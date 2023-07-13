@@ -1,5 +1,5 @@
 # UMC_Healody_Server
-서버 개발 부분
+힐로디 서버 레포지토리
 
 <br>
 
