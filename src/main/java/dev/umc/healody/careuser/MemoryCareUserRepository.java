@@ -1,7 +1,10 @@
 package dev.umc.healody.careuser;
 
+import org.springframework.stereotype.Component;
+
 import java.util.*;
 
+@Component
 public class MemoryCareUserRepository implements CareUserRepository {
 
     private static Map<Long, CareUser> store = new HashMap<>();
