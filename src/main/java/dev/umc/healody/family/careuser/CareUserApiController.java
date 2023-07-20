@@ -1,4 +1,4 @@
-package dev.umc.healody.careuser;
+package dev.umc.healody.family.careuser;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,7 +15,7 @@ public class CareUserApiController {
     private final CareUserService careUserService;
 
     //돌봄 추가
-    @PostMapping
+    @PostMapping("/")
     public ResponseEntity<CareUserDTO> create(@RequestBody CareUserDTO careUserDTO){
         CareUserDTO careUser = careUserService.create(careUserDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(careUser);

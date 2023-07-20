@@ -1,12 +1,14 @@
 package dev.umc.healody.careuser;
 
+import dev.umc.healody.family.careuser.CareUserDTO;
+import dev.umc.healody.family.careuser.CareUserRepository;
+import dev.umc.healody.family.careuser.CareUserService;
+import dev.umc.healody.family.careuser.MemoryCareUserRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class CareUserServiceTest {
 

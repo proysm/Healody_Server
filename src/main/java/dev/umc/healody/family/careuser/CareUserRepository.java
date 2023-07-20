@@ -1,6 +1,4 @@
-package dev.umc.healody.careuser;
-
-import org.springframework.data.jpa.repository.JpaRepository;
+package dev.umc.healody.family.careuser;
 
 import java.util.List;
 import java.util.Optional;

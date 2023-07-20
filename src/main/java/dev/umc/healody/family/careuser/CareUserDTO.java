@@ -1,4 +1,4 @@
-package dev.umc.healody.careuser;
+package dev.umc.healody.family.careuser;
 
 import lombok.Builder;
 import lombok.Getter;
