@@ -26,7 +26,7 @@ class CareUserServiceTest {
         CareUserDTO careUserDTO = CareUserDTO.builder()
                 .homeId(1L)
                 .nickname("test-nickname")
-                .filename("test-filename")
+                .image("test-filename")
                 .build();
         CareUserDTO careUserDTO1 = careUserService.create(careUserDTO);
         CareUserDTO careUserDTO2 = careUserService.findOne(1L).get();
@@ -38,7 +38,7 @@ class CareUserServiceTest {
         CareUserDTO careUserDTO = CareUserDTO.builder()
                 .homeId(1L)
                 .nickname("test-nickname")
-                .filename("test-filename")
+                .image("test-filename")
                 .build();
         careUserService.create(careUserDTO);
         careUserService.delete(1L);
@@ -51,16 +51,16 @@ class CareUserServiceTest {
         CareUserDTO careUserDTO = CareUserDTO.builder()
                 .homeId(1L)
                 .nickname("test-nickname")
-                .filename("test-filename")
+                .image("test-filename")
                 .build();
         careUserService.create(careUserDTO);
 
         CareUserDTO edit = CareUserDTO.builder()
                 .homeId(1L)
                 .nickname("test-edit-nickname")
-                .filename("test-edit-filename")
+                .image("test-edit-filename")
                 .build();
         CareUserDTO update = careUserService.update(1L, edit);
-        Assertions.assertThat(update.getFilename()).isEqualTo("test-edit-filename");
+        Assertions.assertThat(update.getImage()).isEqualTo("test-edit-filename");
     }
 }

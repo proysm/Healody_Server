@@ -21,7 +21,7 @@ public class CareUserService {
         return CareUserDTO.builder()
                 .homeId(save.getHomeId())
                 .nickname(save.getNickname())
-                .filename(save.getFilename())
+                .image(save.getImage())
                 .build();
     }
 
@@ -35,7 +35,7 @@ public class CareUserService {
         return Optional.of(CareUserDTO.builder()
                 .homeId(careUser.getHomeId())
                 .nickname(careUser.getNickname())
-                .filename(careUser.getFilename())
+                .image(careUser.getImage())
                 .build());
     }
 
@@ -47,7 +47,7 @@ public class CareUserService {
                 .map(careUser -> CareUserDTO.builder()
                         .homeId(careUser.getHomeId())
                         .nickname(careUser.getNickname())
-                        .filename(careUser.getNickname())
+                        .image(careUser.getNickname())
                         .build()).collect(Collectors.toList());
     }
 

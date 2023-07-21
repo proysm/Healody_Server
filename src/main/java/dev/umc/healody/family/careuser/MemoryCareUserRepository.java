@@ -23,7 +23,7 @@ public class MemoryCareUserRepository implements CareUserRepository {
     public boolean update(Long id, CareUser careUser) {
         if(!findById(careUser.getId()).equals(Optional.empty())) return false;
         CareUser find = findById(id).get();
-        find.update(careUser.getNickname(), careUser.getFilename());
+        find.update(careUser.getNickname(), careUser.getImage());
         return true;
     }
 

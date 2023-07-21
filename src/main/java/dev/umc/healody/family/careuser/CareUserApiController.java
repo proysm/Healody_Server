@@ -15,7 +15,7 @@ public class CareUserApiController {
     private final CareUserService careUserService;
 
     //돌봄 추가
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<CareUserDTO> create(@RequestBody CareUserDTO careUserDTO){
         CareUserDTO careUser = careUserService.create(careUserDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(careUser);
