@@ -9,5 +9,8 @@ public interface CareUserRepository {
     boolean update(Long id, CareUser careUser);
     boolean remove(Long id);
     Optional<CareUser> findById(Long id);
+    List<CareUser> findByHomeId(Long home_id);
     List<CareUser> findAll();
+    boolean existsCareUser(CareUser careUser);
+    Long getCareUserNumber(Long home_id);
 }

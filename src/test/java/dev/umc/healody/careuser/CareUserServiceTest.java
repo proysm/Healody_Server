@@ -9,7 +9,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
-
+/*
+@SpringBootTest
+class CareUserServiceTest {
+    @MockBean
+    private CareUserRepository careUserRepository;
+    @MockBean
+    private CareUserService careUserService;
+* */
 class CareUserServiceTest {
 
     private CareUserService careUserService;
@@ -24,7 +31,7 @@ class CareUserServiceTest {
     @Test
     void Add(){
         CareUserDTO careUserDTO = CareUserDTO.builder()
-                .homeId(1L)
+                .home_id(1L)
                 .nickname("test-nickname")
                 .image("test-filename")
                 .build();
@@ -36,7 +43,7 @@ class CareUserServiceTest {
     @Test
     void Remove(){
         CareUserDTO careUserDTO = CareUserDTO.builder()
-                .homeId(1L)
+                .home_id(1L)
                 .nickname("test-nickname")
                 .image("test-filename")
                 .build();
@@ -49,14 +56,14 @@ class CareUserServiceTest {
     @Test
     void Update(){
         CareUserDTO careUserDTO = CareUserDTO.builder()
-                .homeId(1L)
+                .home_id(1L)
                 .nickname("test-nickname")
                 .image("test-filename")
                 .build();
         careUserService.create(careUserDTO);
 
         CareUserDTO edit = CareUserDTO.builder()
-                .homeId(1L)
+                .home_id(1L)
                 .nickname("test-edit-nickname")
                 .image("test-edit-filename")
                 .build();

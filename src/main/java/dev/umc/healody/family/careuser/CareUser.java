@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
+@Table(name = "CareUser", uniqueConstraints = @UniqueConstraint(columnNames = {"home_id"}))
 public class CareUser{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,7 +20,7 @@ public class CareUser{
     //나중에 리랙토링 해도 좋을 듯 함.
 
     @Column(name = "home_id")
-    private Long homeId;
+    private Long home_id;
     @Column(name = "image")
     private String image;
     @Column(name = "nickname")
@@ -28,18 +29,18 @@ public class CareUser{
     //사실 빌더까지는 필요 없을 것 같은나 나중에 기획적으로 추가된다는 가정하여 작성 했음.
     //메모리 레파지토리 테스트 위해 id까지 받음
     @Builder
-    public CareUser(Long homeId, String filename, String nickname){
-        this.homeId = homeId;
+    public CareUser(Long home_id, String image, String nickname){
+        this.home_id = home_id;
         this.nickname = nickname;
-        this.image = filename;
+        this.image = image;
     }
 
-    public void update(String nickname, String filename){
+    public void update(String nickname, String image){
         this.nickname = nickname;
-        this.image = filename;
+        this.image = image;
     }
 
-    //테스트용 임시 변수
+    //테스트용 임시 메서드
     public void setId(Long id) {
         this.id = id;
     }

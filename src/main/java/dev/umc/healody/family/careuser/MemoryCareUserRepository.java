@@ -41,7 +41,22 @@ public class MemoryCareUserRepository implements CareUserRepository {
     }
 
     @Override
+    public List<CareUser> findByHomeId(Long home_id) {
+        return null;
+    }
+
+    @Override
     public List<CareUser> findAll() {
         return new ArrayList<>(store.values());
+    }
+
+    @Override
+    public boolean existsCareUser(CareUser careUser) {
+        return false;
+    }
+
+    @Override
+    public Long getCareUserNumber(Long home_id) {
+        return 0L;
     }
 }

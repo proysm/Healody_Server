@@ -19,7 +19,7 @@ public class CareUserService {
         CareUser save = careUserRepository.save(careUser);
 
         return CareUserDTO.builder()
-                .homeId(save.getHomeId())
+                .home_id(save.getHome_id())
                 .nickname(save.getNickname())
                 .image(save.getImage())
                 .build();
@@ -33,19 +33,30 @@ public class CareUserService {
 
         CareUser careUser = optionalCareUser.get();
         return Optional.of(CareUserDTO.builder()
-                .homeId(careUser.getHomeId())
+                .home_id(careUser.getHome_id())
                 .nickname(careUser.getNickname())
                 .image(careUser.getImage())
                 .build());
     }
 
     @Transactional(readOnly = true)
-    public List<CareUserDTO> findCareUers(){
+    public List<CareUserDTO> findCareUsers(Long home_id){
+        List<CareUser> careUeres = careUserRepository.findByHomeId(home_id);
+        return careUeres.stream()
+                .map(careUser -> CareUserDTO.builder()
+                        .home_id(careUser.getHome_id())
+                        .nickname(careUser.getNickname())
+                        .image(careUser.getNickname())
+                        .build()).collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<CareUserDTO> findAll(){
         List<CareUser> careUsers = careUserRepository.findAll();
 
         return careUsers.stream()
                 .map(careUser -> CareUserDTO.builder()
-                        .homeId(careUser.getHomeId())
+                        .home_id(careUser.getHome_id())
                         .nickname(careUser.getNickname())
                         .image(careUser.getNickname())
                         .build()).collect(Collectors.toList());
@@ -64,6 +75,16 @@ public class CareUserService {
     @Transactional
     public void delete(Long id){
         careUserRepository.remove(id);
+    }
+
+    @Transactional
+    public boolean checkDuplicate(CareUserDTO careUserDTO){
+        return careUserRepository.existsCareUser(careUserDTO.toEntity());
+    }
+
+    @Transactional
+    public Long getCareUserNumber(Long home_id){
+        return careUserRepository.getCareUserNumber(home_id);
     }
 
     //중복 검사

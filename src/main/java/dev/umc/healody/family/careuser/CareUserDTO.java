@@ -6,11 +6,11 @@ import lombok.Getter;
 @Getter
 @Builder
 public class CareUserDTO {
-    private Long homeId;
+    private Long home_id;
     private String image;
     private String nickname;
 
     public CareUser toEntity(){
-        return CareUser.builder().homeId(homeId).filename(image).nickname(nickname).build();
+        return CareUser.builder().home_id(home_id).image(image).nickname(nickname).build();
     }
 }
