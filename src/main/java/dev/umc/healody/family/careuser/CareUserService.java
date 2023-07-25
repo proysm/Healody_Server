@@ -19,6 +19,7 @@ public class CareUserService {
         CareUser save = careUserRepository.save(careUser);
 
         return CareUserDTO.builder()
+                .id(save.getId())
                 .home_id(save.getHome_id())
                 .nickname(save.getNickname())
                 .image(save.getImage())
@@ -33,6 +34,7 @@ public class CareUserService {
 
         CareUser careUser = optionalCareUser.get();
         return Optional.of(CareUserDTO.builder()
+                .id(careUser.getId())
                 .home_id(careUser.getHome_id())
                 .nickname(careUser.getNickname())
                 .image(careUser.getImage())
@@ -44,6 +46,7 @@ public class CareUserService {
         List<CareUser> careUeres = careUserRepository.findByHomeId(home_id);
         return careUeres.stream()
                 .map(careUser -> CareUserDTO.builder()
+                        .id(careUser.getId())
                         .home_id(careUser.getHome_id())
                         .nickname(careUser.getNickname())
                         .image(careUser.getNickname())
@@ -56,6 +59,7 @@ public class CareUserService {
 
         return careUsers.stream()
                 .map(careUser -> CareUserDTO.builder()
+                        .id(careUser.getId())
                         .home_id(careUser.getHome_id())
                         .nickname(careUser.getNickname())
                         .image(careUser.getNickname())
@@ -65,11 +69,17 @@ public class CareUserService {
 
     @Transactional
     public CareUserDTO update(Long id, CareUserDTO careUserDTO){
-        CareUser careUser = careUserRepository.findById(id).orElseThrow(
-                ()->new IllegalArgumentException("CareUser not found"));
+        boolean result = careUserRepository.update(id, careUserDTO.toEntity());
 
-        careUserRepository.update(id, careUserDTO.toEntity());
-        return  careUserDTO;
+        if(result == false)
+            return null;
+
+        return  CareUserDTO.builder()
+                .id(id)
+                .nickname(careUserDTO.getNickname())
+                .home_id(careUserDTO.getHome_id())
+                .image(careUserDTO.getImage())
+                .build();
     }
 
     @Transactional

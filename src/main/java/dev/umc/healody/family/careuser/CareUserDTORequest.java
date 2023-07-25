@@ -5,13 +5,12 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class CareUserDTO {
-    private Long id;
+public class CareUserDTORequest {
     private Long home_id;
     private String image;
     private String nickname;
 
-    public CareUser toEntity(){
-        return CareUser.builder().home_id(home_id).image(image).nickname(nickname).build();
+    CareUserDTO toEntity(){
+        return CareUserDTO.builder().home_id(home_id).nickname(nickname).image(image).build();
     }
 }

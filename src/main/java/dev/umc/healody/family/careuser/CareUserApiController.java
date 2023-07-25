@@ -23,8 +23,8 @@ public class CareUserApiController {
 
     //돌봄 추가
     @PostMapping
-    public ResponseEntity<CareUserDTO> create(@RequestBody CareUserDTO careUserDTO){
-
+    public ResponseEntity<CareUserDTO> create(@RequestBody CareUserDTORequest careUserDTORequest){
+        CareUserDTO careUserDTO = careUserDTORequest.toEntity();
         if(careUserService.checkDuplicate(careUserDTO) ||
                 careUserService.getCareUserNumber(careUserDTO.getHome_id()) >= 3){
             return ResponseEntity.notFound().build();
@@ -58,8 +58,8 @@ public class CareUserApiController {
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<CareUserDTO> update(@PathVariable Long id, @RequestBody CareUserDTO careUserDTO){
-        CareUserDTO update = careUserService.update(id, careUserDTO);
+    public ResponseEntity<CareUserDTO> update(@PathVariable Long id, @RequestBody CareUserDTORequest careUserDTORequest){
+        CareUserDTO update = careUserService.update(id, careUserDTORequest.toEntity());
         return ResponseEntity.ok(update);
     }
 
