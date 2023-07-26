@@ -25,7 +25,7 @@ public class CareUserApiController {
     @PostMapping
     public ResponseEntity<CareUserDTO> create(@RequestBody CareUserDTORequest careUserDTORequest){
         CareUserDTO careUserDTO = careUserDTORequest.toEntity();
-        if(careUserService.checkDuplicate(careUserDTO) ||
+        if(careUserService.checkDuplicate(careUserDTO.getHome_id(), careUserDTO.getNickname()) ||
                 careUserService.getCareUserNumber(careUserDTO.getHome_id()) >= 3){
             return ResponseEntity.notFound().build();
         }

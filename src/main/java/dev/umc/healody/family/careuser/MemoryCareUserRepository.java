@@ -51,9 +51,10 @@ public class MemoryCareUserRepository implements CareUserRepository {
     }
 
     @Override
-    public boolean existsCareUser(CareUser careUser) {
+    public boolean existsCareUser(Long home_id, String nickname) {
         return false;
     }
+
 
     @Override
     public Long getCareUserNumber(Long home_id) {

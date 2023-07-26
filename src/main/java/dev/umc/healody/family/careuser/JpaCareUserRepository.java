@@ -63,9 +63,7 @@ public class JpaCareUserRepository implements CareUserRepository{
     }
 
     @Override
-    public boolean existsCareUser(CareUser careUser) {
-        Long home_id = careUser.getHome_id();
-        String nickname = careUser.getNickname();
+    public boolean existsCareUser(Long home_id, String nickname) {
         Long count = em.createQuery("select count(f) from CareUser f where f.home_id = :home_id and f.nickname = :nickname", Long.class)
                 .setParameter("home_id", home_id)
                 .setParameter("nickname", nickname)

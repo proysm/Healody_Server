@@ -88,8 +88,8 @@ public class CareUserService {
     }
 
     @Transactional
-    public boolean checkDuplicate(CareUserDTO careUserDTO){
-        return careUserRepository.existsCareUser(careUserDTO.toEntity());
+    public boolean checkDuplicate(Long home_id, String nickname){
+        return careUserRepository.existsCareUser(home_id, nickname);
     }
 
     @Transactional

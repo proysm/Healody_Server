@@ -11,6 +11,6 @@ public interface CareUserRepository {
     Optional<CareUser> findById(Long id);
     List<CareUser> findByHomeId(Long home_id);
     List<CareUser> findAll();
-    boolean existsCareUser(CareUser careUser);
+    boolean existsCareUser(Long home_id, String nickname);
     Long getCareUserNumber(Long home_id);
 }
