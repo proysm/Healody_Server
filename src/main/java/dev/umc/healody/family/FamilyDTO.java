@@ -7,9 +7,9 @@ import lombok.Getter;
 @Builder
 public class FamilyDTO {
     private Long user_id;
-    private Long family_id;
+    private Long home_id;
 
     public Family toEntity(){
-        return Family.builder().user_id(user_id).family_id(family_id).build();
+        return Family.builder().user_id(user_id).home_id(home_id).build();
     }
 }

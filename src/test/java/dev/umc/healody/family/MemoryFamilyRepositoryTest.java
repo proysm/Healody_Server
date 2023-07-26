@@ -14,14 +14,14 @@ class MemoryFamilyRepositoryTest {
     @Test
     void create(){
         Family family = Family.builder()
-                .family_id(1L)
+                .home_id(1L)
                 .user_id(1L)
                 .build();
         family.setId(1L);
         repository.save(family);
 
         Family family1 = Family.builder()
-                .family_id(1L)
+                .home_id(1L)
                 .user_id(1L)
                 .build();
         family1.setId(2L);
@@ -35,7 +35,7 @@ class MemoryFamilyRepositoryTest {
     @Test
     void delete(){
         Family family = Family.builder()
-                .family_id(1L)
+                .home_id(1L)
                 .user_id(1L)
                 .build();
         family.setId(1L);

@@ -7,5 +7,5 @@ import lombok.Getter;
 @Builder
 public class FamilyDTORequest {
     private String userPhone;
-    private Long family_id;
+    private Long home_id;
 }

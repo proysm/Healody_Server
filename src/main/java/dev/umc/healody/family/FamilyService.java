@@ -19,7 +19,7 @@ public class FamilyService {
 
         return FamilyDTO.builder()
                 .user_id(save.getUser_id())
-                .family_id(save.getFamily_id())
+                .home_id(save.getHome_id())
                 .build();
     }
 
@@ -29,23 +29,23 @@ public class FamilyService {
         return list.stream()
                 .map(family -> FamilyDTO.builder()
                         .user_id(family.getUser_id())
-                        .family_id(family.getFamily_id())
+                        .home_id(family.getHome_id())
                         .build()).collect(Collectors.toList());
     }
 
     @Transactional
-    public boolean delete(Long userId, Long familyId){
-        return familyRepository.remove(userId, familyId);
+    public boolean delete(Long userId, Long homeId){
+        return familyRepository.remove(userId, homeId);
     }
 
     @Transactional(readOnly = true)
-    public int getFamilyNumber(Long familyId){
-        return familyRepository.getFamilyNumber(familyId);
+    public int getFamilyNumber(Long homeId){
+        return familyRepository.getFamilyNumber(homeId);
     }
 
     @Transactional
-    public boolean checkFamilyDuplicate(Long userId, Long familyId){
-        return  familyRepository.existsByFamily(userId, familyId);
+    public boolean checkFamilyDuplicate(Long userId, Long homeId){
+        return  familyRepository.existsByFamily(userId, homeId);
     }
 
     @Transactional

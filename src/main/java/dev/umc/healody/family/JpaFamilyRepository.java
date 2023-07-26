@@ -25,10 +25,10 @@ public class JpaFamilyRepository implements FamilyRepository{
     }
 
     @Override
-    public boolean remove(Long user_id, Long family_id) {
-        List<Family> families = em.createQuery("select f from Family f where f.user_id = :user_id and f.family_id = :family_id", Family.class)
+    public boolean remove(Long user_id, Long home_id) {
+        List<Family> families = em.createQuery("select f from Family f where f.user_id = :user_id and f.home_id = :home_id", Family.class)
                 .setParameter("user_id", user_id)
-                .setParameter("family_id", family_id)
+                .setParameter("home_id", home_id)
                 .getResultList();
 
         if(families.isEmpty()) return false;
@@ -59,10 +59,10 @@ public class JpaFamilyRepository implements FamilyRepository{
     }
 
     @Override
-    public boolean existsByFamily(Long user_id, Long family_id) {
-        Long count = em.createQuery("select count(f) from Family f where f.user_id = :user_id and f.family_id = :family_id", Long.class)
+    public boolean existsByFamily(Long user_id, Long home_id) {
+        Long count = em.createQuery("select count(f) from Family f where f.user_id = :user_id and f.home_id = :home_id", Long.class)
                 .setParameter("user_id", user_id)
-                .setParameter("family_id", family_id)
+                .setParameter("home_id", home_id)
                 .getSingleResult();
         return count > 0;
     }

@@ -16,7 +16,7 @@ public class MemoryFamilyRepository implements FamilyRepository{
     }
 
     @Override
-    public boolean remove(Long user_id, Long family_id) {
+    public boolean remove(Long user_id, Long home_id) {
 
         boolean isFind = false;
 
@@ -25,7 +25,7 @@ public class MemoryFamilyRepository implements FamilyRepository{
         ArrayList<Family> families = new ArrayList<>(store.values());
         for (int i = 0; i < families.size(); i++){
             if(families.get(i).getUser_id() == user_id &&
-                    families.get(i).getFamily_id() == family_id){
+                    families.get(i).getHome_id() == home_id){
                 isFind = true;
                 store.remove(Long.valueOf(i+1));
                 break;
@@ -53,7 +53,7 @@ public class MemoryFamilyRepository implements FamilyRepository{
         ArrayList<Family> families = new ArrayList<>(store.values());
         int count = 0;
         for (int i = 0; i < families.size(); i++){
-            if(families.get(i).getFamily_id() == family_id){
+            if(families.get(i).getHome_id() == family_id){
                 count++;
             }
         }
@@ -66,7 +66,7 @@ public class MemoryFamilyRepository implements FamilyRepository{
     }
 
     @Override
-    public boolean existsByFamily(Long user_id, Long family_id) {
+    public boolean existsByFamily(Long user_id, Long home_id) {
         return false;
     }
 
