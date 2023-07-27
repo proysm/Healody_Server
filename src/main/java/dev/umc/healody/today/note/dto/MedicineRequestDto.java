@@ -1,6 +1,7 @@
-package dev.umc.healody.today.dto;
+package dev.umc.healody.today.note.dto;
 
 import dev.umc.healody.today.note.type.Medicine;
+import dev.umc.healody.user.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,8 +10,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.util.Date;
 
 @Getter @NoArgsConstructor
-public class NoteMedicineResponseDto {
+public class MedicineRequestDto {
 
+    private Long userId;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date date;
     private String title;
@@ -21,7 +23,8 @@ public class NoteMedicineResponseDto {
     private String place;
 
     @Builder
-    public NoteMedicineResponseDto(Date date, String title, String memo, String medicine1, String medicine2, String medicine3, String place) {
+    public MedicineRequestDto(Long userId, Date date, String title, String memo, String medicine1, String medicine2, String medicine3, String place) {
+        this.userId = userId;
         this.date = date;
         this.title = title;
         this.memo = memo;
@@ -31,15 +34,16 @@ public class NoteMedicineResponseDto {
         this.place = place;
     }
 
-    public NoteMedicineResponseDto toDto(Medicine medicine) {
-        return NoteMedicineResponseDto.builder()
-                .date(medicine.getDate())
-                .title(medicine.getTitle())
-                .memo(medicine.getMemo())
-                .medicine1(medicine.getMedicine1())
-                .medicine2(medicine.getMedicine2())
-                .medicine3(medicine.getMedicine3())
-                .place(medicine.getPlace())
+    public Medicine toEntity(User user) {
+        return Medicine.builder()
+                .user(user)
+                .date(date)
+                .title(title)
+                .memo(memo)
+                .medicine1(medicine1)
+                .medicine2(medicine2)
+                .medicine3(medicine3)
+                .place(place)
                 .build();
     }
 }

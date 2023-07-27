@@ -1,6 +1,6 @@
 package dev.umc.healody.today.note;
 
-import dev.umc.healody.today.dto.*;
+import dev.umc.healody.today.note.dto.*;
 import dev.umc.healody.today.note.type.Hospital;
 import dev.umc.healody.today.note.type.Medicine;
 import dev.umc.healody.today.note.type.Symptom;
@@ -20,7 +20,7 @@ public class NoteService {
     private final UserRepository userRepository;
 
     @Transactional
-    public Long createNoteHospital(Long userId, NoteHospitalRequestDto requestDto) {
+    public Long createNoteHospital(Long userId, HospitalRequestDto requestDto) {
         // 사용자 아이디를 통해 Entity 조회
         Optional<User> byId = userRepository.findById(userId);
         User user = new User();
@@ -32,7 +32,7 @@ public class NoteService {
     }
 
     @Transactional
-    public Long createNoteMedicine(Long userId, NoteMedicineRequestDto requestDto) {
+    public Long createNoteMedicine(Long userId, MedicineRequestDto requestDto) {
         // 사용자 아이디를 통해 Entity 조회
         Optional<User> byId = userRepository.findById(userId);
         User user = new User();
@@ -44,7 +44,7 @@ public class NoteService {
     }
 
     @Transactional
-    public Long createNoteSymptom(Long userId, NoteSymptomRequestDto requestDto) {
+    public Long createNoteSymptom(Long userId, SymptomRequestDto requestDto) {
         // 사용자 아이디를 통해 Entity 조회
         Optional<User> byId = userRepository.findById(userId);
         User user = new User();
@@ -55,41 +55,41 @@ public class NoteService {
         return noteRepository.save(symptom).getId();
     }
 
-    public NoteHospitalResponseDto findNoteHospital(Long noteId) {
+    public HospitalResponseDto findNoteHospital(Long noteId) {
         // 기록 아이디를 통해 Entity 조회
         Optional<Note> byId = noteRepository.findById(noteId);
         Hospital hospital = new Hospital();
         if(byId.isPresent())
             hospital = (Hospital) byId.get();
 
-        NoteHospitalResponseDto responseDto = new NoteHospitalResponseDto();
+        HospitalResponseDto responseDto = new HospitalResponseDto();
         return responseDto.toDto(hospital);
     }
 
-    public NoteMedicineResponseDto findNoteMedicine(Long noteId) {
+    public MedicineResponseDto findNoteMedicine(Long noteId) {
         // 기록 아이디를 통해 Entity 조회
         Optional<Note> byId = noteRepository.findById(noteId);
         Medicine medicine = new Medicine();
         if(byId.isPresent())
             medicine = (Medicine) byId.get();
 
-        NoteMedicineResponseDto responseDto = new NoteMedicineResponseDto();
+        MedicineResponseDto responseDto = new MedicineResponseDto();
         return responseDto.toDto(medicine);
     }
 
-    public NoteSymptomResponseDto findNoteSymptom(Long noteId) {
+    public SymptomResponseDto findNoteSymptom(Long noteId) {
         // 기록 아이디를 통해 Entity 조회
         Optional<Note> byId = noteRepository.findById(noteId);
         Symptom symptom = new Symptom();
         if(byId.isPresent())
             symptom = (Symptom) byId.get();
 
-        NoteSymptomResponseDto responseDto = new NoteSymptomResponseDto();
+        SymptomResponseDto responseDto = new SymptomResponseDto();
         return responseDto.toDto(symptom);
     }
 
     @Transactional
-    public Long updateNoteHospital(Long userId, Long noteId, NoteHospitalRequestDto requestDto) {
+    public Long updateNoteHospital(Long userId, Long noteId, HospitalRequestDto requestDto) {
         // 사용자 아이디를 통해 Entity 조회
         Optional<User> byUserId = userRepository.findById(userId);
         User user = new User();
@@ -127,7 +127,7 @@ public class NoteService {
     }
 
     @Transactional
-    public Long updateNoteMedicine(Long userId, Long noteId, NoteMedicineRequestDto requestDto) {
+    public Long updateNoteMedicine(Long userId, Long noteId, MedicineRequestDto requestDto) {
         // 사용자 아이디를 통해 Entity 조회
         Optional<User> byUserId = userRepository.findById(userId);
         User user = new User();
@@ -164,7 +164,7 @@ public class NoteService {
     }
 
     @Transactional
-    public Long updateNoteSymptom(Long userId, Long noteId, NoteSymptomRequestDto requestDto) {
+    public Long updateNoteSymptom(Long userId, Long noteId, SymptomRequestDto requestDto) {
         // 사용자 아이디를 통해 Entity 조회
         Optional<User> byUserId = userRepository.findById(userId);
         User user = new User();

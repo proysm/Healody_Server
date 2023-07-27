@@ -1,4 +1,4 @@
-package dev.umc.healody.today.dto;
+package dev.umc.healody.today.note.dto;
 
 import dev.umc.healody.today.note.type.Hospital;
 import dev.umc.healody.today.note.type.Purpose;
@@ -10,7 +10,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.util.Date;
 
 @Getter @NoArgsConstructor
-public class NoteHospitalResponseDto {
+public class HospitalResponseDto {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date date;
@@ -21,7 +21,7 @@ public class NoteHospitalResponseDto {
     private String surgery;
 
     @Builder
-    public NoteHospitalResponseDto(Date date, String title, String memo, Purpose purpose, String name, String surgery) {
+    public HospitalResponseDto(Date date, String title, String memo, Purpose purpose, String name, String surgery) {
         this.date = date;
         this.title = title;
         this.memo = memo;
@@ -30,8 +30,8 @@ public class NoteHospitalResponseDto {
         this.surgery = surgery;
     }
 
-    public NoteHospitalResponseDto toDto(Hospital hospital) {
-        return NoteHospitalResponseDto.builder()
+    public HospitalResponseDto toDto(Hospital hospital) {
+        return HospitalResponseDto.builder()
                 .date(hospital.getDate())
                 .title(hospital.getTitle())
                 .memo(hospital.getMemo())

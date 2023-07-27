@@ -1,20 +1,7 @@
 package dev.umc.healody.today.note;
 
-import dev.umc.healody.today.dto.NoteHospitalRequestDto;
-import dev.umc.healody.today.note.type.Hospital;
-import dev.umc.healody.today.note.type.Purpose;
-import dev.umc.healody.user.User;
-import dev.umc.healody.user.UserRepository;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.Date;
-import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 

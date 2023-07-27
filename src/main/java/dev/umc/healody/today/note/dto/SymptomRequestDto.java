@@ -1,6 +1,7 @@
-package dev.umc.healody.today.dto;
+package dev.umc.healody.today.note.dto;
 
 import dev.umc.healody.today.note.type.Symptom;
+import dev.umc.healody.user.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,9 +9,11 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
-@Getter @NoArgsConstructor
-public class NoteSymptomResponseDto {
 
+@Getter @NoArgsConstructor
+public class SymptomRequestDto {
+
+    private Long userId;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date date;
     private String title;
@@ -18,19 +21,21 @@ public class NoteSymptomResponseDto {
     private String name;
 
     @Builder
-    public NoteSymptomResponseDto(Date date, String title, String memo, String name) {
+    public SymptomRequestDto(Long userId, Date date, String title, String memo, String name) {
+        this.userId = userId;
         this.date = date;
         this.title = title;
         this.memo = memo;
         this.name = name;
     }
 
-    public NoteSymptomResponseDto toDto(Symptom symptom) {
-        return NoteSymptomResponseDto.builder()
-                .date(symptom.getDate())
-                .title(symptom.getTitle())
-                .memo(symptom.getMemo())
-                .name(symptom.getName())
+    public Symptom toEntity(User user) {
+        return Symptom.builder()
+                .user(user)
+                .date(date)
+                .title(title)
+                .memo(memo)
+                .name(name)
                 .build();
     }
 }
