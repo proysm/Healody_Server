@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
 import java.sql.Date;
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -168,20 +169,30 @@ public class UserService {
 
         // 3. User 오브젝트를 만든다. (사용자의 정보를 넘겨주기 위한 작업)
         User user = new User();
-        //UUID garbagePw = UUID.randomUUID(); // 쓰레기값 만들기
 
-        user.buildUser(
-                kakaoProfile.getId(),
-                "01090304940",
-                Date.valueOf("2001-08-16"),
-                kakaoProfile.getKakao_account().getEmail(),
-                "여성",
-                "garbagePw.toString()",
-                kakaoProfile.getProperties().getThumbnail_image(),
-                kakaoProfile.getProperties().getNickname(),
-                "",
-                0
-        );
+        String name = kakaoProfile.getProperties().getNickname();
+        String email = kakaoProfile.getKakao_account().getEmail();
+        String nickName = kakaoProfile.getProperties().getNickname();
+        UUID garbagePw = UUID.randomUUID(); // 쓰레기값 만들기
+
+        Date birthday = null;
+        String gender = null;
+        if(kakaoProfile.getKakao_account().birthday_needs_agreement == true){
+            birthday = Date.valueOf(kakaoProfile.getKakao_account().birthyear + kakaoProfile.getKakao_account().birthday);
+        }
+        if(kakaoProfile.getKakao_account().gender_needs_agreement == true){
+            gender = kakaoProfile.getKakao_account().gender;
+        }
+
+        user.setUserId(kakaoProfile.getId());
+        user.setName(name);
+        user.setPhone(null);
+        user.setBirth(birthday);
+        user.setEmail(email);
+        user.setGender(gender);
+        user.setNickname(nickName);
+        user.setPassword(String.valueOf(garbagePw));
+
         return user; // 로그인을 한 사용자를 넘겨준다.(정보가 포함되어 있음)
 
     }
@@ -190,7 +201,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public User kakaoLogin(User user){
 
-
+        //User principal = new User();
         User principal = userRepository.findByUserId(user.getUserId());
         if(principal != null){
 

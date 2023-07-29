@@ -50,20 +50,4 @@ public class User {
     private Long familyCnt = 0L;
 
 
-    public void buildUser(long userId, String phone, java.sql.Date birth, String email, String gender,
-                          String password, String image, String nickname, String message, long familyCnt){
-
-        setUserId(userId);
-        setPhone(phone);
-        setBirth(birth);
-        setEmail(email);
-        setGender(gender);
-        setPassword(password);
-        setImage(image);
-        setNickname(nickname);
-        setMessage(message);
-        setFamilyCnt(familyCnt);
-
-    }
-
 }
