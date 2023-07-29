@@ -2,7 +2,7 @@ package dev.umc.healody.today.note.dto;
 
 import dev.umc.healody.today.note.type.Hospital;
 import dev.umc.healody.today.note.type.Purpose;
-import dev.umc.healody.usertest.User;
+import dev.umc.healody.user.entity.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

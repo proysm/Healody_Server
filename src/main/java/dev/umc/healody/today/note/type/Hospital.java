@@ -1,7 +1,7 @@
 package dev.umc.healody.today.note.type;
 
 import dev.umc.healody.today.note.Note;
-import dev.umc.healody.usertest.User;
+import dev.umc.healody.user.entity.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;

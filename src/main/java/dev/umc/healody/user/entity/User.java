@@ -16,7 +16,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    private Long id;
+    private Long userId;
 
     @Column(name = "name")
     private String name;
@@ -25,7 +25,7 @@ public class User {
     private String phone;
 
     @Column(name = "birth")
-    private String birth;
+    private java.sql.Date birth;
 
     @Column(name = "email")
     private String email;
@@ -48,5 +48,22 @@ public class User {
     @Builder.Default
     @Column(name = "family_cnt")
     private Long familyCnt = 0L;
+
+
+    public void buildUser(long userId, String phone, java.sql.Date birth, String email, String gender,
+                          String password, String image, String nickname, String message, long familyCnt){
+
+        setUserId(userId);
+        setPhone(phone);
+        setBirth(birth);
+        setEmail(email);
+        setGender(gender);
+        setPassword(password);
+        setImage(image);
+        setNickname(nickname);
+        setMessage(message);
+        setFamilyCnt(familyCnt);
+
+    }
 
 }

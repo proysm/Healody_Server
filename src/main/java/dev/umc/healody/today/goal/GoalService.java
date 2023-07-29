@@ -2,8 +2,8 @@ package dev.umc.healody.today.goal;
 
 import dev.umc.healody.today.goal.dto.GoalRequestDto;
 import dev.umc.healody.today.goal.dto.GoalResponseDto;
-import dev.umc.healody.usertest.User;
-import dev.umc.healody.usertest.UserRepository;
+import dev.umc.healody.user.entity.User;
+import dev.umc.healody.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

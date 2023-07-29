@@ -1,12 +1,8 @@
 package dev.umc.healody.user.repository;
 
-import dev.umc.healody.user.dto.UserDto;
 import dev.umc.healody.user.entity.User;
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
-import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -18,5 +14,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     // JPA는 findByXXX을 제공
     User findByPhone(String phone);
 
+    // DAO와 같은 것! 자동으로 bean으로 등록이 된다. -> @Repository 생략 가능해짐.
+// 해당 JpaRepository는 User 테이블을 관리하는 Repository 이고, Long은 User 테이블의 p.k이다.
+    User findByUserId(long userId);
 }
 

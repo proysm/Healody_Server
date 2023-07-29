@@ -1,7 +1,7 @@
 package dev.umc.healody.today.todo.dto;
 
 import dev.umc.healody.today.todo.Todo;
-import dev.umc.healody.usertest.User;
+import dev.umc.healody.user.entity.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

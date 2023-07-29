@@ -9,7 +9,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.util.List;
+
+import java.sql.Date;
 
 @Data
 @NoArgsConstructor
@@ -24,7 +25,7 @@ public class UserDto {
     private String phone;
 
     @NotBlank(message = "생년월일을 입력해주세요.")
-    private String birth;
+    private Date birth;
 
     @NotBlank(message = "이메일을 입력해주세요.")
     @Email(message = "올바른 이메일 주소를 입력해주세요.")

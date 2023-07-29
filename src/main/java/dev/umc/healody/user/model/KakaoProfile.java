@@ -1,9 +1,6 @@
-package dev.umc.healody.user.kakao.model;
+package dev.umc.healody.user.model;
 
 import lombok.Data;
-import org.springframework.context.annotation.Profile;
-
-import java.util.Properties;
 
 @Data
 public class KakaoProfile {

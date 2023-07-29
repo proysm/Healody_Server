@@ -2,7 +2,7 @@ package dev.umc.healody.today.goal.dto;
 
 import dev.umc.healody.today.goal.Goal;
 import dev.umc.healody.today.goal.type.Behavior;
-import dev.umc.healody.usertest.User;
+import dev.umc.healody.user.entity.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
