@@ -1,4 +1,4 @@
-package dev.umc.healody.user;
+package dev.umc.healody.usertest;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

@@ -1,9 +1,8 @@
-package dev.umc.healody.user;
+package dev.umc.healody.usertest;
 
 import dev.umc.healody.common.SuccessResponse;
 import dev.umc.healody.common.SuccessStatus;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;

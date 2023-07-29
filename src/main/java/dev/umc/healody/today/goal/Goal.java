@@ -1,7 +1,7 @@
 package dev.umc.healody.today.goal;
 
 import dev.umc.healody.today.goal.type.Behavior;
-import dev.umc.healody.user.User;
+import dev.umc.healody.usertest.User;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;

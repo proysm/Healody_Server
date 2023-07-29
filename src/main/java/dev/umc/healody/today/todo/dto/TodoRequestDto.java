@@ -1,15 +1,13 @@
 package dev.umc.healody.today.todo.dto;
 
 import dev.umc.healody.today.todo.Todo;
-import dev.umc.healody.user.User;
+import dev.umc.healody.usertest.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
-
-import static java.lang.Boolean.*;
 
 @Getter @NoArgsConstructor
 public class TodoRequestDto {

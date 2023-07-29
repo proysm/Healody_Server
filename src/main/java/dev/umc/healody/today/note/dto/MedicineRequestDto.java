@@ -1,7 +1,7 @@
 package dev.umc.healody.today.note.dto;
 
 import dev.umc.healody.today.note.type.Medicine;
-import dev.umc.healody.user.User;
+import dev.umc.healody.usertest.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

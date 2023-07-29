@@ -1,6 +1,6 @@
 package dev.umc.healody.today.note;
 
-import dev.umc.healody.user.User;
+import dev.umc.healody.usertest.User;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;

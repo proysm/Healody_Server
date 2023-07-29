@@ -1,4 +1,4 @@
-package dev.umc.healody.user;
+package dev.umc.healody.usertest;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

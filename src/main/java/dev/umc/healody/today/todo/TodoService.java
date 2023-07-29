@@ -2,8 +2,8 @@ package dev.umc.healody.today.todo;
 
 import dev.umc.healody.today.todo.dto.TodoRequestDto;
 import dev.umc.healody.today.todo.dto.TodoResponseDto;
-import dev.umc.healody.user.User;
-import dev.umc.healody.user.UserRepository;
+import dev.umc.healody.usertest.User;
+import dev.umc.healody.usertest.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
