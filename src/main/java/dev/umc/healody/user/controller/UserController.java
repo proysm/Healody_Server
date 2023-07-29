@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("api/auth")
+@RequestMapping("/api/auth")
 public class UserController {
     private final UserService userService;
     private final EmailService emailService;
@@ -68,11 +68,13 @@ public class UserController {
     }
 
     @GetMapping("/kakao/callback")
-    public @ResponseBody void kakaoCallback(String code) throws JsonProcessingException {
+    public @ResponseBody String kakaoCallback(String code) throws JsonProcessingException {
         // 인증 코드, 카카오 로그인이 성공하면 이곳으로 감, @ResponseBody를 붙이면 데이터를 리턴해주는 함수가 됨.
 
         User user = userService.kakaoCallback(code); // 현재 로그인을 시도한 사용자의 정보를 리턴함
-        kakaoLogin(user); // Healody 로그인을 시도함
+        kakaoLogin(user); // 로그인을 시도함
+
+        return "카카오 코드와 토큰이 발급되었습니다.";
     }
 
     @GetMapping("/kakao/login")

@@ -91,7 +91,7 @@ public class UserService {
         return null; // 해당 전화번호로 유저를 찾지 못한 경우
     }
 
-    // 3. 카카오 로그인을 시도한 후 성공하면 실행
+    // 1. 카카오 로그인을 시도한 후 성공하면 실행
     public @ResponseBody User kakaoCallback(String code) throws JsonProcessingException {
 
         // 1. Post방식으로 key=value 데이터를 카카오쪽으로 요청한다.
