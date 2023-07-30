@@ -8,6 +8,7 @@ public interface FamilyRepository {
     Family save(Family family);
     boolean remove(Long userId, Long homeId);
     List<Family> findById(Long userId);
+    List<Family> findByHomeId(Long homeId);
     int getFamilyNumber(Long userId);
     List<Family> findAll();
     boolean existsByFamily(Long userId, Long homeId);

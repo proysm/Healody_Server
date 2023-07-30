@@ -45,6 +45,13 @@ public class JpaFamilyRepository implements FamilyRepository{
     }
 
     @Override
+    public List<Family> findByHomeId(Long homeId) {
+        return em.createQuery("select f from Family f where f.home.homeId = :home_id", Family.class)
+                .setParameter("home_id", homeId)
+                .getResultList();
+    }
+
+    @Override
     public int getFamilyNumber(Long userId) {
         Long count = em.createQuery("select count(f) from Family f where f.user.userId = :user_id", Long.class)
                 .setParameter("user_id", userId)

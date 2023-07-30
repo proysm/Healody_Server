@@ -17,9 +17,10 @@ public class FamilyApiController {
 
     @PostMapping("/add")
     public ResponseEntity<FamilyDTO> addFamily(@RequestBody FamilyDTORequest familyDTORequest){
-//        Long userId = userService.findUserIdByPhone(familyDTORequest.getUserPhone());
-//        FamilyDTO familyDTO = FamilyDTO.builder().userId(userId).homeId(familyDTORequest.getHomeId()).build();
-        FamilyDTO familyDTO = FamilyDTO.builder().userId(1L).homeId(familyDTORequest.getHomeId()).build(); //임시
+        Long userId = userService.findUserIdByPhone(familyDTORequest.getUserPhone());
+        FamilyDTO familyDTO = FamilyDTO.builder().userId(userId).homeId(familyDTORequest.getHomeId()).build();
+
+        if(userId == null) return ResponseEntity.notFound().build();
 
         if(familyService.checkFamilyOver(familyDTO.getUserId()) ||
                 familyService.checkFamilyDuplicate(familyDTO.getUserId(), familyDTO.getHomeId())){
@@ -27,6 +28,7 @@ public class FamilyApiController {
         }
 
         familyService.create(familyDTO);
+        System.out.println(familyService.searchUserId(familyDTO.getHomeId()).toString());
         return ResponseEntity.status(HttpStatus.CREATED).body(familyDTO);
     }
 

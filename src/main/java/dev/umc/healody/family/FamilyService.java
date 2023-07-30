@@ -66,13 +66,25 @@ public class FamilyService {
         return familyRepository.getFamilyNumber(homeId);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public boolean checkFamilyDuplicate(Long userId, Long homeId){
         return  familyRepository.existsByFamily(userId, homeId);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public boolean checkFamilyOver(Long userId){
         return familyRepository.getFamilyNumber(userId) >= 3;
+    }
+
+    @Transactional(readOnly = true)
+    public List<Long> searchUserId(Long homeId){
+        List<Family> list = familyRepository.findByHomeId(homeId);
+        List<Long> result = new ArrayList<Long>();
+
+        for (int i = 0; i < list.size(); i++) {
+            result.add(list.get(i).getUser().getUserId());
+        }
+
+        return result;
     }
 }
