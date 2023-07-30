@@ -51,9 +51,9 @@ public class JpaCareUserRepository implements CareUserRepository{
     }
 
     @Override
-    public List<CareUser> findByHomeId(Long home_id) {
-        return em.createQuery("select f from CareUser f where f.home_id = :home_id", CareUser.class)
-                .setParameter("home_id", home_id)
+    public List<CareUser> findByHomeId(Long homeId) {
+        return em.createQuery("select f from CareUser f where f.home.homeId = :home_id", CareUser.class)
+                .setParameter("home_id", homeId)
                 .getResultList();
     }
 
@@ -63,18 +63,18 @@ public class JpaCareUserRepository implements CareUserRepository{
     }
 
     @Override
-    public boolean existsCareUser(Long home_id, String nickname) {
-        Long count = em.createQuery("select count(f) from CareUser f where f.home_id = :home_id and f.nickname = :nickname", Long.class)
-                .setParameter("home_id", home_id)
+    public boolean existsCareUser(Long homeId, String nickname) {
+        Long count = em.createQuery("select count(f) from CareUser f where f.home.homeId = :home_id and f.nickname = :nickname", Long.class)
+                .setParameter("home_id", homeId)
                 .setParameter("nickname", nickname)
                 .getSingleResult();
         return count > 0;
     }
 
     @Override
-    public Long getCareUserNumber(Long home_id) {
-        Long count = em.createQuery("select count(f) from CareUser f where f.home_id = :home_id", Long.class)
-                .setParameter("home_id", home_id)
+    public Long getCareUserNumber(Long homeId) {
+        Long count = em.createQuery("select count(f) from CareUser f where f.home.homeId= :home_id", Long.class)
+                .setParameter("home_id", homeId)
                 .getSingleResult();
         return count;
     }

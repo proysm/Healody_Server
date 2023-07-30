@@ -24,9 +24,14 @@ public class CareUserApiController {
     //돌봄 추가
     @PostMapping
     public ResponseEntity<CareUserDTO> create(@RequestBody CareUserDTORequest careUserDTORequest){
-        CareUserDTO careUserDTO = careUserDTORequest.toEntity();
-        if(careUserService.checkDuplicate(careUserDTO.getHome_id(), careUserDTO.getNickname()) ||
-                careUserService.getCareUserNumber(careUserDTO.getHome_id()) >= 3){
+        CareUserDTO careUserDTO = CareUserDTO.builder()
+                .homeId(careUserDTORequest.getHomeId())
+                .nickname(careUserDTORequest.getNickname())
+                .image(careUserDTORequest.getImage())
+                .build();
+
+        if(careUserService.checkDuplicate(careUserDTO.getHomeId(), careUserDTO.getNickname()) ||
+                careUserService.checkCareUserOver(careUserDTO.getHomeId())){
             return ResponseEntity.notFound().build();
         }
 
@@ -59,7 +64,13 @@ public class CareUserApiController {
 
     @PutMapping("/{id}")
     public ResponseEntity<CareUserDTO> update(@PathVariable Long id, @RequestBody CareUserDTORequest careUserDTORequest){
-        CareUserDTO update = careUserService.update(id, careUserDTORequest.toEntity());
+        CareUserDTO careUserDTO = CareUserDTO.builder()
+                .homeId(careUserDTORequest.getHomeId())
+                .nickname(careUserDTORequest.getNickname())
+                .image(careUserDTORequest.getImage())
+                .build();
+
+        CareUserDTO update = careUserService.update(id, careUserDTO);
         return ResponseEntity.ok(update);
     }
 

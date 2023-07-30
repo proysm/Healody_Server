@@ -1,5 +1,6 @@
 package dev.umc.healody.family.careuser;
 
+import dev.umc.healody.home.domain.Home;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -7,11 +8,11 @@ import lombok.Getter;
 @Builder
 public class CareUserDTO {
     private Long id;
-    private Long home_id;
+    private Long homeId;
     private String image;
     private String nickname;
 
-    public CareUser toEntity(){
-        return CareUser.builder().home_id(home_id).image(image).nickname(nickname).build();
+    public CareUser toEntity(Home home){
+        return CareUser.builder().home(home).image(image).nickname(nickname).build();
     }
 }

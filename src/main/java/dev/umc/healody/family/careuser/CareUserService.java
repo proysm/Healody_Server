@@ -1,5 +1,7 @@
 package dev.umc.healody.family.careuser;
 
+import dev.umc.healody.home.domain.Home;
+import dev.umc.healody.home.repository.HomeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,15 +14,23 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CareUserService {
     private final CareUserRepository careUserRepository;
+    private final HomeRepository homeRepository;
 
     @Transactional
     public CareUserDTO create(CareUserDTO careUserDTO){
-        CareUser careUser = careUserDTO.toEntity();
+
+        Optional<Home> optionalHome = homeRepository.findById(careUserDTO.getHomeId());
+        Home home = null;
+
+        if(optionalHome.isPresent()) home = optionalHome.get();
+        else return null;
+
+        CareUser careUser = careUserDTO.toEntity(home);
         CareUser save = careUserRepository.save(careUser);
 
         return CareUserDTO.builder()
                 .id(save.getId())
-                .home_id(save.getHome_id())
+                .homeId(save.getHome().getHomeId())
                 .nickname(save.getNickname())
                 .image(save.getImage())
                 .build();
@@ -35,7 +45,7 @@ public class CareUserService {
         CareUser careUser = optionalCareUser.get();
         return Optional.of(CareUserDTO.builder()
                 .id(careUser.getId())
-                .home_id(careUser.getHome_id())
+                .homeId(careUser.getHome().getHomeId())
                 .nickname(careUser.getNickname())
                 .image(careUser.getImage())
                 .build());
@@ -47,7 +57,7 @@ public class CareUserService {
         return careUeres.stream()
                 .map(careUser -> CareUserDTO.builder()
                         .id(careUser.getId())
-                        .home_id(careUser.getHome_id())
+                        .homeId(careUser.getHome().getHomeId())
                         .nickname(careUser.getNickname())
                         .image(careUser.getNickname())
                         .build()).collect(Collectors.toList());
@@ -60,7 +70,7 @@ public class CareUserService {
         return careUsers.stream()
                 .map(careUser -> CareUserDTO.builder()
                         .id(careUser.getId())
-                        .home_id(careUser.getHome_id())
+                        .homeId(careUser.getHome().getHomeId())
                         .nickname(careUser.getNickname())
                         .image(careUser.getNickname())
                         .build()).collect(Collectors.toList());
@@ -69,15 +79,19 @@ public class CareUserService {
 
     @Transactional
     public CareUserDTO update(Long id, CareUserDTO careUserDTO){
-        boolean result = careUserRepository.update(id, careUserDTO.toEntity());
+        CareUser build = CareUser.builder()
+                .nickname(careUserDTO.getNickname())
+                .image(careUserDTO.getImage())
+                .build();
 
-        if(result == false)
-            return null;
+        boolean result = careUserRepository.update(id, build);
+
+        if(result == false) return null;
 
         return  CareUserDTO.builder()
                 .id(id)
                 .nickname(careUserDTO.getNickname())
-                .home_id(careUserDTO.getHome_id())
+                .homeId(careUserDTO.getHomeId())
                 .image(careUserDTO.getImage())
                 .build();
     }
@@ -93,8 +107,8 @@ public class CareUserService {
     }
 
     @Transactional
-    public Long getCareUserNumber(Long home_id){
-        return careUserRepository.getCareUserNumber(home_id);
+    public boolean checkCareUserOver(Long userId){
+        return careUserRepository.getCareUserNumber(userId) >= 4;
     }
 
     //중복 검사
