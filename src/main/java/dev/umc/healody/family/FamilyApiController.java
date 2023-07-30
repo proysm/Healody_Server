@@ -1,5 +1,6 @@
 package dev.umc.healody.family;
 
+import dev.umc.healody.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,15 +13,16 @@ import java.util.List;
 @RequestMapping("/family")
 public class FamilyApiController {
     private final FamilyService familyService;
+    private final UserService userService;
 
     @PostMapping("/add")
     public ResponseEntity<FamilyDTO> addFamily(@RequestBody FamilyDTORequest familyDTORequest){
-        //Long userId = userService.findByPhone(familyDTORequest.getUserPhone());
-        //FamilyDTO familyDTO = FamilyDTO.builder().userId(userId).familyId(familyDTORequest.getFamilyId()).build();
-        FamilyDTO familyDTO = FamilyDTO.builder().user_id(1L).home_id(familyDTORequest.getHome_id()).build(); //임시
+//        Long userId = userService.findUserIdByPhone(familyDTORequest.getUserPhone());
+//        FamilyDTO familyDTO = FamilyDTO.builder().userId(userId).homeId(familyDTORequest.getHomeId()).build();
+        FamilyDTO familyDTO = FamilyDTO.builder().userId(1L).homeId(familyDTORequest.getHomeId()).build(); //임시
 
-        if(familyService.checkFamilyOver(familyDTO.getUser_id()) ||
-                familyService.checkFamilyDuplicate(familyDTO.getUser_id(), familyDTO.getHome_id())){
+        if(familyService.checkFamilyOver(familyDTO.getUserId()) ||
+                familyService.checkFamilyDuplicate(familyDTO.getUserId(), familyDTO.getHomeId())){
             return ResponseEntity.notFound().build();
         }
 
@@ -36,7 +38,7 @@ public class FamilyApiController {
 
     @DeleteMapping
     public ResponseEntity<Void> delete(@RequestBody FamilyDTO familyDTO){
-        boolean result = familyService.delete(familyDTO.getUser_id(), familyDTO.getHome_id());
+        boolean result = familyService.delete(familyDTO.getUserId(), familyDTO.getHomeId());
 
         if(result) {
             System.out.println("FamilyApiController.delete");

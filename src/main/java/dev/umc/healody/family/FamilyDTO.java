@@ -1,15 +1,17 @@
 package dev.umc.healody.family;
 
+import dev.umc.healody.home.domain.Home;
+import dev.umc.healody.user.entity.User;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 @Builder
 public class FamilyDTO {
-    private Long user_id;
-    private Long home_id;
+    private Long userId;
+    private Long homeId;
 
-    public Family toEntity(){
-        return Family.builder().user_id(user_id).home_id(home_id).build();
+    public Family toEntity(User user, Home home){
+        return Family.builder().user(user).home(home).build();
     }
 }

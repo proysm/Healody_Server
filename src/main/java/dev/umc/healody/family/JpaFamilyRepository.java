@@ -25,10 +25,10 @@ public class JpaFamilyRepository implements FamilyRepository{
     }
 
     @Override
-    public boolean remove(Long user_id, Long home_id) {
-        List<Family> families = em.createQuery("select f from Family f where f.user_id = :user_id and f.home_id = :home_id", Family.class)
-                .setParameter("user_id", user_id)
-                .setParameter("home_id", home_id)
+    public boolean remove(Long userId, Long homeId) {
+        List<Family> families = em.createQuery("select f from Family f where f.user.userId = :user_id and f.home.homeId = :home_id", Family.class)
+                .setParameter("user_id", userId)
+                .setParameter("home_id", homeId)
                 .getResultList();
 
         if(families.isEmpty()) return false;
@@ -38,16 +38,16 @@ public class JpaFamilyRepository implements FamilyRepository{
     }
 
     @Override
-    public List<Family> findById(Long user_id) {
-        return em.createQuery("select f from Family f where f.user_id = :user_id", Family.class)
-                .setParameter("user_id", user_id)
+    public List<Family> findById(Long userId) {
+        return em.createQuery("select f from Family f where f.user.userId = :user_id", Family.class)
+                .setParameter("user_id", userId)
                 .getResultList();
     }
 
     @Override
-    public int getFamilyNumber(Long user_id) {
-        Long count = em.createQuery("select count(f) from Family f where f.user_id = :user_id", Long.class)
-                .setParameter("user_id", user_id)
+    public int getFamilyNumber(Long userId) {
+        Long count = em.createQuery("select count(f) from Family f where f.user.userId = :user_id", Long.class)
+                .setParameter("user_id", userId)
                 .getSingleResult();
         return count.intValue();
     }
@@ -59,10 +59,10 @@ public class JpaFamilyRepository implements FamilyRepository{
     }
 
     @Override
-    public boolean existsByFamily(Long user_id, Long home_id) {
-        Long count = em.createQuery("select count(f) from Family f where f.user_id = :user_id and f.home_id = :home_id", Long.class)
-                .setParameter("user_id", user_id)
-                .setParameter("home_id", home_id)
+    public boolean existsByFamily(Long userId, Long homeId) {
+        Long count = em.createQuery("select count(f) from Family f where f.user.userId = :user_id and f.home.homeId = :home_id", Long.class)
+                .setParameter("user_id", userId)
+                .setParameter("home_id", homeId)
                 .getSingleResult();
         return count > 0;
     }

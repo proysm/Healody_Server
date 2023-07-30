@@ -1,5 +1,7 @@
 package dev.umc.healody.family;
 
+import dev.umc.healody.home.domain.Home;
+import dev.umc.healody.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,15 +17,18 @@ public class Family {
     @Column(name = "family_id")
     private Long id;
 
-    @Column(name = "user_id")
-    private Long user_id;
-    @Column(name = "home_id")
-    private Long home_id;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "home_id")
+    private Home home;
 
     @Builder
-    public Family(Long user_id, Long home_id){
-        this.user_id = user_id;
-        this.home_id = home_id;
+    public Family(User user, Home home){
+        this.user = user;
+        this.home = home;
     }
 
     //테스트용 임시 메서드
