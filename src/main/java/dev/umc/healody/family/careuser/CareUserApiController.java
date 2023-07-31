@@ -62,15 +62,14 @@ public class CareUserApiController {
     }
 
 
-    @PutMapping("/{id}")
-    public ResponseEntity<CareUserDTO> update(@PathVariable Long id, @RequestBody CareUserDTORequest careUserDTORequest){
+    @PutMapping
+    public ResponseEntity<CareUserDTO> update(@RequestBody CareUserDTORequest careUserDTORequest){
         CareUserDTO careUserDTO = CareUserDTO.builder()
-                .homeId(careUserDTORequest.getHomeId())
                 .nickname(careUserDTORequest.getNickname())
                 .image(careUserDTORequest.getImage())
                 .build();
 
-        CareUserDTO update = careUserService.update(id, careUserDTO);
+        CareUserDTO update = careUserService.update(careUserDTORequest.getCareuserId(), careUserDTO);
         return ResponseEntity.ok(update);
     }
 
