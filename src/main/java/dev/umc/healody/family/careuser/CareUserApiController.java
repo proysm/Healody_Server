@@ -16,7 +16,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/home")
+@RequestMapping("/api/home")
 public class CareUserApiController {
 
     private final CareUserService careUserService;

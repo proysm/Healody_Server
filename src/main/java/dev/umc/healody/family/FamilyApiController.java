@@ -9,7 +9,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/family")
+@RequestMapping("/api/family")
 public class FamilyApiController {
     private final FamilyService familyService;
 
