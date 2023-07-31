@@ -16,7 +16,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/home")
+@RequestMapping("/api/care-user")
 public class CareUserApiController {
 
     private final CareUserService careUserService;
@@ -34,7 +34,7 @@ public class CareUserApiController {
         return ResponseEntity.status(HttpStatus.CREATED).body(careUser);
     }
 
-    @GetMapping("care-user/{id}")
+    @GetMapping("/test/{id}")
     public ResponseEntity<CareUserDTO> readByCareUserId(@PathVariable Long id){
         Optional<CareUserDTO> careUserDTO = careUserService.findOne(id);
 
