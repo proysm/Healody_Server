@@ -28,7 +28,6 @@ public class FamilyApiController {
         }
 
         familyService.create(familyDTO);
-        System.out.println(familyService.searchUserId(familyDTO.getHomeId()).toString());
         return ResponseEntity.status(HttpStatus.CREATED).body(familyDTO);
     }
 
@@ -43,7 +42,6 @@ public class FamilyApiController {
         boolean result = familyService.delete(familyDTO.getUserId(), familyDTO.getHomeId());
 
         if(result) {
-            System.out.println("FamilyApiController.delete");
             return ResponseEntity.noContent().build();
         }
         else return ResponseEntity.notFound().build();
