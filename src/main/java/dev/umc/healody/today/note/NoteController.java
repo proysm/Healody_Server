@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
-@RestController
+@RestController("/api")
 public class NoteController {
 
     private final NoteService noteService;
