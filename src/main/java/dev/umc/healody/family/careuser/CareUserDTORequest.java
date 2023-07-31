@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class CareUserDTORequest {
-    private Long careuserId;
+    private Long id;
     private Long homeId;
     private String image;
     private String nickname;

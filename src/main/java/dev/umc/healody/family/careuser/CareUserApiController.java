@@ -39,20 +39,9 @@ public class CareUserApiController {
         return ResponseEntity.status(HttpStatus.CREATED).body(careUser);
     }
 
-    @GetMapping("/test/{id}")
-    public ResponseEntity<CareUserDTO> readByCareUserId(@PathVariable Long id){
-        Optional<CareUserDTO> careUserDTO = careUserService.findOne(id);
-
-        if(careUserDTO.isPresent()) {
-            return ResponseEntity.ok(careUserDTO.get());
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-    }
-
-    @GetMapping("/{home_id}")
-    public ResponseEntity<List<CareUserDTO>> readByHomeId(@PathVariable Long home_id){
-        List<CareUserDTO> careUsers = careUserService.findCareUsers(home_id);
+    @GetMapping("/{homeId}")
+    public ResponseEntity<List<CareUserDTO>> readByHomeId(@PathVariable Long homeId){
+        List<CareUserDTO> careUsers = careUserService.findCareUsers(homeId);
 
         if(!careUsers.isEmpty()) {
             return ResponseEntity.ok(careUsers);
@@ -69,17 +58,17 @@ public class CareUserApiController {
                 .image(careUserDTORequest.getImage())
                 .build();
 
-        CareUserDTO update = careUserService.update(careUserDTORequest.getCareuserId(), careUserDTO);
+        CareUserDTO update = careUserService.update(careUserDTORequest.getId(), careUserDTO);
         return ResponseEntity.ok(update);
     }
 
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        Optional<CareUserDTO> careUser = careUserService.findOne(id);
+    @DeleteMapping("/{careuserId}")
+    public ResponseEntity<Void> delete(@PathVariable Long careuserId) {
+        Optional<CareUserDTO> careUser = careUserService.findOne(careuserId);
 
         if (careUser.isPresent()) {
-            careUserService.delete(id);
+            careUserService.delete(careuserId);
             return ResponseEntity.noContent().build();  // Successfully deleted
         } else {
             return ResponseEntity.notFound().build();  // User not found
