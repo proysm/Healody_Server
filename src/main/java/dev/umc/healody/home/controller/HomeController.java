@@ -18,7 +18,6 @@ public class HomeController {
 
     @Autowired
     public HomeController(HomeService homeService) {
-        System.out.println("HomeController.HomeController");
         this.homeService = homeService;
     }
 
