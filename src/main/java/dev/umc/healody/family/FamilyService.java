@@ -21,9 +21,9 @@ public class FamilyService {
     private final HomeRepository homeRepository;
 
     @Transactional
-    public FamilyDTO create(FamilyDTO familyDTO){
-        Optional<User> optionalUser = userRepository.findById(familyDTO.getUserId());
-        Optional<Home> optionalHome = homeRepository.findById(familyDTO.getHomeId());
+    public Long create(FamilyRequestDTO requestDTO){
+        Optional<User> optionalUser = userRepository.findById(requestDTO.getUserId());
+        Optional<Home> optionalHome = homeRepository.findById(requestDTO.getHomeId());
         User user = null;
         Home home = null;
 
@@ -31,26 +31,23 @@ public class FamilyService {
         if(optionalUser.isPresent()) home = optionalHome.get();
         if(user == null || home == null) return null;
 
-        Family family = familyDTO.toEntity(user, home);
+        Family family = requestDTO.toEntity(user, home);
         Family save = familyRepository.save(family);
 
-        return FamilyDTO.builder()
-                .userId(save.getUser().getUserId())
-                .homeId(save.getHome().getHomeId())
-                .build();
+        return save.getId();
     }
 
     @Transactional(readOnly = true)
-    public List<FamilyDTO> findFamily(Long userId){
+    public List<FamilyResponseDTO> searchFamily(Long userId){
         Optional<User> optionalUser = userRepository.findById(userId);
         User user = null;
 
         if(optionalUser.isPresent()) user = optionalUser.get();
         if(user == null) return null;
 
-        List<Family> list = familyRepository.findById(userId);
+        List<Family> list = familyRepository.findByUserId(userId);
         return list.stream()
-                .map(family -> FamilyDTO.builder()
+                .map(family -> FamilyResponseDTO.builder()
                         .userId(family.getUser().getUserId())
                         .homeId(family.getHome().getHomeId())
                         .build()).collect(Collectors.toList());
