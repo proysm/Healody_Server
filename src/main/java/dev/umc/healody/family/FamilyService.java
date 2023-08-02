@@ -5,6 +5,7 @@ import dev.umc.healody.home.repository.HomeRepository;
 import dev.umc.healody.user.entity.User;
 import dev.umc.healody.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,8 @@ public class FamilyService {
 
     @Transactional
     public Long create(FamilyRequestDTO requestDTO){
+        if(requestDTO.getUserId() == null) return null;
+
         Optional<User> optionalUser = userRepository.findById(requestDTO.getUserId());
         Optional<Home> optionalHome = homeRepository.findById(requestDTO.getHomeId());
         User user = null;
@@ -29,11 +32,15 @@ public class FamilyService {
 
         if(optionalUser.isPresent()) user = optionalUser.get();
         if(optionalUser.isPresent()) home = optionalHome.get();
-        if(user == null || home == null) return null;
+        if(checkFamilyOver(requestDTO.getUserId()) ||
+                checkFamilyMemberOver(requestDTO.getHomeId()) ||
+                checkFamilyDuplicate(requestDTO.getUserId(), requestDTO.getHomeId())
+                || user == null || home == null){
+            return null;
+        }
 
         Family family = requestDTO.toEntity(user, home);
         Family save = familyRepository.save(family);
-
         return save.getId();
     }
 
@@ -43,7 +50,6 @@ public class FamilyService {
         User user = null;
 
         if(optionalUser.isPresent()) user = optionalUser.get();
-        if(user == null) return null;
 
         List<Family> list = familyRepository.findByUserId(userId);
         return list.stream()
@@ -58,10 +64,6 @@ public class FamilyService {
         return familyRepository.remove(userId, homeId);
     }
 
-    @Transactional(readOnly = true)
-    public int hasFamilyNumber(Long homeId){
-        return familyRepository.getFamilyNumber(homeId);
-    }
 
     @Transactional(readOnly = true)
     public boolean checkFamilyDuplicate(Long userId, Long homeId){
@@ -70,7 +72,14 @@ public class FamilyService {
 
     @Transactional(readOnly = true)
     public boolean checkFamilyOver(Long userId){
-        return familyRepository.getFamilyNumber(userId) >= 3;
+        System.out.println(familyRepository.findByUserId(userId).size());
+        return familyRepository.findByUserId(userId).size() >= 3;
+    }
+
+    @Transactional(readOnly = true)
+    public boolean checkFamilyMemberOver(Long homeId){
+        System.out.println(familyRepository.findByHomeId(homeId).size());
+        return familyRepository.findByHomeId(homeId).size() >= 6;
     }
 
     @Transactional(readOnly = true)

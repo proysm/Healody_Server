@@ -1,12 +1,10 @@
 package dev.umc.healody.family;
 
+import dev.umc.healody.common.SuccessResponse;
+import dev.umc.healody.common.SuccessStatus;
 import dev.umc.healody.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -16,18 +14,11 @@ public class FamilyApiController {
     private final UserService userService;
 
     @PostMapping("/add")
-    public ResponseEntity<Long> addFamily(@RequestBody FamilyRequestDTO familyDTORequest){
+    public SuccessResponse<Long> addFamily(@RequestBody FamilyRequestDTO familyDTORequest){
         Long userId = userService.findUserIdByPhone(familyDTORequest.getUserPhone());
         FamilyRequestDTO request = familyDTORequest.builder().userId(userId).homeId(familyDTORequest.getHomeId()).build();
 
-        if(userId == null) return ResponseEntity.notFound().build();
-
-        if(familyService.checkFamilyOver(request.getUserId()) ||
-                familyService.checkFamilyDuplicate(request.getUserId(), request.getHomeId())){
-            return ResponseEntity.notFound().build();
-        }
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(familyService.create(request));
+        return new SuccessResponse<>(SuccessStatus.SUCCESS, familyService.create(request));
     }
 
 //    @GetMapping("/{userId}")
@@ -37,12 +28,8 @@ public class FamilyApiController {
 //    }
 
     @DeleteMapping
-    public ResponseEntity<Void> delete(@RequestBody FamilyRequestDTO familyDTORequest){
+    public SuccessResponse<Void> delete(@RequestBody FamilyRequestDTO familyDTORequest){
         boolean result = familyService.delete(familyDTORequest.getUserId(), familyDTORequest.getHomeId());
-
-        if(result) {
-            return ResponseEntity.noContent().build();
-        }
-        else return ResponseEntity.notFound().build();
+        return new SuccessResponse<>(SuccessStatus.SUCCESS);
     }
 }
