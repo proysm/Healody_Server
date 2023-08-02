@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class CareUserDTO {
+public class CareUserRequestDTO {
     private Long id;
     private Long homeId;
     private String image;

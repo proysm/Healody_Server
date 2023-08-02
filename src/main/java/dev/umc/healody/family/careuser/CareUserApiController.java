@@ -1,5 +1,8 @@
 package dev.umc.healody.family.careuser;
 
+import dev.umc.healody.common.SuccessResponse;
+import dev.umc.healody.common.SuccessStatus;
+import dev.umc.healody.today.note.dto.HospitalRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,55 +26,34 @@ public class CareUserApiController {
 
     //돌봄 추가
     @PostMapping
-    public ResponseEntity<CareUserDTO> create(@RequestBody CareUserDTORequest careUserDTORequest){
-        CareUserDTO careUserDTO = CareUserDTO.builder()
-                .homeId(careUserDTORequest.getHomeId())
-                .nickname(careUserDTORequest.getNickname())
-                .image(careUserDTORequest.getImage())
+    public SuccessResponse<Long> create(@RequestBody CareUserRequestDTO careUserRequestDTO){
+        CareUserRequestDTO requestDTO = CareUserRequestDTO.builder()
+                .homeId(careUserRequestDTO.getHomeId())
+                .nickname(careUserRequestDTO.getNickname())
+                .image(careUserRequestDTO.getImage())
                 .build();
 
-        if(careUserService.checkDuplicate(careUserDTO.getHomeId(), careUserDTO.getNickname()) ||
-                careUserService.checkCareUserOver(careUserDTO.getHomeId())){
-            return ResponseEntity.notFound().build();
-        }
-
-        CareUserDTO careUser = careUserService.create(careUserDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(careUser);
+        Long careUerId = careUserService.create(requestDTO);
+        return new SuccessResponse<>(SuccessStatus.SUCCESS, careUerId);
     }
 
     @GetMapping("/{homeId}")
-    public ResponseEntity<List<CareUserDTO>> readByHomeId(@PathVariable Long homeId){
-        List<CareUserDTO> careUsers = careUserService.findCareUsers(homeId);
-
-        if(!careUsers.isEmpty()) {
-            return ResponseEntity.ok(careUsers);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+    public SuccessResponse<List<CareUserResponseDTO>> readByHomeId(@PathVariable Long homeId){
+        List<CareUserResponseDTO> careUsers = careUserService.findCareUsers(homeId);
+        return new SuccessResponse<>(SuccessStatus.SUCCESS, careUsers);
     }
 
 
     @PutMapping
-    public ResponseEntity<CareUserDTO> update(@RequestBody CareUserDTORequest careUserDTORequest){
-        CareUserDTO careUserDTO = CareUserDTO.builder()
-                .nickname(careUserDTORequest.getNickname())
-                .image(careUserDTORequest.getImage())
-                .build();
-
-        CareUserDTO update = careUserService.update(careUserDTORequest.getId(), careUserDTO);
-        return ResponseEntity.ok(update);
+    public SuccessResponse<Long> update(@RequestBody CareUserRequestDTO careUserRequestDTO){
+        boolean result = careUserService.update(careUserRequestDTO.getId(), careUserRequestDTO);
+        return new SuccessResponse<>(SuccessStatus.SUCCESS, careUserRequestDTO.getId());
     }
 
 
     @DeleteMapping("/{careuserId}")
-    public ResponseEntity<Void> delete(@PathVariable Long careuserId) {
-        Optional<CareUserDTO> careUser = careUserService.findOne(careuserId);
-
-        if (careUser.isPresent()) {
-            careUserService.delete(careuserId);
-            return ResponseEntity.noContent().build();  // Successfully deleted
-        } else {
-            return ResponseEntity.notFound().build();  // User not found
-        }
+    public SuccessResponse<Void> delete(@PathVariable Long careuserId) {
+        boolean result = careUserService.delete(careuserId);
+        return new SuccessResponse<>(SuccessStatus.SUCCESS);
     }
 }
