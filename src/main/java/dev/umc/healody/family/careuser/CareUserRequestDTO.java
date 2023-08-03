@@ -11,8 +11,9 @@ public class CareUserRequestDTO {
     private Long homeId;
     private String image;
     private String nickname;
+    private String massage;
 
     public CareUser toEntity(Home home){
-        return CareUser.builder().home(home).image(image).nickname(nickname).build();
+        return CareUser.builder().home(home).image(image).nickname(nickname).massage(massage).build();
     }
 }

@@ -26,7 +26,7 @@ public class CareUserService {
         if(checkDuplicate(requestDTO.getHomeId(), requestDTO.getNickname()) ||
                 checkCareUserOver(requestDTO.getHomeId()) ||
                 optionalHome.isEmpty()){
-            return  -1L;
+            return null;
         }
 
         CareUser careUser = requestDTO.toEntity(optionalHome.get());
@@ -51,6 +51,7 @@ public class CareUserService {
         return careUeres.stream()
                 .map(careUser -> CareUserResponseDTO.builder()
                         .id(careUser.getId())
+                        .massage(careUser.getMassage())
                         .homeId(careUser.getHome().getHomeId())
                         .nickname(careUser.getNickname())
                         .image(careUser.getNickname())
@@ -64,6 +65,7 @@ public class CareUserService {
         return careUsers.stream()
                 .map(careUser -> CareUserResponseDTO.builder()
                         .id(careUser.getId())
+                        .massage(careUser.getMassage())
                         .homeId(careUser.getHome().getHomeId())
                         .nickname(careUser.getNickname())
                         .image(careUser.getNickname())
@@ -79,6 +81,7 @@ public class CareUserService {
 
         return careUserRepository.update(id,
                 CareUser.builder()
+                .massage(requestDTO.getMassage())
                 .nickname(requestDTO.getNickname())
                 .image(requestDTO.getImage())
                 .build());

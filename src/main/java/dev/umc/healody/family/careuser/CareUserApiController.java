@@ -37,13 +37,6 @@ public class CareUserApiController {
         return new SuccessResponse<>(SuccessStatus.SUCCESS, careUerId);
     }
 
-    @GetMapping("/{homeId}")
-    public SuccessResponse<List<CareUserResponseDTO>> readByHomeId(@PathVariable Long homeId){
-        List<CareUserResponseDTO> careUsers = careUserService.findCareUsers(homeId);
-        return new SuccessResponse<>(SuccessStatus.SUCCESS, careUsers);
-    }
-
-
     @PutMapping
     public SuccessResponse<Long> update(@RequestBody CareUserRequestDTO careUserRequestDTO){
         boolean result = careUserService.update(careUserRequestDTO.getId(), careUserRequestDTO);
