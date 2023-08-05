@@ -33,11 +33,12 @@ public class Note {
 
     private String noteType;  // 노트 타입 구분
 
-    public Note(User user, Date date, String title, String memo) {
+    public Note(User user, Date date, String title, String memo, String noteType) {
         this.user = user;
         this.date = date;
         this.title = title;
         this.memo = memo;
+        this.noteType = noteType;
     }
 
     public void updateDate(String date) {
