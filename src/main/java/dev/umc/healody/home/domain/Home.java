@@ -24,7 +24,7 @@ public class Home{
     @Column(nullable = true)
     private Long caring_cnt;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Long admin;
 
     @Builder

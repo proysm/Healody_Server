@@ -1,5 +1,6 @@
 package dev.umc.healody.home.controller;
 
+import dev.umc.healody.family.FamilyRequestDTO;
 import dev.umc.healody.family.FamilyResponseDTO;
 import dev.umc.healody.family.FamilyService;
 import dev.umc.healody.family.careuser.CareUserResponseDTO;
@@ -35,6 +36,7 @@ public class HomeController {
     public ResponseEntity<HomeDto> createHome(@RequestBody HomeDto homeDto, HttpServletRequest request){
         Long adminId = homeService.getCurrentUserId(request);
         HomeDto newHome = homeService.createHome(homeDto, adminId);
+        familyService.create(FamilyRequestDTO.builder().userId(adminId).homeId(newHome.homeId).build());
         return ResponseEntity.status(HttpStatus.CREATED).body(newHome);
     }
     //집을 만들며 그 안에 가족을 넣기, 그리고 user_cnt 관리
