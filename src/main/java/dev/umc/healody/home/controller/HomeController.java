@@ -1,26 +1,34 @@
 package dev.umc.healody.home.controller;
 
+import dev.umc.healody.family.FamilyResponseDTO;
+import dev.umc.healody.family.FamilyService;
+import dev.umc.healody.family.careuser.CareUserResponseDTO;
+import dev.umc.healody.family.careuser.CareUserService;
 import dev.umc.healody.home.domain.Home;
 import dev.umc.healody.home.dto.HomeDto;
 import dev.umc.healody.home.service.HomeService;
+import dev.umc.healody.user.entity.User;
+import dev.umc.healody.user.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.*;
+import java.util.stream.Collectors;
+
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api")
 public class HomeController {
 
-    private HomeService homeService;
-
-    @Autowired
-    public HomeController(HomeService homeService) {
-        System.out.println("HomeController.HomeController");
-        this.homeService = homeService;
-    }
+    private final HomeService homeService;
+    private final FamilyService familyService;
+    private final UserService userService;
+    private final CareUserService careUserService;
 
     @PostMapping("/home") //집 추가 POST
     public ResponseEntity<HomeDto> createHome(@RequestBody HomeDto homeDto){
@@ -30,11 +38,19 @@ public class HomeController {
     //집을 만들며 그 안에 가족을 넣기, 그리고 user_cnt 관리
     //돌봄계정  careuser_cnt 관리
     //가족구성원의 할일 목표 등등 정보 조회하기
-    @GetMapping("/home/{homeId}") //집 조회 GET
-    public ResponseEntity<HomeDto> getHomeInfo(@PathVariable Long homeId){
-        HomeDto homeDto = homeService.getHomeInfo(homeId);
-        return ResponseEntity.status(HttpStatus.OK).body(homeDto);
+    @GetMapping("/home/{userId}") // 집 조회 GET
+    public ResponseEntity<Map<String, Map<String, List<String>>>> viewMyFamily(@PathVariable Long userId) {
+        List<FamilyResponseDTO> familyList = familyService.searchFamily(userId);
+
+        Map<String, Map<String, List<String>>> resultMap = familyList.stream()
+                .collect(Collectors.toMap(
+                        family -> homeService.getHomeInfo(family.getHomeId()).getName(),
+                        family -> getFamilyInfo(family.getHomeId(), userId)
+                ));
+
+        return ResponseEntity.status(HttpStatus.OK).body(resultMap);
     }
+    
     @DeleteMapping("/home/{homeId}") //집 삭제 DELETE
     public ResponseEntity<String> deleteHome(@PathVariable Long homeId){
         homeService.deleteHome(homeId);
@@ -50,5 +66,25 @@ public class HomeController {
     public String test() {
         System.out.println("dhodkseho");
         return "Hello World!";
+    }
+
+    private Map<String, List<String>> getFamilyInfo(Long homeId, Long userId) {
+        List<Long> userList = familyService.searchUserId(homeId);
+        List<CareUserResponseDTO> careUserList = careUserService.findCareUsers(homeId);
+
+        Map<String, List<String>> infoMap = new HashMap<>();
+        List<String> userInfoList = userList.stream()
+                .filter(id -> !id.equals(userId))
+                .map(userService::findUser)
+                .map(User::toString)
+                .collect(Collectors.toList());
+
+        List<String> careUserInfoList = careUserList.stream()
+                .map(CareUserResponseDTO::toString)
+                .collect(Collectors.toList());
+
+        infoMap.put("user", userInfoList);
+        infoMap.put("care-user", careUserInfoList);
+        return infoMap;
     }
 }

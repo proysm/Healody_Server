@@ -49,5 +49,14 @@ public class User {
     @Column(name = "family_cnt")
     private Long familyCnt = 0L;
 
-
+    @Override
+    public String toString() {
+        return "{" +
+                "id=" + userId +
+                ", name='" + name + '\'' +
+                ", image='" + image + '\'' +
+                ", nickname='" + nickname + '\'' +
+                ", message='" + message + '\'' +
+                '}';
+    }
 }
