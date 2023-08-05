@@ -30,9 +30,4 @@ public class Family {
         this.user = user;
         this.home = home;
     }
-
-    //테스트용 임시 메서드
-    public void setId(Long id) {
-        this.id = id;
-    }
 }

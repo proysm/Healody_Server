@@ -16,13 +16,15 @@ public class SymptomResponseDto {
     private String title;
     private String memo;
     private String name;
+    private String noteType;
 
     @Builder
-    public SymptomResponseDto(Date date, String title, String memo, String name) {
+    public SymptomResponseDto(Date date, String title, String memo, String name, String noteType) {
         this.date = date;
         this.title = title;
         this.memo = memo;
         this.name = name;
+        this.noteType = noteType;
     }
 
     public SymptomResponseDto toDto(Symptom symptom) {
@@ -31,6 +33,7 @@ public class SymptomResponseDto {
                 .title(symptom.getTitle())
                 .memo(symptom.getMemo())
                 .name(symptom.getName())
+                .noteType(symptom.getNoteType())
                 .build();
     }
 }

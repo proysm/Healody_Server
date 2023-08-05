@@ -6,9 +6,11 @@ import dev.umc.healody.today.note.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RequiredArgsConstructor
-@RestController
 @RequestMapping("/api")
+@RestController
 public class NoteController {
 
     private final NoteService noteService;
@@ -31,23 +33,31 @@ public class NoteController {
         return new SuccessResponse<>(SuccessStatus.SUCCESS, noteId);
     }
 
-    @GetMapping("/note/hospital/{noteId}")
-    public SuccessResponse<HospitalResponseDto> findNoteHospital(@PathVariable Long noteId) {
-        HospitalResponseDto responseDto = noteService.findNoteHospital(noteId);
-        return new SuccessResponse<>(SuccessStatus.SUCCESS, responseDto);
+    @GetMapping("/note/{userId}")
+    public SuccessResponse<List<NoteResponseDto>> getNoteByUserId(@PathVariable Long userId) {
+        // 전체 조회할 때는 NoteResponseDto 사용해서 전체 조회 (사용자 아이디 & 날짜 조합)
+        // 개별 조회할 때는 각각 ResponseDto 사용해서 개별 조회
+        List<NoteResponseDto> responseDtoList = noteService.getNoteByUserId(userId);
+        return new SuccessResponse<>(SuccessStatus.SUCCESS, responseDtoList);
     }
 
-    @GetMapping("/note/medicine/{noteId}")
-    public SuccessResponse<MedicineResponseDto> findNoteMedicine(@PathVariable Long noteId) {
-        MedicineResponseDto responseDto = noteService.findNoteMedicine(noteId);
-        return new SuccessResponse<>(SuccessStatus.SUCCESS, responseDto);
-    }
-
-    @GetMapping("/note/symptom/{noteId}")
-    public SuccessResponse<SymptomResponseDto> findNoteSymptom(@PathVariable Long noteId) {
-        SymptomResponseDto responseDto = noteService.findNoteSymptom(noteId);
-        return new SuccessResponse<>(SuccessStatus.SUCCESS, responseDto);
-    }
+//    @GetMapping("/note/hospital/{noteId}")
+//    public SuccessResponse<HospitalResponseDto> findNoteHospital(@PathVariable Long noteId) {
+//        HospitalResponseDto responseDto = noteService.findNoteHospital(noteId);
+//        return new SuccessResponse<>(SuccessStatus.SUCCESS, responseDto);
+//    }
+//
+//    @GetMapping("/note/medicine/{noteId}")
+//    public SuccessResponse<MedicineResponseDto> findNoteMedicine(@PathVariable Long noteId) {
+//        MedicineResponseDto responseDto = noteService.findNoteMedicine(noteId);
+//        return new SuccessResponse<>(SuccessStatus.SUCCESS, responseDto);
+//    }
+//
+//    @GetMapping("/note/symptom/{noteId}")
+//    public SuccessResponse<SymptomResponseDto> findNoteSymptom(@PathVariable Long noteId) {
+//        SymptomResponseDto responseDto = noteService.findNoteSymptom(noteId);
+//        return new SuccessResponse<>(SuccessStatus.SUCCESS, responseDto);
+//    }
 
     @PatchMapping("/note/hospital/{noteId}")
     public SuccessResponse<Long> updateNoteHospital(@PathVariable Long noteId, @RequestBody HospitalRequestDto requestDto) {

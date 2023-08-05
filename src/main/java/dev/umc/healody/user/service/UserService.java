@@ -219,4 +219,9 @@ public class UserService {
 
         userRepository.save(newUser);
     }
+
+    @Transactional
+    public User findUser(Long userId){
+        return userRepository.findByUserId(userId);
+    }
 }

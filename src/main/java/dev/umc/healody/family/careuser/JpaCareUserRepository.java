@@ -26,7 +26,7 @@ public class JpaCareUserRepository implements CareUserRepository{
     public boolean update(Long id, CareUser updatedCareUser) {
         CareUser careUser = em.find(CareUser.class, id);
         if(careUser != null){
-            careUser.update(updatedCareUser.getNickname(), updatedCareUser.getImage());
+            careUser.update(updatedCareUser.getNickname(), updatedCareUser.getImage(), updatedCareUser.getMassage());
             return true;
         }
 
