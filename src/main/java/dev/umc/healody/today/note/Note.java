@@ -6,12 +6,14 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Inheritance(strategy = InheritanceType.JOINED)  // JOIN TABLE 전략
-@DiscriminatorColumn(name = "NOTE_TYPE")
+@DiscriminatorColumn
 @SuperBuilder @NoArgsConstructor
 @Entity @Getter
 public class Note {
@@ -24,10 +26,12 @@ public class Note {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     private Date date;
     private String title;
     private String memo;
+
+    private String noteType;  // 노트 타입 구분
 
     public Note(User user, Date date, String title, String memo) {
         this.user = user;
@@ -36,8 +40,13 @@ public class Note {
         this.memo = memo;
     }
 
-    public void updateDate(Date date) {
-        this.date = date;
+    public void updateDate(String date) {
+        try {
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            this.date = format.parse(date);
+        } catch (ParseException e) {
+            System.out.println("예외 처리");
+        }
     }
 
     public void updateTitle(String title) {

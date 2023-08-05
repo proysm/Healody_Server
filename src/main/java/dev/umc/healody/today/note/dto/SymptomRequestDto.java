@@ -14,14 +14,13 @@ import java.util.Date;
 public class SymptomRequestDto {
 
     private Long userId;
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date date;
+    private String date;
     private String title;
     private String memo;
     private String name;
 
     @Builder
-    public SymptomRequestDto(Long userId, Date date, String title, String memo, String name) {
+    public SymptomRequestDto(Long userId, String date, String title, String memo, String name) {
         this.userId = userId;
         this.date = date;
         this.title = title;
@@ -29,13 +28,14 @@ public class SymptomRequestDto {
         this.name = name;
     }
 
-    public Symptom toEntity(User user) {
+    public Symptom toEntity(User user, Date date) {
         return Symptom.builder()
                 .user(user)
                 .date(date)
                 .title(title)
                 .memo(memo)
                 .name(name)
+                .noteType("S")
                 .build();
     }
 }

@@ -10,6 +10,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -27,7 +31,16 @@ public class NoteService {
         if(byId.isPresent())
             user = byId.get();
 
-        Hospital hospital = requestDto.toEntity(user);
+        Date date = new Date();
+        try {
+            String requestDtoDate = requestDto.getDate();
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            date = format.parse(requestDtoDate);
+        } catch (ParseException e) {
+            System.out.println("예외 처리");
+        }
+
+        Hospital hospital = requestDto.toEntity(user, date);
         return noteRepository.save(hospital).getId();
     }
 
@@ -39,7 +52,16 @@ public class NoteService {
         if(byId.isPresent())
             user = byId.get();
 
-        Medicine medicine = requestDto.toEntity(user);
+        Date date = new Date();
+        try {
+            String requestDtoDate = requestDto.getDate();
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            date = format.parse(requestDtoDate);
+        } catch (ParseException e) {
+            System.out.println("예외 처리");
+        }
+
+        Medicine medicine = requestDto.toEntity(user, date);
         return noteRepository.save(medicine).getId();
     }
 
@@ -51,8 +73,23 @@ public class NoteService {
         if(byId.isPresent())
             user = byId.get();
 
-        Symptom symptom = requestDto.toEntity(user);
+        Date date = new Date();
+        try {
+            String requestDtoDate = requestDto.getDate();
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            date = format.parse(requestDtoDate);
+        } catch (ParseException e) {
+            System.out.println("예외 처리");
+        }
+
+        Symptom symptom = requestDto.toEntity(user, date);
         return noteRepository.save(symptom).getId();
+    }
+
+    public List<NoteResponseDto> getNoteByUserId(Long userId) {
+        List<Note> noteList = noteRepository.findAllByUserId(userId);
+        NoteResponseDto responseDto = new NoteResponseDto();
+        return responseDto.toDto(noteList);
     }
 
     public HospitalResponseDto findNoteHospital(Long noteId) {

@@ -6,7 +6,6 @@ import dev.umc.healody.user.entity.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -14,8 +13,7 @@ import java.util.Date;
 public class HospitalRequestDto {
 
     private Long userId;
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date date;
+    private String date;
     private String title;
     private String memo;
     private Purpose purpose;
@@ -23,7 +21,7 @@ public class HospitalRequestDto {
     private String surgery;
 
     @Builder
-    public HospitalRequestDto(Long userId, Date date, String title, String memo, Purpose purpose, String name, String surgery) {
+    public HospitalRequestDto(Long userId, String date, String title, String memo, Purpose purpose, String name, String surgery) {
         this.userId = userId;
         this.date = date;
         this.title = title;
@@ -33,7 +31,7 @@ public class HospitalRequestDto {
         this.surgery = surgery;
     }
 
-    public Hospital toEntity(User user) {
+    public Hospital toEntity(User user, Date date) {
         return Hospital.builder()
                 .user(user)
                 .date(date)
@@ -42,6 +40,7 @@ public class HospitalRequestDto {
                 .purpose(purpose)
                 .name(name)
                 .surgery(surgery)
+                .noteType("H")
                 .build();
     }
 }
