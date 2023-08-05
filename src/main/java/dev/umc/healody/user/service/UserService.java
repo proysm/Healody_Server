@@ -4,16 +4,17 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.umc.healody.user.dto.UserDto;
+import dev.umc.healody.user.entity.Authority;
 import dev.umc.healody.user.entity.User;
 import dev.umc.healody.user.model.KakaoProfile;
 import dev.umc.healody.user.model.OAuthToken;
 import dev.umc.healody.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
@@ -22,47 +23,49 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
 import java.sql.Date;
+import java.util.Collections;
 import java.util.UUID;
 
 @Service
 public class UserService {
     private final UserRepository userRepository;
-//    private final BCryptPasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
-//    public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
+//    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
-//        this.passwordEncoder = passwordEncoder;
+        this.passwordEncoder = passwordEncoder;
+
     }
 
-    public void registerUser(UserDto userDTO) {
+    public void registerUser(UserDto userDto) {
+        if (userRepository.findOneWithAuthoritiesByPhone(userDto.getPhone()).orElse(null) != null) {
+            throw new RuntimeException("이미 가입되어 있는 유저입니다.");
+        }
+
+        // 가입되어 있지 않은 회원이면 권한 정보 만들기
+        Authority authority = Authority.builder()
+                .authorityName("ROLE_USER")
+                .build();
+
         // UserDTO에서 필요한 데이터를 추출하여 User 엔티티로 변환
         User user = new User();
-        user.setName(userDTO.getName());
-        user.setPhone(userDTO.getPhone());
-        user.setBirth(userDTO.getBirth());
-        user.setEmail(userDTO.getEmail());
-        user.setGender(userDTO.getGender());
-        user.setNickname(userDTO.getNickname());
-        user.setPassword(userDTO.getPassword());
+        user.setName(userDto.getName());
+        user.setPhone(userDto.getPhone());
+        user.setBirth(userDto.getBirth());
+        user.setEmail(userDto.getEmail());
+        user.setGender(userDto.getGender());
+        user.setNickname(userDto.getNickname());
+//        user.setPassword(userDto.getPassword());
+        user.setPassword(passwordEncoder.encode((userDto.getPassword())));
+        System.out.println(passwordEncoder.encode((userDto.getPassword())));
+        user.setActivated(true);
+        user.setAuthorities(Collections.singleton(authority));
 
         userRepository.save(user);
     }
 
-//    public JwtToken login(String phone, String password) {
-//        User user = userRepository.findByPhone(loginDto.getPhone());
-//        System.out.println(user);
-//
-//        if(user.orElse(null) == null || !){
-//            return false;
-//        }
-//        if(!findUser.getPassword().equals(user.getPassword())){
-//            return false;
-//        }
-//
-//        return true;
-//    }
 
     @Transactional(readOnly = true)
     public boolean checkPhoneDuplication(String phone) {
@@ -224,4 +227,10 @@ public class UserService {
     public User findUser(Long userId){
         return userRepository.findByUserId(userId);
     }
+
+    // 유저,권한 정보를 가져오는 메소드
+//    @Transactional(readOnly = true)
+//    public Optional<User> getUserWithAuthorities(String phone) {
+//        return userRepository.findOneWithAuthoritiesByPhone(phone);
+//    }
 }
