@@ -2,6 +2,8 @@ package dev.umc.healody.home.service;
 import dev.umc.healody.home.domain.Home;
 import dev.umc.healody.home.dto.HomeDto;
 import dev.umc.healody.home.repository.HomeRepository;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,8 +19,9 @@ public class HomeService {
         System.out.println("HomeService.HomeService");
     }
     @Transactional
-    public HomeDto createHome(HomeDto homeDto) {
+    public HomeDto createHome(HomeDto homeDto, Long userId) {
         Home home = homeDto.toEntity();
+        home.setAdmin(userId);
         Home save = homeRepository.save(home);
         return HomeDto.builder()
                 .homeId(save.getHomeId())
@@ -31,6 +34,7 @@ public class HomeService {
                 return HomeDto.builder()
                         .homeId(home.get().getHomeId())
                         .name(home.get().getName())
+                        .admin(home.get().getAdmin())
                         .build();
             }
             return null;
@@ -41,7 +45,7 @@ public class HomeService {
             if(home.isPresent()){
                 home.get().setName(homeDto.getName());
                 homeRepository.save(home.get());
-                HomeDto updatedHome = new HomeDto( home_id, homeDto.getName());
+                HomeDto updatedHome = new HomeDto(home_id, homeDto.getName(), homeDto.getAdmin());
                 return updatedHome;
             }
             return null;
@@ -55,4 +59,22 @@ public class HomeService {
             throw new RuntimeException(e);
         }
     }
+    public Long getCurrentUserId(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            Object userIdObj = session.getAttribute("userId");
+            if (userIdObj instanceof Long) {
+                return (Long) userIdObj;
+            }
+        }
+        return null; // 세션에 인증된 사용자 id가 없을 경우 null 반환
+    }
+
+    public boolean isAdmin(HttpServletRequest request, HomeDto homeDto){
+        Long adminId = getCurrentUserId(request);
+        if(adminId.equals(homeDto.admin)){return true;}
+        else{return false;}
+    }
+
+
 }
