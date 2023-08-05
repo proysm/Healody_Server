@@ -18,7 +18,7 @@ public class UserController {
     private final UserService userService;
     private final EmailService emailService;
 
-    @Autowired
+
     private HttpSession session;
 
     @Autowired
@@ -91,5 +91,12 @@ public class UserController {
 
         userService.kakaoJoin(newUser);
         return "카카오 회원가입이 완료되었습니다.";
+    }
+
+    @PostMapping("/kakao/logout")
+    public String kakaoLogout(User newUser){
+
+        userService.kakaoLogout(newUser);
+        return "카카오 로그아웃이 완료되었습니다.";
     }
 }
