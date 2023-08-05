@@ -7,6 +7,7 @@ import dev.umc.healody.family.careuser.CareUserService;
 import dev.umc.healody.home.domain.Home;
 import dev.umc.healody.home.dto.HomeDto;
 import dev.umc.healody.home.service.HomeService;
+import jakarta.servlet.http.HttpServletRequest;
 import dev.umc.healody.user.entity.User;
 import dev.umc.healody.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -31,8 +32,9 @@ public class HomeController {
     private final CareUserService careUserService;
 
     @PostMapping("/home") //집 추가 POST
-    public ResponseEntity<HomeDto> createHome(@RequestBody HomeDto homeDto){
-        HomeDto newHome = homeService.createHome(homeDto);
+    public ResponseEntity<HomeDto> createHome(@RequestBody HomeDto homeDto, HttpServletRequest request){
+        Long adminId = homeService.getCurrentUserId(request);
+        HomeDto newHome = homeService.createHome(homeDto, adminId);
         return ResponseEntity.status(HttpStatus.CREATED).body(newHome);
     }
     //집을 만들며 그 안에 가족을 넣기, 그리고 user_cnt 관리
@@ -52,14 +54,24 @@ public class HomeController {
     }
     
     @DeleteMapping("/home/{homeId}") //집 삭제 DELETE
-    public ResponseEntity<String> deleteHome(@PathVariable Long homeId){
-        homeService.deleteHome(homeId);
-        return ResponseEntity.status(HttpStatus.OK).body("집이 삭제되었습니다.");
+    public ResponseEntity<String> deleteHome(@PathVariable Long homeId, HttpServletRequest request){
+        HomeDto currentHome = homeService.getHomeInfo(homeId);
+        if (homeService.isAdmin(request, currentHome)) {
+            homeService.deleteHome(homeId);
+            return ResponseEntity.status(HttpStatus.OK).body("집이 삭제되었습니다.");
+        }else {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("관리자 권한이 없습니다.");
+        }
     }
     @PatchMapping("/home/{homeId}") //집 수정 PATCH
-    public ResponseEntity<HomeDto> updateHome(@PathVariable Long homeId, @RequestBody HomeDto homeDto){
-        HomeDto updatedHome = homeService.updateHome(homeId, homeDto);
-        return ResponseEntity.ok(updatedHome);
+    public ResponseEntity<HomeDto> updateHome(@PathVariable Long homeId, @RequestBody HomeDto homeDto, HttpServletRequest request){
+        HomeDto currentHome = homeService.getHomeInfo(homeId);
+        if (homeService.isAdmin(request, currentHome)) {
+            HomeDto updatedHome = homeService.updateHome(homeId, homeDto);
+            return ResponseEntity.ok(updatedHome);
+        }else {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(homeDto);
+        }
     }
 
     @GetMapping("/test")

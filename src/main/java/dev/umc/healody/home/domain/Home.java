@@ -18,22 +18,19 @@ public class Home{
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = true)
-    private Long user_cnt;
+    @Column(nullable = false)
+    private Long user_cnt = 1L;
 
     @Column(nullable = true)
     private Long caring_cnt;
 
-//    @Builder
-//    public Home(String name) {
-//        this.name = name;
-//    }
+    @Column(nullable = false)
+    private Long admin;
 
     @Builder
     public Home(String name, Long homeId){
         this.name = name;
         this.homeId = homeId;
-        //cnt 어디에 어떻게 구현할지
     }
 
 }
