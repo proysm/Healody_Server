@@ -3,7 +3,7 @@ package dev.umc.healody;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication(scanBasePackages = "dev.umc.healody.home")
+@SpringBootApplication
 public class HealodyApplication {
 
 	public static void main(String[] args) {

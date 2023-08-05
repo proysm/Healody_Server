@@ -16,7 +16,6 @@ public class HomeService {
     @Autowired
     public HomeService(HomeRepository homeRepository) {
         this.homeRepository = homeRepository;
-        System.out.println("HomeService.HomeService");
     }
     @Transactional
     public HomeDto createHome(HomeDto homeDto, Long userId) {
