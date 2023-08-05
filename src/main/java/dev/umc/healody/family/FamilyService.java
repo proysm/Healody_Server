@@ -5,6 +5,7 @@ import dev.umc.healody.home.repository.HomeRepository;
 import dev.umc.healody.user.entity.User;
 import dev.umc.healody.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,36 +22,38 @@ public class FamilyService {
     private final HomeRepository homeRepository;
 
     @Transactional
-    public FamilyDTO create(FamilyDTO familyDTO){
-        Optional<User> optionalUser = userRepository.findById(familyDTO.getUserId());
-        Optional<Home> optionalHome = homeRepository.findById(familyDTO.getHomeId());
+    public Long create(FamilyRequestDTO requestDTO){
+        if(requestDTO.getUserId() == null) return null;
+
+        Optional<User> optionalUser = userRepository.findById(requestDTO.getUserId());
+        Optional<Home> optionalHome = homeRepository.findById(requestDTO.getHomeId());
         User user = null;
         Home home = null;
 
         if(optionalUser.isPresent()) user = optionalUser.get();
         if(optionalUser.isPresent()) home = optionalHome.get();
-        if(user == null || home == null) return null;
+        if(checkFamilyOver(requestDTO.getUserId()) ||
+                checkFamilyMemberOver(requestDTO.getHomeId()) ||
+                checkFamilyDuplicate(requestDTO.getUserId(), requestDTO.getHomeId())
+                || user == null || home == null){
+            return null;
+        }
 
-        Family family = familyDTO.toEntity(user, home);
+        Family family = requestDTO.toEntity(user, home);
         Family save = familyRepository.save(family);
-
-        return FamilyDTO.builder()
-                .userId(save.getUser().getUserId())
-                .homeId(save.getHome().getHomeId())
-                .build();
+        return save.getId();
     }
 
     @Transactional(readOnly = true)
-    public List<FamilyDTO> findFamily(Long userId){
+    public List<FamilyResponseDTO> searchFamily(Long userId){
         Optional<User> optionalUser = userRepository.findById(userId);
         User user = null;
 
         if(optionalUser.isPresent()) user = optionalUser.get();
-        if(user == null) return null;
 
-        List<Family> list = familyRepository.findById(userId);
+        List<Family> list = familyRepository.findByUserId(userId);
         return list.stream()
-                .map(family -> FamilyDTO.builder()
+                .map(family -> FamilyResponseDTO.builder()
                         .userId(family.getUser().getUserId())
                         .homeId(family.getHome().getHomeId())
                         .build()).collect(Collectors.toList());
@@ -61,10 +64,6 @@ public class FamilyService {
         return familyRepository.remove(userId, homeId);
     }
 
-    @Transactional(readOnly = true)
-    public int hasFamilyNumber(Long homeId){
-        return familyRepository.getFamilyNumber(homeId);
-    }
 
     @Transactional(readOnly = true)
     public boolean checkFamilyDuplicate(Long userId, Long homeId){
@@ -73,7 +72,14 @@ public class FamilyService {
 
     @Transactional(readOnly = true)
     public boolean checkFamilyOver(Long userId){
-        return familyRepository.getFamilyNumber(userId) >= 3;
+        System.out.println(familyRepository.findByUserId(userId).size());
+        return familyRepository.findByUserId(userId).size() >= 3;
+    }
+
+    @Transactional(readOnly = true)
+    public boolean checkFamilyMemberOver(Long homeId){
+        System.out.println(familyRepository.findByHomeId(homeId).size());
+        return familyRepository.findByHomeId(homeId).size() >= 6;
     }
 
     @Transactional(readOnly = true)

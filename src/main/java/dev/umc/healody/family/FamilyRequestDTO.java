@@ -7,7 +7,8 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class FamilyDTO {
+public class FamilyRequestDTO {
+    private String userPhone;
     private Long userId;
     private Long homeId;
 
