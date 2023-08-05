@@ -13,8 +13,7 @@ import java.util.Date;
 public class MedicineRequestDto {
 
     private Long userId;
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date date;
+    private String date;
     private String title;
     private String memo;
     private String medicine1;
@@ -23,7 +22,7 @@ public class MedicineRequestDto {
     private String place;
 
     @Builder
-    public MedicineRequestDto(Long userId, Date date, String title, String memo, String medicine1, String medicine2, String medicine3, String place) {
+    public MedicineRequestDto(Long userId, String date, String title, String memo, String medicine1, String medicine2, String medicine3, String place) {
         this.userId = userId;
         this.date = date;
         this.title = title;
@@ -34,7 +33,7 @@ public class MedicineRequestDto {
         this.place = place;
     }
 
-    public Medicine toEntity(User user) {
+    public Medicine toEntity(User user, Date date) {
         return Medicine.builder()
                 .user(user)
                 .date(date)
@@ -44,6 +43,7 @@ public class MedicineRequestDto {
                 .medicine2(medicine2)
                 .medicine3(medicine3)
                 .place(place)
+                .noteType("M")
                 .build();
     }
 }

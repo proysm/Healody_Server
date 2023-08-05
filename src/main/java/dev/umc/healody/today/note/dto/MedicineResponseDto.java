@@ -19,9 +19,10 @@ public class MedicineResponseDto {
     private String medicine2;
     private String medicine3;
     private String place;
+    private String noteType;
 
     @Builder
-    public MedicineResponseDto(Date date, String title, String memo, String medicine1, String medicine2, String medicine3, String place) {
+    public MedicineResponseDto(Date date, String title, String memo, String medicine1, String medicine2, String medicine3, String place, String noteType) {
         this.date = date;
         this.title = title;
         this.memo = memo;
@@ -29,6 +30,7 @@ public class MedicineResponseDto {
         this.medicine2 = medicine2;
         this.medicine3 = medicine3;
         this.place = place;
+        this.noteType = noteType;
     }
 
     public MedicineResponseDto toDto(Medicine medicine) {
@@ -40,6 +42,7 @@ public class MedicineResponseDto {
                 .medicine2(medicine.getMedicine2())
                 .medicine3(medicine.getMedicine3())
                 .place(medicine.getPlace())
+                .noteType(medicine.getNoteType())
                 .build();
     }
 }

@@ -8,7 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
-@RestController("/api")
+@RequestMapping("/api")
+@RestController
 public class TodoController {
 
     private final TodoService todoService;
