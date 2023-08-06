@@ -50,8 +50,8 @@ public class GoalService {
         if(requestDto.getStartDate() != null)
             goal.updateStartDate(requestDto.getStartDate());
 
-        if(requestDto.getFinishDate() != null)
-            goal.updateFinishDate(requestDto.getFinishDate());
+        if(requestDto.getEndDate() != null)
+            goal.updateEndDate(requestDto.getEndDate());
 
         if(requestDto.getBehavior() != null)
             goal.updateBehavior(requestDto.getBehavior());
