@@ -1,5 +1,5 @@
 # UMC_Healody_Server
-힐로디 서버 레포지토리
+<img width="571" alt="image" src="https://github.com/UMC-Healody/UMC_Healody_Server/assets/55044278/b39c08ef-08f1-438c-b341-3d9c3cc56fb2">
 
 <br>
 
