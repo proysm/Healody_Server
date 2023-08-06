@@ -22,7 +22,7 @@ public class Goal {
     private User user;
 
     private LocalDate startDate;
-    private LocalDate finishDate;
+    private LocalDate endDate;
 
     @Enumerated(value = EnumType.STRING)
     private Behavior behavior;
@@ -31,10 +31,10 @@ public class Goal {
     private String value;
 
     @Builder
-    public Goal(User user, LocalDate startDate, LocalDate finishDate, Behavior behavior, String value) {
+    public Goal(User user, LocalDate startDate, LocalDate endDate, Behavior behavior, String value) {
         this.user = user;
         this.startDate = startDate;
-        this.finishDate = finishDate;
+        this.endDate = endDate;
         this.behavior = behavior;
         this.value = value;
     }
@@ -43,8 +43,8 @@ public class Goal {
         this.startDate = startDate;
     }
 
-    public void updateFinishDate(LocalDate finishDate) {
-        this.finishDate = finishDate;
+    public void updateEndDate(LocalDate endDate) {
+        this.endDate = endDate;
     }
 
     public void updateBehavior(Behavior behavior) {
