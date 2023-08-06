@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -85,12 +86,11 @@ public class NoteService {
         return noteRepository.save(symptom).getId();
     }
 
-//    public List<NoteResponseDto> getNoteByUserId(Long userId) {
-//        // List<Note> noteList = noteRepository.findAllById(userId);
-//        List<Note> noteList = noteRepositoryImpl.findAllByUserId(userId);
-//        NoteResponseDto responseDto = new NoteResponseDto();
-//        return responseDto.toDto(noteList);
-//    }
+    public List<NoteResponseDto> getNoteByUserId(Long userId) {
+        List<Note> noteList = noteRepository.findAllByUser_UserId(userId);
+        NoteResponseDto responseDto = new NoteResponseDto();
+        return responseDto.toDto(noteList);
+    }
 
     public HospitalResponseDto findNoteHospital(Long noteId) {
         // 기록 아이디를 통해 Entity 조회

@@ -46,7 +46,7 @@ public class Note {
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
             this.date = format.parse(date);
         } catch (ParseException e) {
-            System.out.println("예외 처리");
+            System.out.println("updateDate 예외 처리");
         }
     }
 
