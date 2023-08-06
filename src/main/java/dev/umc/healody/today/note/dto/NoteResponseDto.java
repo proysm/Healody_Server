@@ -4,7 +4,8 @@ import dev.umc.healody.today.note.Note;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -12,13 +13,11 @@ import java.util.List;
 public class NoteResponseDto {
 
     Long noteId;  // 이게 있어야지 상세 조회 가능
-    Date date;
+    String date;
     String title;
     String noteType;
 
-    List<NoteResponseDto> noteResponseDtoList = new ArrayList<>();
-
-    public NoteResponseDto(Long noteId, Date date, String title, String noteType) {
+    public NoteResponseDto(Long noteId, String date, String title, String noteType) {
         this.noteId = noteId;
         this.date = date;
         this.title = title;
@@ -27,23 +26,33 @@ public class NoteResponseDto {
 
     public List<NoteResponseDto> toDto(List<Note> notes) {
 
+        NoteResponseDtoList responseDtoList = new NoteResponseDtoList();
+
         for(Note note : notes) {
             this.noteId = note.getId();
-            this.date = note.getDate();
+
+            // Date to String
+            Date realDate = note.getDate();
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            String stringDate = dateFormat.format(realDate);
+            this.date = stringDate;
+
             this.title = note.getTitle();
-            if (note.getNoteType() == "H") {
+
+            // NoteType 한글 적용
+            if (note.getNoteType().equals("H")) {
                 this.noteType = "병원";
-            } else if (note.getNoteType() == "M") {
+            } else if (note.getNoteType().equals("M")) {
                 this.noteType = "약";
-            } else if (note.getNoteType() == "S") {
+            } else if (note.getNoteType().equals("S")) {
                 this.noteType = "증상";
             } else {
-                System.out.println("예외처리");
+                System.out.println("noteType 예외처리");
             }
 
-            noteResponseDtoList.add(new NoteResponseDto(noteId, date, title, noteType));
+            responseDtoList.addResponseDto(new NoteResponseDto(noteId, date, title, noteType));
         }
 
-        return noteResponseDtoList;
+        return responseDtoList.getResponseDtoList();
     }
 }

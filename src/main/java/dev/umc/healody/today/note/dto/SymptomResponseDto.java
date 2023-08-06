@@ -6,20 +6,21 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Getter @NoArgsConstructor
 public class SymptomResponseDto {
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date date;
+    private String date;
     private String title;
     private String memo;
     private String name;
     private String noteType;
 
     @Builder
-    public SymptomResponseDto(Date date, String title, String memo, String name, String noteType) {
+    public SymptomResponseDto(String date, String title, String memo, String name, String noteType) {
         this.date = date;
         this.title = title;
         this.memo = memo;
@@ -28,8 +29,13 @@ public class SymptomResponseDto {
     }
 
     public SymptomResponseDto toDto(Symptom symptom) {
+
+        Date realDate = symptom.getDate();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String stringDate = dateFormat.format(realDate);
+
         return SymptomResponseDto.builder()
-                .date(symptom.getDate())
+                .date(stringDate)
                 .title(symptom.getTitle())
                 .memo(symptom.getMemo())
                 .name(symptom.getName())
