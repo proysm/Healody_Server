@@ -21,7 +21,7 @@ public class GoalRequestDto {
     private LocalDate endDate;
 
     private Behavior behavior;
-    private String value;
+    private String quantity;
 
     public Goal toEntity(User user) {
 
@@ -34,7 +34,7 @@ public class GoalRequestDto {
                 .startDate(startDate)
                 .endDate(endDate)
                 .behavior(behavior)
-                .value(value)
+                .quantity(quantity)
                 .build();
     }
 }

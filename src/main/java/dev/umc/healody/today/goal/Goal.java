@@ -28,15 +28,15 @@ public class Goal {
     private Behavior behavior;
 
     // 목표량은 설정해두고 일부 타입은 null 허용하도록 구현 (그냥 null 받게 구현해도 될듯)
-    private String value;
+    private String quantity;
 
     @Builder
-    public Goal(User user, LocalDate startDate, LocalDate endDate, Behavior behavior, String value) {
+    public Goal(User user, LocalDate startDate, LocalDate endDate, Behavior behavior, String quantity) {
         this.user = user;
         this.startDate = startDate;
         this.endDate = endDate;
         this.behavior = behavior;
-        this.value = value;
+        this.quantity = quantity;
     }
 
     public void updateStartDate(LocalDate startDate) {
@@ -51,7 +51,7 @@ public class Goal {
         this.behavior = behavior;
     }
 
-    public void updateValue(String value) {
-        this.value = value;
+    public void updateQuantity(String quantity) {
+        this.quantity = quantity;
     }
 }
