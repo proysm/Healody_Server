@@ -174,18 +174,13 @@ public class UserService {
         User user = new User();
 
         String name = kakaoProfile.getProperties().getNickname();
-        String email = kakaoProfile.getKakao_account().getEmail();
         String nickName = kakaoProfile.getProperties().getNickname();
         UUID garbagePw = UUID.randomUUID(); // 쓰레기값 만들기
 
-        Date birthday = null;
-        String gender = null;
-        if(kakaoProfile.getKakao_account().birthday_needs_agreement == true){
-            birthday = Date.valueOf(kakaoProfile.getKakao_account().birthyear + kakaoProfile.getKakao_account().birthday);
-        }
-        if(kakaoProfile.getKakao_account().gender_needs_agreement == true){
-            gender = kakaoProfile.getKakao_account().gender;
-        }
+        String email = kakaoProfile.getKakao_account().getEmail();
+        Date birthday = Date.valueOf(kakaoProfile.getKakao_account().birthyear + kakaoProfile.getKakao_account().birthday);
+        String gender = kakaoProfile.getKakao_account().gender;
+
 
         user.setUserId(kakaoProfile.getId());
         user.setName(name);
@@ -202,26 +197,31 @@ public class UserService {
 
     // 2. 카카오 로그인 시도 -> 이미 가입한 사용자인지 확인하고 새로운 사용자라면 회원가입으로 이동한다.
     @Transactional(readOnly = true)
-    public User kakaoLogin(User user){
+    public Boolean kakaoLogin(User user){
 
-        User principal = null;
-        if(checkEmailDuplication(user.getEmail())) { // 이미 존재하는 회원
-
-            principal = user;
-            // 로그인 연동
-
-        }
-        return principal;
+        if(checkEmailDuplication(user.getEmail())) return true; // 이미 존재하는 회원
+        else return false;
     }
 
     // 3. 카카오 회원가입 -> 추가 정보를 입력한다.
     @Transactional
-    public void kakaoJoin(User newUser){
+    public Boolean kakaoJoin(User newUser){
 
-            // 추가 정보를 받아야 함.
+        // 추가 정보를 받아야 함.
+        if(newUser.getEmail() == null || newUser.getGender() == null || newUser.getBirth() == null)
+        {
+            return false;
+        }
 
-            userRepository.save(newUser);
+        // 가입되어 있지 않은 회원이면 권한 정보 만들기
+        Authority authority = Authority.builder()
+                .authorityName("ROLE_USER")
+                .build();
+        newUser.setActivated(true);
+        newUser.setAuthorities(Collections.singleton(authority));
 
+        userRepository.save(newUser);
+        return true;
     }
 
     // 4. 카카오 로그아웃
