@@ -19,22 +19,22 @@ public class GoalResponseDto {
     private LocalDate finishDate;
 
     private Behavior behavior;
-    private String value;
+    private String quantity;
 
     @Builder
-    public GoalResponseDto(LocalDate startDate, LocalDate finishDate, Behavior behavior, String value) {
+    public GoalResponseDto(LocalDate startDate, LocalDate finishDate, Behavior behavior, String quantity) {
         this.startDate = startDate;
         this.finishDate = finishDate;
         this.behavior = behavior;
-        this.value = value;
+        this.quantity = quantity;
     }
 
     public GoalResponseDto toDto(Goal goal) {
         return GoalResponseDto.builder()
                 .startDate(goal.getStartDate())
-                .finishDate(goal.getFinishDate())
+                .finishDate(goal.getEndDate())
                 .behavior(goal.getBehavior())
-                .value(goal.getValue())
+                .quantity(goal.getQuantity())
                 .build();
     }
 }

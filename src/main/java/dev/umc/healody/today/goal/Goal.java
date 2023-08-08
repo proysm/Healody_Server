@@ -22,36 +22,36 @@ public class Goal {
     private User user;
 
     private LocalDate startDate;
-    private LocalDate finishDate;
+    private LocalDate endDate;
 
     @Enumerated(value = EnumType.STRING)
     private Behavior behavior;
 
     // 목표량은 설정해두고 일부 타입은 null 허용하도록 구현 (그냥 null 받게 구현해도 될듯)
-    private String value;
+    private String quantity;
 
     @Builder
-    public Goal(User user, LocalDate startDate, LocalDate finishDate, Behavior behavior, String value) {
+    public Goal(User user, LocalDate startDate, LocalDate endDate, Behavior behavior, String quantity) {
         this.user = user;
         this.startDate = startDate;
-        this.finishDate = finishDate;
+        this.endDate = endDate;
         this.behavior = behavior;
-        this.value = value;
+        this.quantity = quantity;
     }
 
     public void updateStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
-    public void updateFinishDate(LocalDate finishDate) {
-        this.finishDate = finishDate;
+    public void updateEndDate(LocalDate endDate) {
+        this.endDate = endDate;
     }
 
     public void updateBehavior(Behavior behavior) {
         this.behavior = behavior;
     }
 
-    public void updateValue(String value) {
-        this.value = value;
+    public void updateQuantity(String quantity) {
+        this.quantity = quantity;
     }
 }

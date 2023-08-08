@@ -18,18 +18,23 @@ public class GoalRequestDto {
     private LocalDate startDate;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate finishDate;
+    private LocalDate endDate;
 
     private Behavior behavior;
-    private String value;
+    private String quantity;
 
     public Goal toEntity(User user) {
+
+        // 시작 날짜, 종료 날짜 계산
+        startDate = LocalDate.now();
+        endDate = LocalDate.of(startDate.getYear(), startDate.getMonth(), startDate.lengthOfMonth());
+
         return Goal.builder()
                 .user(user)
                 .startDate(startDate)
-                .finishDate(finishDate)
+                .endDate(endDate)
                 .behavior(behavior)
-                .value(value)
+                .quantity(quantity)
                 .build();
     }
 }

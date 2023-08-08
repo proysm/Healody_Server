@@ -27,7 +27,7 @@ public class GoalService {
 
         Goal goal = requestDto.toEntity(user);
         goalRepository.save(goal);
-        return "이번 달 회원님의 목표는 " + goal.getBehavior().getDisplayValue() + "입니다";
+        return goal.getStartDate().getMonthValue() + "월 회원님의 목표는 " + goal.getBehavior().getDisplayValue() + "입니다";
     }
 
     public GoalResponseDto findGoal(Long goalId) {
@@ -50,14 +50,14 @@ public class GoalService {
         if(requestDto.getStartDate() != null)
             goal.updateStartDate(requestDto.getStartDate());
 
-        if(requestDto.getFinishDate() != null)
-            goal.updateFinishDate(requestDto.getFinishDate());
+        if(requestDto.getEndDate() != null)
+            goal.updateEndDate(requestDto.getEndDate());
 
         if(requestDto.getBehavior() != null)
             goal.updateBehavior(requestDto.getBehavior());
 
-        if(requestDto.getValue() != null)
-            goal.updateValue(requestDto.getValue());
+        if(requestDto.getQuantity() != null)
+            goal.updateQuantity(requestDto.getQuantity());
 
         return goal.getId();
     }
