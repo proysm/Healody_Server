@@ -70,17 +70,6 @@ public class UserController {
         return ResponseEntity.ok(userId);
     }
 
-    @GetMapping("/kakao/callback")
-    public @ResponseBody String kakaoCallback(String code, RedirectAttributes redirectAttributes) throws JsonProcessingException {
-        // 인증 코드, 카카오 로그인이 성공하면 이곳으로 감, @ResponseBody를 붙이면 데이터를 리턴해주는 함수가 됨.
-
-        User user = userService.kakaoCallback(code); // 현재 로그인을 시도한 사용자의 정보를 리턴함
-        redirectAttributes.addAttribute("user", user);
-        return "redirect:/kakao/login";
-        //kakaoLogin(user); // 로그인을 시도함
-        //return "카카오 코드와 토큰이 발급되었습니다.";
-    }
-
     @GetMapping("/kakao/login")
     public String kakaoLogin(@RequestParam("user") User user, RedirectAttributes redirectAttributes){
 
@@ -123,5 +112,16 @@ public class UserController {
 
         userService.kakaoLogout(newUser);
         return "카카오 로그아웃이 완료되었습니다.";
+    }
+
+    @GetMapping("/kakao/callback")
+    public @ResponseBody String kakaoCallback(String code, RedirectAttributes redirectAttributes) throws JsonProcessingException {
+        // 인증 코드, 카카오 로그인이 성공하면 이곳으로 감, @ResponseBody를 붙이면 데이터를 리턴해주는 함수가 됨.
+
+        User user = userService.kakaoCallback(code); // 현재 로그인을 시도한 사용자의 정보를 리턴함
+        redirectAttributes.addAttribute("user", user);
+        return "redirect:/kakao/login";
+        //kakaoLogin(user); // 로그인을 시도함
+        //return "카카오 코드와 토큰이 발급되었습니다.";
     }
 }
