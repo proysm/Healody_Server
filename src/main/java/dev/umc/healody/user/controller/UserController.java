@@ -10,19 +10,24 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.sql.Date;
+import java.util.Collection;
+import java.util.Map;
 
-@RestController
+
+@Controller
 @RequestMapping("/api/auth")
 public class UserController {
     private final UserService userService;
     private final EmailService emailService;
 
-
-    private HttpSession session;
 
     @Autowired
     public UserController(UserService userService, EmailService emailService) {
@@ -70,43 +75,54 @@ public class UserController {
         return ResponseEntity.ok(userId);
     }
 
-    @GetMapping("/kakao/login")
-    public String kakaoLogin(@RequestParam("user") User user, RedirectAttributes redirectAttributes){
 
-        Boolean principal = userService.kakaoLogin(user); // 로그인을 시도함
+    @RequestMapping("/kakao/callback")
+    public String kakaoCallback(String code, RedirectAttributes rttr) throws JsonProcessingException {
+        // 인증 코드, 카카오 로그인이 성공하면 이곳으로 감, @ResponseBody를 붙이면 데이터를 리턴해주는 함수가 됨.
+
+        User user = userService.kakaoCallback(code); // 현재 로그인을 시도한 사용자의 정보를 리턴함
+
+        rttr.addFlashAttribute("user", user);
+        return "redirect:/api/auth/kakao/login";
+    }
+
+    @RequestMapping("/kakao/login")
+    public String kakaoLogin(@ModelAttribute("user") User user, RedirectAttributes rttr){
 
         User newUser = user;
-        redirectAttributes.addAttribute("newUser", newUser);
-        if(principal == false) {
-            return "redirect:/kakao/join";
+
+        Boolean principal = userService.kakaoLogin(newUser); // 로그인을 시도한다.
+        if(principal == false){ // 새로운 유저이면 회원가입을 진행한다.
+            rttr.addFlashAttribute("newUser", newUser);
+            return "redirect:/api/auth/kakao/join";
         }
-        else {
-            return "카카오 로그인이 완료되었습니다.";
-        }
+        // 이미 존재하는 유저이면 로그인을 진행한다.
+        return null;
     }
 
-    @GetMapping("/kakao/join")
-    public String kakaoJoin(@RequestParam("newUser") User newUser, RedirectAttributes redirectAttributes){
-
-        redirectAttributes.addAttribute(("newUser"), newUser);
-
-        if(!userService.kakaoJoin(newUser)){
-            return "redirect:/kakao/join/getInfo";
-        }
-        else{
-            return "카카오 회원가입이 완료되었습니다.";
-        }
+    @ResponseBody
+    @GetMapping("/kakao/join") // 일단 가입을 시킨 다음, 'kakaoGetInfo'에서 추가 정보를 입력받는다.
+    public void kakaoJoin(@ModelAttribute("newUser") User newUser, RedirectAttributes rttr){
+        userService.kakaoJoin(newUser);
+        rttr.addFlashAttribute("newUserId", newUser.getUserId());
+        //return "redirect:/api/auth/kakao/join/getInfo";
     }
 
-    @GetMapping("/kakao/join/getInfo")
-    public String kakaoGetInfo(@RequestParam("newUser") User newUser, @RequestParam String email, @RequestParam String gender, @RequestParam String birth){
-        newUser.setEmail(email);
+
+    @ResponseBody
+    @Transactional
+    @GetMapping("/kakao/join/getInfo") // kakao 회원가입 이후 반드시 거쳐야됨.
+    public void kakaoGetInfo(@RequestParam Long userid, @RequestParam String nickName, @RequestParam String gender, @RequestParam String birth, @RequestParam String phone){
+
+        User newUser = userService.findUser(userid);
+        newUser.setNickname(nickName);
         newUser.setGender(gender);
         newUser.setBirth(Date.valueOf(birth));
-        userService.kakaoJoin(newUser);
-        return "카카오 회원가입이 완료되었습니다.";
+        newUser.setPhone(phone);
+        //userService.kakaoJoin(newUser); @Transactional을 사용하면 굳이 할 필요 없음.
     }
 
+    @ResponseBody
     @PostMapping("/kakao/logout")
     public String kakaoLogout(User newUser){
 
@@ -114,14 +130,5 @@ public class UserController {
         return "카카오 로그아웃이 완료되었습니다.";
     }
 
-    @GetMapping("/kakao/callback")
-    public @ResponseBody String kakaoCallback(String code, RedirectAttributes redirectAttributes) throws JsonProcessingException {
-        // 인증 코드, 카카오 로그인이 성공하면 이곳으로 감, @ResponseBody를 붙이면 데이터를 리턴해주는 함수가 됨.
 
-        User user = userService.kakaoCallback(code); // 현재 로그인을 시도한 사용자의 정보를 리턴함
-        redirectAttributes.addAttribute("user", user);
-        return "redirect:/kakao/login";
-        //kakaoLogin(user); // 로그인을 시도함
-        //return "카카오 코드와 토큰이 발급되었습니다.";
-    }
 }
