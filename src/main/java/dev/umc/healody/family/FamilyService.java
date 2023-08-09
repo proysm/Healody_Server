@@ -40,6 +40,7 @@ public class FamilyService {
         }
 
         Family family = requestDTO.toEntity(user, home);
+        home.setUser_cnt(home.getUser_cnt() + 1);
         Family save = familyRepository.save(family);
         return save.getId();
     }
