@@ -4,6 +4,7 @@ import dev.umc.healody.common.SuccessResponse;
 import dev.umc.healody.common.SuccessStatus;
 import dev.umc.healody.today.goal.dto.GoalRequestDto;
 import dev.umc.healody.today.goal.dto.GoalResponseDto;
+import dev.umc.healody.today.goal.dto.RecordsRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,8 +23,20 @@ public class GoalController {
 
     @GetMapping("/goal/{goalId}")
     public SuccessResponse<GoalResponseDto> findGoal(@PathVariable Long goalId) {
-        GoalResponseDto responseDto = goalService.findGoal(goalId);
-        return new SuccessResponse<>(SuccessStatus.SUCCESS, responseDto);
+        goalService.createRecord(goalId);
+        return new SuccessResponse<>(SuccessStatus.SUCCESS);
+    }
+
+    @PatchMapping("/goal/{goalId}")
+    public SuccessResponse<String> updateGoalVal(@PathVariable Long goalId, @RequestBody RecordsRequestDto requestDto) {
+        String updateMessage = goalService.updateRecords(goalId, requestDto.getVal());
+        return new SuccessResponse<>(SuccessStatus.SUCCESS, updateMessage);
+    }
+
+    @GetMapping("/goal/{goalId}/{date}")
+    public SuccessResponse dateFindGoal(@PathVariable Long goalId, @PathVariable String date) {
+        goalService.dateCreateRecord(goalId, date);
+        return new SuccessResponse(SuccessStatus.SUCCESS);
     }
 
     @PatchMapping("/goal/{goalId}")

@@ -21,20 +21,24 @@ public class GoalRequestDto {
     private LocalDate endDate;
 
     private Behavior behavior;
-    private String quantity;
+    private String target;
+
+    private Long cnt;
 
     public Goal toEntity(User user) {
 
         // 시작 날짜, 종료 날짜 계산
         startDate = LocalDate.now();
         endDate = LocalDate.of(startDate.getYear(), startDate.getMonth(), startDate.lengthOfMonth());
+        cnt = 0L;
 
         return Goal.builder()
                 .user(user)
                 .startDate(startDate)
                 .endDate(endDate)
                 .behavior(behavior)
-                .quantity(quantity)
+                .target(target)
+                .cnt(cnt)
                 .build();
     }
 }
