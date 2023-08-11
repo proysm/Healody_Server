@@ -36,7 +36,7 @@ public class Todo {
 
     public void updateDate(String date) {
         try {
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
             this.date = format.parse(date);
         } catch (ParseException e) {
             System.out.println("updateDate 예외 처리");
