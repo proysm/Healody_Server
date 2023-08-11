@@ -39,12 +39,6 @@ public class GoalController {
         return new SuccessResponse(SuccessStatus.SUCCESS);
     }
 
-    @PatchMapping("/goal/{goalId}")
-    public SuccessResponse<Long> updateGoal(@PathVariable Long goalId, @RequestBody GoalRequestDto requestDto) {
-        Long findGoalId = goalService.updateGoal(goalId, requestDto);
-        return new SuccessResponse<>(SuccessStatus.SUCCESS, findGoalId);
-    }
-
     @DeleteMapping("/goal/{goalId}")
     public SuccessResponse deleteGoal(@PathVariable Long goalId) {
         goalService.deleteGoal(goalId);
