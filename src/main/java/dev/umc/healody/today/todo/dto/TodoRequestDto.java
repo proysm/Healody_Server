@@ -14,18 +14,17 @@ public class TodoRequestDto {
 
     private Long userId;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date date;
+    private String date;
     private String content;
 
     @Builder
-    public TodoRequestDto(Long userId, Date date, String content) {
+    public TodoRequestDto(Long userId, String date, String content) {
         this.userId = userId;
         this.date = date;
         this.content = content;
     }
 
-    public Todo toEntity(User user) {
+    public Todo toEntity(User user, Date date) {
         return Todo.builder()
                 .user(user)
                 .date(date)

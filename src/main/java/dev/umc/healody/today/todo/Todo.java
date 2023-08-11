@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @NoArgsConstructor
@@ -32,8 +34,13 @@ public class Todo {
         this.content = content;
     }
 
-    public void updateDate(Date date) {
-        this.date = date;
+    public void updateDate(String date) {
+        try {
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            this.date = format.parse(date);
+        } catch (ParseException e) {
+            System.out.println("updateDate 예외 처리");
+        }
     }
 
     public void updateContent(String content) {
