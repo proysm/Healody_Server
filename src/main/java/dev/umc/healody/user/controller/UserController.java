@@ -7,21 +7,14 @@ import dev.umc.healody.user.dto.UserDto;
 import dev.umc.healody.user.entity.User;
 import dev.umc.healody.user.service.EmailService;
 import dev.umc.healody.user.service.UserService;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.view.RedirectView;
 
 import java.sql.Date;
-import java.util.Collection;
-import java.util.Map;
 
 
 @Controller
@@ -38,6 +31,7 @@ public class UserController {
         this.emailService = emailService;
     }
 
+    @ResponseBody
     @PostMapping("/join")
     public SuccessResponse<String> registerUser(@Valid @RequestBody UserDto userDTO) {
         userService.registerUser(userDTO);
@@ -50,6 +44,7 @@ public class UserController {
 //        return ResponseEntity.ok(token);
 //    }
 
+    @ResponseBody
     @GetMapping("/phone/{phone}/exists")
     public SuccessResponse<String> checkPhoneDuplicate(@PathVariable String phone){
         if(userService.checkPhoneDuplication(phone)){
@@ -61,6 +56,7 @@ public class UserController {
         }
     }
 
+    @ResponseBody
     @GetMapping("/nickname/{nickname}/exists")
     public SuccessResponse<String> checkNicknameDuplicate(@PathVariable String nickname){
         if(userService.checkNicknameDuplication(nickname)){
@@ -71,6 +67,7 @@ public class UserController {
         }
     }
 
+    @ResponseBody
     @GetMapping("/email/{email}/exists")
     public SuccessResponse<String> checkEmailDuplicate(@PathVariable String email){
         if(userService.checkEmailDuplication(email)){
@@ -81,12 +78,14 @@ public class UserController {
         }
     }
 
+    @ResponseBody
     @PostMapping("/email-confirm")
     public SuccessResponse<String> emailConfirm(@RequestParam String email) throws Exception {
         confirm = emailService.sendEmail(email);
         return new SuccessResponse<>(SuccessStatus.SUCCESS, "이메일을 확인해주세요");
     }
 
+    @ResponseBody
     @PostMapping("/email-confirm/check")
     public SuccessResponse<String> emailConfirmCheck(@RequestParam String check) {
         if(confirm.equals(check)) {
@@ -97,6 +96,7 @@ public class UserController {
         }
     }
 
+    @ResponseBody
     @GetMapping("/user-id/{phone}")
     public SuccessResponse<Long> findUserIdByPhone(@PathVariable String phone) {
         // 입력 받은 휴대폰 번호로 유저 아이디를 조회
