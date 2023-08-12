@@ -22,7 +22,7 @@ import java.sql.Date;
 public class UserController {
     private final UserService userService;
     private final EmailService emailService;
-    String confirm;
+    String confirm = "";
 
 
     @Autowired
@@ -48,8 +48,7 @@ public class UserController {
     @GetMapping("/phone/{phone}/exists")
     public SuccessResponse<String> checkPhoneDuplicate(@PathVariable String phone){
         if(userService.checkPhoneDuplication(phone)){
-//            return new SuccessResponse<>(SuccessStatus.FAILURE, "이미 존재하는 휴대폰 번호입니다.");
-            return new SuccessResponse<>(SuccessStatus.SUCCESS, "이미 존재하는 휴대폰 번호입니다.");
+            return new SuccessResponse<>(SuccessStatus.FAILURE, "이미 존재하는 휴대폰 번호입니다.");
 
         } else {
             return new SuccessResponse<>(SuccessStatus.SUCCESS, "사용 가능한 휴대폰 번호입니다.");
@@ -60,8 +59,7 @@ public class UserController {
     @GetMapping("/nickname/{nickname}/exists")
     public SuccessResponse<String> checkNicknameDuplicate(@PathVariable String nickname){
         if(userService.checkNicknameDuplication(nickname)){
-//            return new SuccessResponse<>(SuccessStatus.FAILURE, "이미 존재하는 닉네임입니다.");
-            return new SuccessResponse<>(SuccessStatus.SUCCESS, "이미 존재하는 닉네임입니다.");
+            return new SuccessResponse<>(SuccessStatus.FAILURE, "이미 존재하는 닉네임입니다.");
         } else {
             return new SuccessResponse<>(SuccessStatus.SUCCESS, "사용 가능한 닉네임입니다.");
         }
@@ -71,8 +69,7 @@ public class UserController {
     @GetMapping("/email/{email}/exists")
     public SuccessResponse<String> checkEmailDuplicate(@PathVariable String email){
         if(userService.checkEmailDuplication(email)){
-//            return new SuccessResponse<>(SuccessStatus.FAILURE, "이미 존재하는 이메일입니다.");
-            return new SuccessResponse<>(SuccessStatus.SUCCESS, "이미 존재하는 이메일입니다.");
+            return new SuccessResponse<>(SuccessStatus.FAILURE, "이미 존재하는 이메일입니다.");
         } else {
             return new SuccessResponse<>(SuccessStatus.SUCCESS, "사용 가능한 이메일입니다.");
         }
@@ -91,8 +88,7 @@ public class UserController {
         if(confirm.equals(check)) {
             return new SuccessResponse<>(SuccessStatus.SUCCESS, "이메일 인증이 완료되었습니다.");
         } else {
-//            return new SuccessResponse<>(SuccessStatus.FAILURE, "이메일 인증 코드가 일치하지 않습니다.");
-            return new SuccessResponse<>(SuccessStatus.SUCCESS, "이메일 인증 코드가 일치하지 않습니다.");
+            return new SuccessResponse<>(SuccessStatus.FAILURE, "이메일 인증 코드가 일치하지 않습니다.");
         }
     }
 
