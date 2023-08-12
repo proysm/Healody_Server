@@ -52,6 +52,20 @@ public class TokenProvider implements InitializingBean {
         long now = (new Date()).getTime();
         Date validity = new Date(now + this.tokenValidityInMilliseconds);
 
+//        String accessToken = Jwts.builder()
+//                .setSubject(authentication.getName())
+//                .claim(AUTHORITIES_KEY, authorities) // 정보 저장
+//                .signWith(key, SignatureAlgorithm.HS512) // 사용할 암호화 알고리즘과 , signature 에 들어갈 secret값 세팅
+//                .setExpiration(validity) // set Expire Time 해당 옵션 안넣으면 expire안함
+//                .compact();
+//
+//        String refreshToken = Jwts.builder()
+//                .setSubject(authentication.getName())
+//                .claim(AUTHORITIES_KEY, authorities) // 정보 저장
+//                .signWith(key, SignatureAlgorithm.HS512) // 사용할 암호화 알고리즘과 , signature 에 들어갈 secret값 세팅
+//                .setExpiration(validity) // set Expire Time 해당 옵션 안넣으면 expire안함
+//                .compact();
+//        return Token.builder().accessToken(accessToken).refreshToken(refreshToken).key(userEmail).build();
         return Jwts.builder()
                 .setSubject(authentication.getName())
                 .claim(AUTHORITIES_KEY, authorities) // 정보 저장

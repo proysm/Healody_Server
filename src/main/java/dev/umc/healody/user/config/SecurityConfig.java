@@ -60,6 +60,7 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
                         .requestMatchers("/api/**").permitAll() // 회원 api
+//                        .requestMatchers("/api/auth").permitAll() // 회원 api
                         .anyRequest().authenticated() // 그 외 인증 없이 접근X
                 )
 

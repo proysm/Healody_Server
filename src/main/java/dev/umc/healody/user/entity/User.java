@@ -23,13 +23,13 @@ public class User {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "phone")
+    @Column(name = "phone", unique = true)
     private String phone;
 
     @Column(name = "birth")
     private java.sql.Date birth;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String email;
 
     @Column(name = "gender")
@@ -41,7 +41,7 @@ public class User {
     @Column(name = "image")
     private String image;
 
-    @Column(name = "nickname")
+    @Column(name = "nickname", unique = true)
     private String nickname;
 
     @Column(name = "message")
