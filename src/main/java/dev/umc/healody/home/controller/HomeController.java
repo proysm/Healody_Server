@@ -1,5 +1,7 @@
 package dev.umc.healody.home.controller;
 
+import dev.umc.healody.common.SuccessResponse;
+import dev.umc.healody.common.SuccessStatus;
 import dev.umc.healody.family.FamilyRequestDTO;
 import dev.umc.healody.family.FamilyResponseDTO;
 import dev.umc.healody.family.FamilyService;
@@ -23,6 +25,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static dev.umc.healody.common.userInfo.getCurrentUserId;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -35,11 +39,11 @@ public class HomeController {
     private final CareUserService careUserService;
 
     @PostMapping("/home") //집 추가 POST
-    public ResponseEntity<HomeDto> createHome(@RequestBody HomeDto homeDto, HttpServletRequest request){
+    public SuccessResponse<HomeDto> createHome(@RequestBody HomeDto homeDto, HttpServletRequest request){
         Long adminId = getCurrentUserId();
         HomeDto newHome = homeService.createHome(homeDto, adminId);
         familyService.create(FamilyRequestDTO.builder().userId(adminId).homeId(newHome.homeId).build());
-        return ResponseEntity.status(HttpStatus.CREATED).body(newHome);
+        return new SuccessResponse<>(SuccessStatus.SUCCESS, newHome);
     }
     @GetMapping("/home/{userId}") // 집 조회 GET
     public ResponseEntity<Map<String, Map<String, List<String>>>> viewMyFamily(@PathVariable Long userId) {
@@ -71,12 +75,6 @@ public class HomeController {
         }
     }
 
-    @GetMapping("/test")
-    public String test() {
-        System.out.println("dhodkseho");
-        return "Hello World!";
-    }
-
     private Map<String, List<String>> getFamilyInfo(Long homeId, Long userId) {
         List<Long> userList = familyService.searchUserId(homeId);
         List<CareUserResponseDTO> careUserList = careUserService.findCareUsers(homeId);
@@ -96,13 +94,13 @@ public class HomeController {
         infoMap.put("care-user", careUserInfoList);
         return infoMap;
     }
-    private Long getCurrentUserId() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if ((authentication != null) && (authentication.getPrincipal() instanceof UserDetails)) {
-            String userName = authentication.getName();
-            Long userId = userService.findUserIdByPhone(userName);
-            return userId;
-        }
-        return null; // 인증된 사용자가 없을 경우 null 반환
-    }
+//    private Long getCurrentUserId() {
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        if ((authentication != null) && (authentication.getPrincipal() instanceof UserDetails)) {
+//            String userName = authentication.getName();
+//            Long userId = userService.findUserIdByPhone(userName);
+//            return userId;
+//        }
+//        return null; // 인증된 사용자가 없을 경우 null 반환
+//    }
 }
