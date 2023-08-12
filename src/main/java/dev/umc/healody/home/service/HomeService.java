@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
@@ -25,6 +26,7 @@ public class HomeService {
         return HomeDto.builder()
                 .homeId(save.getHomeId())
                 .name(save.getName())
+                .admin(userId)
                 .build();
     }
     public HomeDto getHomeInfo(Long HomeId){
@@ -39,41 +41,31 @@ public class HomeService {
             return null;
     }
     @Transactional
-    public HomeDto updateHome(Long home_id, HomeDto homeDto) {
+    public HomeDto updateHome(Long home_id, HomeDto homeDto, Long currentUserId) {
             Optional<Home> home = homeRepository.findHomeByHomeId(home_id);
             if(home.isPresent()){
+                if (!home.get().getAdmin().equals(currentUserId)) {
+                    throw new AccessDeniedException("권한이 없습니다.");
+                }
                 home.get().setName(homeDto.getName());
                 homeRepository.save(home.get());
-                HomeDto updatedHome = new HomeDto(home_id, homeDto.getName(), homeDto.getAdmin());
-                return updatedHome;
+                return HomeDto.builder()
+                        .homeId(home_id)
+                        .name(homeDto.getName())
+                        .build();
             }
             return null;
     }
     @Transactional
-    public void deleteHome(Long home_id) {
-        try {
-            Optional<Home> home = homeRepository.findHomeByHomeId(home_id);
-            home.ifPresent(value -> homeRepository.delete(value));
-        } catch (Exception e){
-            throw new RuntimeException(e);
-        }
-    }
-    public Long getCurrentUserId(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            Object userIdObj = session.getAttribute("userId");
-            if (userIdObj instanceof Long) {
-                return (Long) userIdObj;
+    public void deleteHome(Long home_id, Long currentUserId) {
+        Optional<Home> home = homeRepository.findHomeByHomeId(home_id);
+        if (home.isPresent()) {
+            // 현재 사용자가 집의 관리자인지 확인
+            if (!home.get().getAdmin().equals(currentUserId)) {
+                throw new AccessDeniedException("권한이 없습니다.");
             }
+
+            homeRepository.delete(home.get());
         }
-        return null; // 세션에 인증된 사용자 id가 없을 경우 null 반환
     }
-
-    public boolean isAdmin(HttpServletRequest request, HomeDto homeDto){
-        Long adminId = getCurrentUserId(request);
-        if(adminId.equals(homeDto.admin)){return true;}
-        else{return false;}
-    }
-
-
 }
