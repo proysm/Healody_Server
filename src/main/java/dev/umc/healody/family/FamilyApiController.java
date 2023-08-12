@@ -9,6 +9,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import static dev.umc.healody.common.userInfo.getCurrentUserId;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/family")
@@ -36,13 +38,5 @@ public class FamilyApiController {
         return new SuccessResponse<>(SuccessStatus.SUCCESS);
     }
 
-    private Long getCurrentUserId() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if ((authentication != null) && (authentication.getPrincipal() instanceof UserDetails)) {
-            String userName = authentication.getName();
-            Long userId = userService.findUserIdByPhone(userName);
-            return userId;
-        }
-        return null; // 인증된 사용자가 없을 경우 null 반환
-    }
+
 }
