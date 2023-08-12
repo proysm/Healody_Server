@@ -32,14 +32,13 @@ public class UserDto {
     private String gender;
 
     @NotBlank(message = "비밀번호를 입력해주세요.")
-    @Size(max = 16, message = "비밀번호는 8자 이상 16자 이하로 입력해주세요.")
-//    @Size(min = 8, max = 16, message = "비밀번호는 8자 이상 16자 이하로 입력해주세요.")
+    @Size(min = 8, max = 16, message = "비밀번호는 8자 이상 16자 이하로 입력해주세요.")
     private String password;
 
     private String image;
 
     @NotBlank(message = "닉네임을 입력해주세요.")
-    @Size(min = 1, max = 10, message = "닉네임은 2자 이상 10자 이하로 입력해주세요.")
+    @Size(min = 2, max = 10, message = "닉네임은 2자 이상 10자 이하로 입력해주세요.")
     private String nickname;
 
     private String message;

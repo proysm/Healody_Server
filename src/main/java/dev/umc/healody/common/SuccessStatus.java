@@ -21,8 +21,8 @@ public enum SuccessStatus {
      * SUCCESS CODE
      * 200 OK
      */
-    SUCCESS(200, "SUCCESS", "요청이 완료되었습니다.");
-
+    SUCCESS(200, "SUCCESS", "요청이 완료되었습니다."),
+    FAILURE(400, "FAILURE", "요청이 실패하였습니다.");
 
     /**
      * SUCCESS CODE

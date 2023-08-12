@@ -16,7 +16,6 @@ public class LoginDto {
     private String phone;
 
     @NotBlank(message = "비밀번호를 입력해주세요.")
-    @Size(max = 16, message = "비밀번호는 8자 이상 16자 이하로 입력해주세요.")
-//    @Size(min = 8, max = 16, message = "비밀번호는 8자 이상 16자 이하로 입력해주세요.")
+    @Size(min = 8, max = 16, message = "비밀번호는 8자 이상 16자 이하로 입력해주세요.")
     private String password;
 }
