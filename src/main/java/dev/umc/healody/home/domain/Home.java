@@ -21,16 +21,17 @@ public class Home{
     @Column(nullable = false)
     private Long user_cnt = 1L;
 
-    @Column(nullable = true)
-    private Long caring_cnt;
+    @Column(nullable = false)
+    private Long caring_cnt = 0L;
 
-    @Column(nullable = true)
+    @Column(nullable = false)
     private Long admin;
 
     @Builder
-    public Home(String name, Long homeId){
+    public Home(String name, Long homeId, Long admin){
         this.name = name;
         this.homeId = homeId;
+        this.admin = admin;
     }
 
 }

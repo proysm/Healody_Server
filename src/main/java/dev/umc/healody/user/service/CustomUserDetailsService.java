@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 @Component("userDetailsService")
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
+
     private final UserRepository userRepository;
 
     @Override
@@ -28,8 +29,6 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .map(user -> createUser(phone, user))
                 .orElseThrow(() -> new UsernameNotFoundException(phone + " -> 데이터베이스에서 찾을 수 없습니다."));
     }
-
-
     private org.springframework.security.core.userdetails.User createUser(String phone, User user) {
         if (!user.isActivated()) {
             throw new RuntimeException(phone + " -> 활성화되어 있지 않습니다.");
@@ -39,8 +38,10 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .map(authority -> new SimpleGrantedAuthority(authority.getAuthorityName()))
                 .collect(Collectors.toList());
 
-        return new org.springframework.security.core.userdetails.User(user.getPhone(),
+        return new org.springframework.security.core.userdetails.User(
+                user.getPhone(),
                 user.getPassword(),
-                grantedAuthorities);
+                grantedAuthorities
+                );
     }
 }

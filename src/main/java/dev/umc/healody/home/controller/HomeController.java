@@ -5,17 +5,19 @@ import dev.umc.healody.family.FamilyResponseDTO;
 import dev.umc.healody.family.FamilyService;
 import dev.umc.healody.family.careuser.CareUserResponseDTO;
 import dev.umc.healody.family.careuser.CareUserService;
-import dev.umc.healody.home.domain.Home;
 import dev.umc.healody.home.dto.HomeDto;
 import dev.umc.healody.home.service.HomeService;
+import dev.umc.healody.user.service.CustomUserDetailsService;
 import jakarta.servlet.http.HttpServletRequest;
 import dev.umc.healody.user.entity.User;
 import dev.umc.healody.user.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -34,14 +36,11 @@ public class HomeController {
 
     @PostMapping("/home") //집 추가 POST
     public ResponseEntity<HomeDto> createHome(@RequestBody HomeDto homeDto, HttpServletRequest request){
-        Long adminId = homeService.getCurrentUserId(request);
+        Long adminId = getCurrentUserId();
         HomeDto newHome = homeService.createHome(homeDto, adminId);
         familyService.create(FamilyRequestDTO.builder().userId(adminId).homeId(newHome.homeId).build());
         return ResponseEntity.status(HttpStatus.CREATED).body(newHome);
     }
-    //집을 만들며 그 안에 가족을 넣기, 그리고 user_cnt 관리
-    //돌봄계정  careuser_cnt 관리
-    //가족구성원의 할일 목표 등등 정보 조회하기
     @GetMapping("/home/{userId}") // 집 조회 GET
     public ResponseEntity<Map<String, Map<String, List<String>>>> viewMyFamily(@PathVariable Long userId) {
         List<FamilyResponseDTO> familyList = familyService.searchFamily(userId);
@@ -57,19 +56,15 @@ public class HomeController {
     
     @DeleteMapping("/home/{homeId}") //집 삭제 DELETE
     public ResponseEntity<String> deleteHome(@PathVariable Long homeId, HttpServletRequest request){
-        HomeDto currentHome = homeService.getHomeInfo(homeId);
-        if (homeService.isAdmin(request, currentHome)) {
-            homeService.deleteHome(homeId);
-            return ResponseEntity.status(HttpStatus.OK).body("집이 삭제되었습니다.");
-        }else {
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("관리자 권한이 없습니다.");
-        }
+        Long currentUserId = getCurrentUserId();
+        homeService.deleteHome(homeId, currentUserId);
+        return ResponseEntity.ok().body("집이 삭제되었습니다.");
     }
     @PatchMapping("/home/{homeId}") //집 수정 PATCH
     public ResponseEntity<HomeDto> updateHome(@PathVariable Long homeId, @RequestBody HomeDto homeDto, HttpServletRequest request){
-        HomeDto currentHome = homeService.getHomeInfo(homeId);
-        if (homeService.isAdmin(request, currentHome)) {
-            HomeDto updatedHome = homeService.updateHome(homeId, homeDto);
+        Long currentUserId = getCurrentUserId();
+        HomeDto updatedHome = homeService.updateHome(homeId, homeDto, currentUserId);
+        if (updatedHome != null) {
             return ResponseEntity.ok(updatedHome);
         }else {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(homeDto);
@@ -100,5 +95,14 @@ public class HomeController {
         infoMap.put("user", userInfoList);
         infoMap.put("care-user", careUserInfoList);
         return infoMap;
+    }
+    private Long getCurrentUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if ((authentication != null) && (authentication.getPrincipal() instanceof UserDetails)) {
+            String userName = authentication.getName();
+            Long userId = userService.findUserIdByPhone(userName);
+            return userId;
+        }
+        return null; // 인증된 사용자가 없을 경우 null 반환
     }
 }

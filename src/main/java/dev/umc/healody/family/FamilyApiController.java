@@ -4,6 +4,9 @@ import dev.umc.healody.common.SuccessResponse;
 import dev.umc.healody.common.SuccessStatus;
 import dev.umc.healody.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
@@ -29,7 +32,17 @@ public class FamilyApiController {
 
     @DeleteMapping
     public SuccessResponse<Void> delete(@RequestBody FamilyRequestDTO familyDTORequest){
-        boolean result = familyService.delete(familyDTORequest.getUserId(), familyDTORequest.getHomeId());
+        boolean result = familyService.delete(getCurrentUserId(), familyDTORequest.getHomeId());
         return new SuccessResponse<>(SuccessStatus.SUCCESS);
+    }
+
+    private Long getCurrentUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if ((authentication != null) && (authentication.getPrincipal() instanceof UserDetails)) {
+            String userName = authentication.getName();
+            Long userId = userService.findUserIdByPhone(userName);
+            return userId;
+        }
+        return null; // 인증된 사용자가 없을 경우 null 반환
     }
 }
