@@ -104,7 +104,7 @@ public class UserController {
     @GetMapping("/kakao/join") // 일단 가입을 시킨 다음, 'kakaoGetInfo'에서 추가 정보를 입력받는다.
     public void kakaoJoin(@ModelAttribute("newUser") User newUser, RedirectAttributes rttr){
         userService.kakaoJoin(newUser);
-        rttr.addFlashAttribute("newUserId", newUser.getUserId());
+        rttr.addFlashAttribute("newUserEmail", newUser.getUserId());
         //return "redirect:/api/auth/kakao/join/getInfo";
     }
 
