@@ -30,6 +30,7 @@ public class CareUserService {
         }
 
         CareUser careUser = requestDTO.toEntity(optionalHome.get());
+        home.setCaring_cnt(home.getCaring_cnt() + 1);
         CareUser save = careUserRepository.save(careUser);
 
         return save.getId();

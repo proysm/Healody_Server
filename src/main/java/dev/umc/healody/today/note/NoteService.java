@@ -87,7 +87,7 @@ public class NoteService {
     }
 
     public List<NoteResponseDto> getNoteByUserId(Long userId) {
-        List<Note> noteList = noteRepository.findAllByUserId(userId);
+        List<Note> noteList = noteRepository.findAllByUser_UserId(userId);
         NoteResponseDto responseDto = new NoteResponseDto();
         return responseDto.toDto(noteList);
     }

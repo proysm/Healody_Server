@@ -10,6 +10,7 @@ import dev.umc.healody.user.model.KakaoProfile;
 import dev.umc.healody.user.model.OAuthToken;
 import dev.umc.healody.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -30,6 +31,11 @@ import java.util.UUID;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+
+    @Value("${security.oauth2.client.registration.kakao.client-id}")
+    String clientId;
+    @Value("${security.oauth2.client.registration.kakao.redirect-uri}")
+    String redirectUri;
 
     @Autowired
 //    public UserService(UserRepository userRepository) {
@@ -98,15 +104,18 @@ public class UserService {
     public @ResponseBody User kakaoCallback(String code) throws JsonProcessingException {
 
         // 1. Post방식으로 key=value 데이터를 카카오쪽으로 요청한다.
-        RestTemplate rt = new RestTemplate(); // Http 요청을 편리하게 할 수 있다.
+        RestTemplate tokenRt = new RestTemplate(); // Http 요청을 편리하게 할 수 있다.
 
         // HttpHeader 오브젝트 생성
-        HttpHeaders headers = new HttpHeaders(); // Http header를 만든다.
-        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8"); // Http의 body data가 key=value의 data 형태라고 알려준다.
+        HttpHeaders tokenHeader = new HttpHeaders(); // Http header를 만든다.
+        tokenHeader.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8"); // Http의 body data가 key=value의 data 형태라고 알려준다.
 
         // body data를 저장한다.
-        String clientId = "c33420b52702ac0ebf8805e80e6078f1";
-        String redirectUri = "http://localhost:8080/api/auth/kakao/callback";
+//        @Value("${security.oauth2.client.registration.kakao.client-id}")
+//        String clientId;
+
+        //String redirectUri;
+
         // HttpBody 오브젝트 생성
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>(); // body data를 저장할 object
         params.add("grant_type", "authorization_code");
@@ -115,10 +124,10 @@ public class UserService {
         params.add("code", code); // code는 동적임
 
         // HttpHeader와 HttpBody를 하나의 오브젝트에 담는다.
-        HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(params, headers);
+        HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(params, tokenHeader);
 
         // 요청한다.
-        ResponseEntity<String> response = rt.exchange(
+        ResponseEntity<String> response = tokenRt.exchange(
                 "https://kauth.kakao.com/oauth/token",
                 HttpMethod.POST, // 요청 타입
                 kakaoTokenRequest, // Http body에 들어갈 data와 header 값
@@ -140,18 +149,18 @@ public class UserService {
 
 
         // 2. Post방식으로 key=value 데이터를 카카오쪽으로 요청한다.
-        RestTemplate rt2 = new RestTemplate(); // Http 요청을 편리하게 할 수 있다.
+        RestTemplate userRt = new RestTemplate(); // Http 요청을 편리하게 할 수 있다.
 
         // HttpHeader 오브젝트 생성
-        HttpHeaders headers2 = new HttpHeaders(); // Http header를 만든다.
-        headers2.add("Authorization", "Bearer " + oauthToken.getAccess_token());
-        headers2.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8"); // Http의 body data가 key=value의 data 형태라고 알려준다.
+        HttpHeaders userHeader = new HttpHeaders(); // Http header를 만든다.
+        userHeader.add("Authorization", "Bearer " + oauthToken.getAccess_token());
+        userHeader.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8"); // Http의 body data가 key=value의 data 형태라고 알려준다.
 
         // HttpHeader와 HttpBody를 하나의 오브젝트에 담는다.
-        HttpEntity<MultiValueMap<String, String>> kakaoProfileRequest = new HttpEntity<>(headers2);
+        HttpEntity<MultiValueMap<String, String>> kakaoProfileRequest = new HttpEntity<>(userHeader);
 
         // 요청한다.
-        ResponseEntity<String> response2 = rt2.exchange(
+        ResponseEntity<String> response2 = userRt.exchange(
                 "https://kapi.kakao.com/v2/user/me",
                 HttpMethod.POST, // 요청 타입
                 kakaoProfileRequest, // header 값
@@ -173,27 +182,21 @@ public class UserService {
         User user = new User();
 
         String name = kakaoProfile.getProperties().getNickname();
-        String email = kakaoProfile.getKakao_account().getEmail();
-        String nickName = kakaoProfile.getProperties().getNickname();
         UUID garbagePw = UUID.randomUUID(); // 쓰레기값 만들기
+        String email = kakaoProfile.getKakao_account().getEmail();
+        String image = kakaoProfile.getProperties().getThumbnail_image();
 
-        Date birthday = null;
-        String gender = null;
-        if(kakaoProfile.getKakao_account().birthday_needs_agreement == true){
-            birthday = Date.valueOf(kakaoProfile.getKakao_account().birthyear + kakaoProfile.getKakao_account().birthday);
-        }
-        if(kakaoProfile.getKakao_account().gender_needs_agreement == true){
-            gender = kakaoProfile.getKakao_account().gender;
-        }
 
-        user.setUserId(kakaoProfile.getId());
+        //user.setUserId(kakaoProfile.getId());
         user.setName(name);
-        user.setPhone(null);
-        user.setBirth(birthday);
         user.setEmail(email);
-        user.setGender(gender);
-        user.setNickname(nickName);
+        user.setImage(image);
         user.setPassword(String.valueOf(garbagePw));
+        user.setPhone(null);
+        user.setBirth(null);
+        user.setGender(null);
+        user.setNickname(null);
+
 
         return user; // 로그인을 한 사용자를 넘겨준다.(정보가 포함되어 있음)
 
@@ -201,25 +204,25 @@ public class UserService {
 
     // 2. 카카오 로그인 시도 -> 이미 가입한 사용자인지 확인하고 새로운 사용자라면 회원가입으로 이동한다.
     @Transactional(readOnly = true)
-    public User kakaoLogin(User user){
+    public Boolean kakaoLogin(User user){
 
-        //User principal = new User();
-        User principal = userRepository.findByUserId(user.getUserId());
-        if(principal != null){
-
-            // 로그인 구현해야 됨.
-        }
-        return principal;
+        if(checkEmailDuplication(user.getEmail())) return true; // 이미 존재하는 회원
+        else return false;
     }
 
     // 3. 카카오 회원가입 -> 추가 정보를 입력한다.
     @Transactional
     public void kakaoJoin(User newUser){
 
-
-        // 추가 정보를 받아야 함.
-
         userRepository.save(newUser);
+    }
+
+    // 4. 카카오 로그아웃
+    @Transactional
+    public void kakaoLogout(User newUser) {
+
+
+
     }
 
     @Transactional

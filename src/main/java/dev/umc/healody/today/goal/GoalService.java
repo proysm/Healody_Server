@@ -8,6 +8,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -16,6 +21,7 @@ public class GoalService {
 
     private final GoalRepository goalRepository;
     private final UserRepository userRepository;
+    private final RecordsRepository recordsRepository;
 
     @Transactional
     public String createGoal(Long userId, GoalRequestDto requestDto) {
@@ -27,7 +33,63 @@ public class GoalService {
 
         Goal goal = requestDto.toEntity(user);
         goalRepository.save(goal);
-        return "이번 달 회원님의 목표는 " + goal.getBehavior().getDisplayValue() + "입니다";
+        return goal.getStartDate().getMonthValue() + "월 회원님의 목표는 " + goal.getBehavior().getDisplayValue() + "입니다";
+    }
+
+    @Transactional
+    public void createRecord(Long goalId) {
+        Goal goal = goalRepository.findById(goalId).get();
+
+        int startCnt = goal.getStartDate().getDayOfMonth();
+        int nowCnt = LocalDate.now().getDayOfMonth();
+
+        // 날짜가 지났다면
+        if((nowCnt - startCnt) == goal.getCnt()) {
+            Records records = Records.builder()
+                    .goal(goal)
+                    .today(LocalDate.now())
+                    .val("0")
+                    .build();
+            recordsRepository.save(records);
+            goal.plusCnt();
+        }
+        // 그렇지 않았다면
+        else {
+            System.out.println("createRecord 예외처리");
+        }
+    }
+
+    @Transactional
+    public void dateCreateRecord(Long goalId, String date) {
+        Goal goal = goalRepository.findById(goalId).get();
+
+        LocalDate localDate = LocalDate.parse(date);
+
+        int startCnt = goal.getStartDate().getDayOfMonth();
+        int nowCnt = localDate.getDayOfMonth();
+
+        // 날짜가 지났다면
+        if((nowCnt - startCnt) == goal.getCnt()) {
+            Records records = Records.builder()
+                    .goal(goal)
+                    .today(localDate)
+                    .val("0")
+                    .build();
+            recordsRepository.save(records);
+            goal.plusCnt();
+        }
+        // 그렇지 않았다면
+        else {
+            System.out.println("dateCreateRecord 예외처리");
+        }
+    }
+
+    @Transactional
+    public String updateRecords(Long recordsId, String val) {
+        Records records = recordsRepository.findById(recordsId).get();
+        records.updateVal(val);
+
+        return val + " 값으로 업데이트 되었습니다.";
     }
 
     public GoalResponseDto findGoal(Long goalId) {
@@ -50,14 +112,14 @@ public class GoalService {
         if(requestDto.getStartDate() != null)
             goal.updateStartDate(requestDto.getStartDate());
 
-        if(requestDto.getFinishDate() != null)
-            goal.updateFinishDate(requestDto.getFinishDate());
+        if(requestDto.getEndDate() != null)
+            goal.updateEndDate(requestDto.getEndDate());
 
         if(requestDto.getBehavior() != null)
             goal.updateBehavior(requestDto.getBehavior());
 
-        if(requestDto.getValue() != null)
-            goal.updateValue(requestDto.getValue());
+        if(requestDto.getTarget() != null)
+            goal.updateTarget(requestDto.getTarget());
 
         return goal.getId();
     }

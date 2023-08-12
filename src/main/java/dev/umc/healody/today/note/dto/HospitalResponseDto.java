@@ -7,13 +7,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Getter @NoArgsConstructor
 public class HospitalResponseDto {
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
-    private Date date;
+    private String date;
     private String title;
     private String memo;
     private Purpose purpose;
@@ -22,7 +23,7 @@ public class HospitalResponseDto {
     private String noteType;
 
     @Builder
-    public HospitalResponseDto(Date date, String title, String memo, Purpose purpose, String name, String surgery, String noteType) {
+    public HospitalResponseDto(String date, String title, String memo, Purpose purpose, String name, String surgery, String noteType) {
         this.date = date;
         this.title = title;
         this.memo = memo;
@@ -33,8 +34,13 @@ public class HospitalResponseDto {
     }
 
     public HospitalResponseDto toDto(Hospital hospital) {
+
+        Date realDate = hospital.getDate();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String stringDate = dateFormat.format(realDate);
+
         return HospitalResponseDto.builder()
-                .date(hospital.getDate())
+                .date(stringDate)
                 .title(hospital.getTitle())
                 .memo(hospital.getMemo())
                 .purpose(hospital.getPurpose())

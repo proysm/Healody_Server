@@ -15,6 +15,6 @@ public class HomeDto {
 
 
     public Home toEntity(){
-        return Home.builder().name(name).homeId(homeId).build();
+        return Home.builder().name(name).homeId(homeId).admin(admin).build();
     }
 }

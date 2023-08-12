@@ -41,41 +41,41 @@ public class NoteController {
         return new SuccessResponse<>(SuccessStatus.SUCCESS, responseDtoList);
     }
 
-//    @GetMapping("/note/hospital/{noteId}")
-//    public SuccessResponse<HospitalResponseDto> findNoteHospital(@PathVariable Long noteId) {
-//        HospitalResponseDto responseDto = noteService.findNoteHospital(noteId);
-//        return new SuccessResponse<>(SuccessStatus.SUCCESS, responseDto);
+    @GetMapping("/note/hospital/{noteId}")
+    public SuccessResponse<HospitalResponseDto> findNoteHospital(@PathVariable Long noteId) {
+        HospitalResponseDto responseDto = noteService.findNoteHospital(noteId);
+        return new SuccessResponse<>(SuccessStatus.SUCCESS, responseDto);
+    }
+
+    @GetMapping("/note/medicine/{noteId}")
+    public SuccessResponse<MedicineResponseDto> findNoteMedicine(@PathVariable Long noteId) {
+        MedicineResponseDto responseDto = noteService.findNoteMedicine(noteId);
+        return new SuccessResponse<>(SuccessStatus.SUCCESS, responseDto);
+    }
+
+    @GetMapping("/note/symptom/{noteId}")
+    public SuccessResponse<SymptomResponseDto> findNoteSymptom(@PathVariable Long noteId) {
+        SymptomResponseDto responseDto = noteService.findNoteSymptom(noteId);
+        return new SuccessResponse<>(SuccessStatus.SUCCESS, responseDto);
+    }
+
+//    @PatchMapping("/note/hospital/{noteId}")
+//    public SuccessResponse<Long> updateNoteHospital(@PathVariable Long noteId, @RequestBody HospitalRequestDto requestDto) {
+//        Long updateId = noteService.updateNoteHospital(requestDto.getUserId(), noteId, requestDto);
+//        return new SuccessResponse<>(SuccessStatus.SUCCESS, updateId);
 //    }
 //
-//    @GetMapping("/note/medicine/{noteId}")
-//    public SuccessResponse<MedicineResponseDto> findNoteMedicine(@PathVariable Long noteId) {
-//        MedicineResponseDto responseDto = noteService.findNoteMedicine(noteId);
-//        return new SuccessResponse<>(SuccessStatus.SUCCESS, responseDto);
+//    @PatchMapping("/note/medicine/{noteId}")
+//    public SuccessResponse<Long> updateNoteMedicine(@PathVariable Long noteId, @RequestBody MedicineRequestDto requestDto) {
+//        Long updateId = noteService.updateNoteMedicine(requestDto.getUserId(), noteId, requestDto);
+//        return new SuccessResponse<>(SuccessStatus.SUCCESS, updateId);
 //    }
 //
-//    @GetMapping("/note/symptom/{noteId}")
-//    public SuccessResponse<SymptomResponseDto> findNoteSymptom(@PathVariable Long noteId) {
-//        SymptomResponseDto responseDto = noteService.findNoteSymptom(noteId);
-//        return new SuccessResponse<>(SuccessStatus.SUCCESS, responseDto);
+//    @PatchMapping("/note/symptom/{noteId}")
+//    public SuccessResponse<Long> updateNoteSymptom(@PathVariable Long noteId, @RequestBody SymptomRequestDto requestDto) {
+//        Long updateId = noteService.updateNoteSymptom(requestDto.getUserId(), noteId, requestDto);
+//        return new SuccessResponse<>(SuccessStatus.SUCCESS, updateId);
 //    }
-
-    @PatchMapping("/note/hospital/{noteId}")
-    public SuccessResponse<Long> updateNoteHospital(@PathVariable Long noteId, @RequestBody HospitalRequestDto requestDto) {
-        Long updateId = noteService.updateNoteHospital(requestDto.getUserId(), noteId, requestDto);
-        return new SuccessResponse<>(SuccessStatus.SUCCESS, updateId);
-    }
-
-    @PatchMapping("/note/medicine/{noteId}")
-    public SuccessResponse<Long> updateNoteMedicine(@PathVariable Long noteId, @RequestBody MedicineRequestDto requestDto) {
-        Long updateId = noteService.updateNoteMedicine(requestDto.getUserId(), noteId, requestDto);
-        return new SuccessResponse<>(SuccessStatus.SUCCESS, updateId);
-    }
-
-    @PatchMapping("/note/symptom/{noteId}")
-    public SuccessResponse<Long> updateNoteSymptom(@PathVariable Long noteId, @RequestBody SymptomRequestDto requestDto) {
-        Long updateId = noteService.updateNoteSymptom(requestDto.getUserId(), noteId, requestDto);
-        return new SuccessResponse<>(SuccessStatus.SUCCESS, updateId);
-    }
 
     @DeleteMapping("/note/hospital/{noteId}")
     public SuccessResponse deleteNoteHospital(@PathVariable Long noteId) {
