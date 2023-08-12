@@ -75,15 +75,14 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public boolean checkPhoneDuplication(String phone) {
-        boolean usernameDuplicate = userRepository.existsByPhone(phone);
-        return usernameDuplicate;
+        boolean phoneDuplicate = userRepository.existsByPhone(phone);
+        return phoneDuplicate;
     }
 
     @Transactional(readOnly = true)
     public boolean checkNicknameDuplication(String nickname) {
         boolean nicknameDuplicate = userRepository.existsByNickname(nickname);
         return nicknameDuplicate;
-
     }
 
     @Transactional(readOnly = true)
@@ -236,4 +235,5 @@ public class UserService {
 //    public Optional<User> getUserWithAuthorities(String phone) {
 //        return userRepository.findOneWithAuthoritiesByPhone(phone);
 //    }
+
 }

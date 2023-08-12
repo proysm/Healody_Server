@@ -11,4 +11,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TokenDto {
     String token;
+
+//    private String grantType;
+//    private String accessToken;
+//    private String refreshToken;
+//    private String key;
+
 }
