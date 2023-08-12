@@ -1,5 +1,6 @@
 package dev.umc.healody.user.service;
 
+import dev.umc.healody.user.entity.CustomUserDetails;
 import dev.umc.healody.user.entity.User;
 import dev.umc.healody.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -39,8 +40,9 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .map(authority -> new SimpleGrantedAuthority(authority.getAuthorityName()))
                 .collect(Collectors.toList());
 
-        return new org.springframework.security.core.userdetails.User(user.getPhone(),
-                user.getPassword(),
-                grantedAuthorities);
+//        return new org.springframework.security.core.userdetails.User(user.getPhone(),
+//                user.getPassword(),
+//                grantedAuthorities);
+        return new CustomUserDetails(user.getUserId(), user.getPhone(), user.getPassword(), grantedAuthorities);
     }
 }

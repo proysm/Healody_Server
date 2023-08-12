@@ -4,6 +4,7 @@ import dev.umc.healody.user.dto.LoginDto;
 import dev.umc.healody.user.dto.TokenDto;
 import dev.umc.healody.user.jwt.JwtFilter;
 import dev.umc.healody.user.jwt.TokenProvider;
+import dev.umc.healody.user.repository.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -22,22 +23,28 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoginController {
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final UserRepository userRepository;
 
-    public LoginController(TokenProvider tokenProvider, AuthenticationManagerBuilder authenticationManagerBuilder) {
+    public LoginController(TokenProvider tokenProvider, AuthenticationManagerBuilder authenticationManagerBuilder, UserRepository userRepository) {
         this.tokenProvider = tokenProvider;
         this.authenticationManagerBuilder = authenticationManagerBuilder;
+        this.userRepository = userRepository;
     }
 
     @PostMapping
     public ResponseEntity<TokenDto> authorize(@Valid @RequestBody LoginDto loginDto) {
 
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(loginDto.getPhone(), loginDto.getPassword());
+                new UsernamePasswordAuthenticationToken(
+                        loginDto.getPhone(),
+                        loginDto.getPassword()
+                );
 
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        String jwt = tokenProvider.createToken(authentication);
+        Long userId = userRepository.findByPhone(loginDto.getPhone()).getUserId();
+        String jwt = tokenProvider.createToken(authentication, userId);
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
