@@ -31,7 +31,7 @@ public class FamilyService {
         Home home = null;
 
         if(optionalUser.isPresent()) user = optionalUser.get();
-        if(optionalUser.isPresent()) home = optionalHome.get();
+        if(optionalHome.isPresent()) home = optionalHome.get();
         if(checkFamilyOver(requestDTO.getUserId()) ||
                 checkFamilyMemberOver(requestDTO.getHomeId()) ||
                 checkFamilyDuplicate(requestDTO.getUserId(), requestDTO.getHomeId())
@@ -62,6 +62,12 @@ public class FamilyService {
 
     @Transactional
     public boolean delete(Long userId, Long homeId){
+        Optional<Home> optionalHome = homeRepository.findHomeByHomeId(homeId);
+        Home home = null;
+
+        if(optionalHome.isPresent()) home = optionalHome.get();
+        if(home.getAdmin() != userId) return false;
+
         return familyRepository.remove(userId, homeId);
     }
 
