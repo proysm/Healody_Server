@@ -26,9 +26,9 @@ public class FamilyApiController {
         return new SuccessResponse<>(SuccessStatus.SUCCESS, familyService.create(request));
     }
 
-    @DeleteMapping("/{homeId}")
-    public SuccessResponse<Void> delete(@PathVariable Long homeId){
-        boolean result = familyService.delete(getCurrentUserId(), homeId);
+    @DeleteMapping
+    public SuccessResponse<Void> delete(@RequestBody FamilyRequestDTO familyDTORequest){
+        boolean result = familyService.delete(familyDTORequest.getUserId(), familyDTORequest.getHomeId());
         return new SuccessResponse<>(SuccessStatus.SUCCESS);
     }
 

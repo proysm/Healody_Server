@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static dev.umc.healody.common.userInfo.getCurrentUserId;
+
 @Service
 @RequiredArgsConstructor
 public class FamilyService {
@@ -66,7 +68,8 @@ public class FamilyService {
         Home home = null;
 
         if(optionalHome.isPresent()) home = optionalHome.get();
-        if(home.getAdmin() != userId) return false;
+        if(home == null) return false;
+        if(home.getAdmin() != getCurrentUserId()) return false;
 
         return familyRepository.remove(userId, homeId);
     }
