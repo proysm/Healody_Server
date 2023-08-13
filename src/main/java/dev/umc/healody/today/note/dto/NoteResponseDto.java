@@ -1,5 +1,7 @@
 package dev.umc.healody.today.note.dto;
 
+import dev.umc.healody.family.careuser.domain.CareUser;
+import dev.umc.healody.family.careuser.domain.CareUserNote;
 import dev.umc.healody.today.note.Note;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,6 +31,38 @@ public class NoteResponseDto {
         NoteResponseDtoList responseDtoList = new NoteResponseDtoList();
 
         for(Note note : notes) {
+            this.noteId = note.getId();
+
+            // Date to String
+            Date realDate = note.getDate();
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            String stringDate = dateFormat.format(realDate);
+            this.date = stringDate;
+
+            this.title = note.getTitle();
+
+            // NoteType 한글 적용
+            if (note.getNoteType().equals("H")) {
+                this.noteType = "병원";
+            } else if (note.getNoteType().equals("M")) {
+                this.noteType = "약";
+            } else if (note.getNoteType().equals("S")) {
+                this.noteType = "증상";
+            } else {
+                System.out.println("noteType 예외처리");
+            }
+
+            responseDtoList.addResponseDto(new NoteResponseDto(noteId, date, title, noteType));
+        }
+
+        return responseDtoList.getResponseDtoList();
+    }
+
+    public List<NoteResponseDto> toDtoCareUser(List<CareUserNote> notes) {
+
+        NoteResponseDtoList responseDtoList = new NoteResponseDtoList();
+
+        for(CareUserNote note : notes) {
             this.noteId = note.getId();
 
             // Date to String

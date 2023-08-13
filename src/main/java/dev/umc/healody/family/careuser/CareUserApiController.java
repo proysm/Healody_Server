@@ -2,14 +2,13 @@ package dev.umc.healody.family.careuser;
 
 import dev.umc.healody.common.SuccessResponse;
 import dev.umc.healody.common.SuccessStatus;
-import dev.umc.healody.today.note.dto.HospitalRequestDto;
+import dev.umc.healody.family.careuser.dto.CareUserNoteRequestDto;
+import dev.umc.healody.family.careuser.dto.CareUserRequestDTO;
+import dev.umc.healody.today.note.dto.NoteResponseDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 /*
 해야 하는 것
@@ -49,4 +48,17 @@ public class CareUserApiController {
         boolean result = careUserService.delete(careuserId);
         return new SuccessResponse<>(SuccessStatus.SUCCESS);
     }
+
+    @PostMapping("/note")
+    public SuccessResponse<Long> createNote(@RequestBody CareUserNoteRequestDto requestDto) {
+        Long noteId = careUserService.createNote(requestDto.getUserId(), requestDto);
+        return new SuccessResponse<>(SuccessStatus.SUCCESS, noteId);
+    }
+
+    @GetMapping("/note/{careUserId}")
+    public SuccessResponse<List<NoteResponseDto>> getNoteByUserId(@PathVariable Long careUserId) {
+        List<NoteResponseDto> responseDtoList = careUserService.getNoteByUserId(careUserId);
+        return new SuccessResponse<>(SuccessStatus.SUCCESS, responseDtoList);
+    }
+
 }
