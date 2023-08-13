@@ -1,4 +1,4 @@
-package dev.umc.healody.family.careuser;
+package dev.umc.healody.family.careuser.domain;
 
 import dev.umc.healody.home.domain.Home;
 import jakarta.persistence.*;
@@ -24,21 +24,21 @@ public class CareUser{
     private String image;
     @Column(name = "nickname")
     private String nickname;
-    @Column(name = "massage")
-    private String massage;
+    @Column(name = "message")
+    private String message;
 
     //사실 빌더까지는 필요 없을 것 같은나 나중에 기획적으로 추가된다는 가정하여 작성 했음.
     @Builder
-    public CareUser(Home home, String image, String nickname, String massage){
+    public CareUser(Home home, String image, String nickname, String message){
         this.home = home;
         this.nickname = nickname;
         this.image = image;
-        this.massage = massage;
+        this.message = message;
     }
 
-    public void update(String nickname, String image, String massage){
+    public void update(String nickname, String image, String message){
         this.nickname = nickname;
         this.image = image;
-        this.massage = massage;
+        this.message = message;
     }
 }
