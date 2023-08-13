@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static dev.umc.healody.common.userInfo.getCurrentUserId;
+
 @Service
 @RequiredArgsConstructor
 public class FamilyService {
@@ -31,7 +33,7 @@ public class FamilyService {
         Home home = null;
 
         if(optionalUser.isPresent()) user = optionalUser.get();
-        if(optionalUser.isPresent()) home = optionalHome.get();
+        if(optionalHome.isPresent()) home = optionalHome.get();
         if(checkFamilyOver(requestDTO.getUserId()) ||
                 checkFamilyMemberOver(requestDTO.getHomeId()) ||
                 checkFamilyDuplicate(requestDTO.getUserId(), requestDTO.getHomeId())
@@ -62,6 +64,13 @@ public class FamilyService {
 
     @Transactional
     public boolean delete(Long userId, Long homeId){
+        Optional<Home> optionalHome = homeRepository.findHomeByHomeId(homeId);
+        Home home = null;
+
+        if(optionalHome.isPresent()) home = optionalHome.get();
+        if(home == null) return false;
+        if(home.getAdmin() != getCurrentUserId()) return false;
+
         return familyRepository.remove(userId, homeId);
     }
 
