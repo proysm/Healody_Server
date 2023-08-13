@@ -1,6 +1,6 @@
 package dev.umc.healody.family.careuser;
 
-import dev.umc.healody.family.Family;
+import dev.umc.healody.family.careuser.domain.CareUser;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
@@ -26,7 +26,7 @@ public class JpaCareUserRepository implements CareUserRepository{
     public boolean update(Long id, CareUser updatedCareUser) {
         CareUser careUser = em.find(CareUser.class, id);
         if(careUser != null){
-            careUser.update(updatedCareUser.getNickname(), updatedCareUser.getImage(), updatedCareUser.getMassage());
+            careUser.update(updatedCareUser.getNickname(), updatedCareUser.getImage(), updatedCareUser.getMessage());
             return true;
         }
 
