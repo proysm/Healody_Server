@@ -1,5 +1,6 @@
 package dev.umc.healody.family.careuser;
 
+import dev.umc.healody.common.FileUploadUtil;
 import dev.umc.healody.family.careuser.domain.CareUser;
 import dev.umc.healody.family.careuser.domain.CareUserNote;
 import dev.umc.healody.family.careuser.dto.CareUserNoteRequestDto;
@@ -12,7 +13,9 @@ import dev.umc.healody.today.note.dto.NoteResponseDtoList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -28,8 +31,10 @@ public class CareUserService {
     private final CareUserNoteRepository careUserNoteRepository;
     private final CareUserTodoRepository careUserTodoRepository;
 
+    private final FileUploadUtil fileUploadUtil;
+
     @Transactional
-    public Long create(CareUserRequestDTO requestDTO){
+    public Long create(CareUserRequestDTO requestDTO, MultipartFile image) throws IOException {
         Optional<Home> optionalHome = homeRepository.findById(requestDTO.getHomeId());
         Home home = null;
 
@@ -40,8 +45,11 @@ public class CareUserService {
             return null;
         }
 
+        // 이미지 URL 생성
+        String imgUrl = fileUploadUtil.uploadFile("profile", image);
+
         home = optionalHome.get();
-        CareUser careUser = requestDTO.toEntity(optionalHome.get());
+        CareUser careUser = requestDTO.toEntity(home, imgUrl);
         home.setCaring_cnt(home.getCaring_cnt() + 1);
         CareUser save = careUserRepository.save(careUser);
 

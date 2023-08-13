@@ -23,7 +23,7 @@ public class CareUserRequestDTO {
         this.nickname = nickname;
     }
 
-    public CareUser toEntity(Home home){
-        return CareUser.builder().home(home).image(image).nickname(nickname).message(message).build();
+    public CareUser toEntity(Home home, String imgUrl){
+        return CareUser.builder().home(home).image(imgUrl).nickname(nickname).message(message).build();
     }
 }

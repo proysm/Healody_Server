@@ -1,5 +1,6 @@
 package dev.umc.healody.family.careuser;
 
+import dev.umc.healody.common.FileUploadUtil;
 import dev.umc.healody.common.SuccessResponse;
 import dev.umc.healody.common.SuccessStatus;
 import dev.umc.healody.family.careuser.dto.CareUserNoteRequestDto;
@@ -7,7 +8,9 @@ import dev.umc.healody.family.careuser.dto.CareUserRequestDTO;
 import dev.umc.healody.today.note.dto.NoteResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 /*
@@ -23,16 +26,12 @@ public class CareUserApiController {
 
     private final CareUserService careUserService;
 
+    private final FileUploadUtil fileUploadUtil;
+
     //돌봄 추가
     @PostMapping
-    public SuccessResponse<Long> create(@RequestBody CareUserRequestDTO careUserRequestDTO){
-        CareUserRequestDTO requestDTO = CareUserRequestDTO.builder()
-                .homeId(careUserRequestDTO.getHomeId())
-                .nickname(careUserRequestDTO.getNickname())
-                .image(careUserRequestDTO.getImage())
-                .build();
-
-        Long careUerId = careUserService.create(requestDTO);
+    public SuccessResponse<Long> create(@RequestPart CareUserRequestDTO requestDTO, @RequestPart MultipartFile image) throws IOException {
+        Long careUerId = careUserService.create(requestDTO, image);
         return new SuccessResponse<>(SuccessStatus.SUCCESS, careUerId);
     }
 
@@ -59,6 +58,11 @@ public class CareUserApiController {
     public SuccessResponse<List<NoteResponseDto>> getNoteByUserId(@PathVariable Long careUserId) {
         List<NoteResponseDto> responseDtoList = careUserService.getNoteByUserId(careUserId);
         return new SuccessResponse<>(SuccessStatus.SUCCESS, responseDtoList);
+    }
+
+    @PostMapping("/test/file/upload")
+    public String uploadFile(@RequestParam("category") String category, @RequestParam("file") MultipartFile multipartFile) throws IOException {
+        return fileUploadUtil.uploadFile(category, multipartFile);
     }
 
 }
