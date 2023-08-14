@@ -1,30 +1,64 @@
 package dev.umc.healody.today.todo.dto;
 
+import dev.umc.healody.family.careuser.domain.CareUserTodo;
 import dev.umc.healody.today.todo.Todo;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 @Getter @NoArgsConstructor
 public class TodoResponseDto {
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date date;
+    private String date;
     private String content;
 
     @Builder
-    public TodoResponseDto(Date date, String content) {
+    public TodoResponseDto(String date, String content) {
         this.date = date;
         this.content = content;
     }
 
-    public TodoResponseDto toDto(Todo todo) {
-        return TodoResponseDto.builder()
-                .date(todo.getDate())
-                .content(todo.getContent())
-                .build();
+    public List<TodoResponseDto> toDto(List<Todo> todos) {
+
+        TodoResponseDtoList responseDtoList = new TodoResponseDtoList();
+
+        for(Todo todo : todos) {
+            // Date to String
+            Date realDate = todo.getDate();
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            String stringDate = dateFormat.format(realDate);
+            this.date = stringDate;
+
+            this.content = todo.getContent();
+
+            responseDtoList.addResponseDto(new TodoResponseDto(date, content));
+        }
+
+        return responseDtoList.getResponseDtoList();
+    }
+
+    public List<TodoResponseDto> toDtoCareUser(List<CareUserTodo> todos) {
+
+        TodoResponseDtoList responseDtoList = new TodoResponseDtoList();
+
+        for(CareUserTodo todo : todos) {
+            // Date to String
+            Date realDate = todo.getDate();
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            String stringDate = dateFormat.format(realDate);
+            this.date = stringDate;
+
+            this.content = todo.getContent();
+
+            responseDtoList.addResponseDto(new TodoResponseDto(date, content));
+        }
+
+        return responseDtoList.getResponseDtoList();
     }
 }

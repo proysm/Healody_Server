@@ -7,6 +7,8 @@ import dev.umc.healody.today.todo.dto.TodoResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @RequestMapping("/api")
 @RestController
@@ -20,10 +22,10 @@ public class TodoController {
         return new SuccessResponse<>(SuccessStatus.SUCCESS, todoId);
     }
 
-    @GetMapping("/todo/{todoId}")
-    public SuccessResponse<TodoResponseDto> findTodo(@PathVariable Long todoId) {
-        TodoResponseDto responseDto = todoService.findTodo(todoId);
-        return new SuccessResponse<>(SuccessStatus.SUCCESS, responseDto);
+    @GetMapping("/todo/{userId}")
+    public SuccessResponse<List<TodoResponseDto>> findTodo(@PathVariable Long userId) {
+        List<TodoResponseDto> responseDtoList = todoService.findTodayTodo(userId);
+        return new SuccessResponse<>(SuccessStatus.SUCCESS, responseDtoList);
     }
 
     @PatchMapping("/todo/{todoId}")
