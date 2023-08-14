@@ -1,5 +1,7 @@
 package dev.umc.healody.family.careuser;
 
+import dev.umc.healody.today.todo.dto.TodoRequestDto;
+import dev.umc.healody.today.todo.dto.TodoResponseDto;
 import dev.umc.healody.utils.FileUploadUtil;
 import dev.umc.healody.common.SuccessResponse;
 import dev.umc.healody.common.SuccessStatus;
@@ -48,6 +50,7 @@ public class CareUserApiController {
         return new SuccessResponse<>(SuccessStatus.SUCCESS);
     }
 
+    // 돌봄계정 기록 CRUD
     @PostMapping("/note")
     public SuccessResponse<Long> createNote(@RequestBody CareUserNoteRequestDto requestDto) {
         Long noteId = careUserService.createNote(requestDto.getUserId(), requestDto);
@@ -60,6 +63,38 @@ public class CareUserApiController {
         return new SuccessResponse<>(SuccessStatus.SUCCESS, responseDtoList);
     }
 
+    @DeleteMapping("/note/{noteId}")
+    public SuccessResponse deleteNote(@PathVariable Long noteId) {
+        careUserService.deleteNote(noteId);
+        return new SuccessResponse<>(SuccessStatus.SUCCESS);
+    }
+
+    // 돌봄계정 할일 CRUD
+    @PostMapping("/todo")
+    public SuccessResponse<Long> createTodo(@RequestBody TodoRequestDto requestDto) {
+        Long todoId = careUserService.createTodo(requestDto.getUserId(), requestDto);
+        return new SuccessResponse<>(SuccessStatus.SUCCESS, todoId);
+    }
+
+    @GetMapping("/todo/{careUserId}")
+    public SuccessResponse<List<TodoResponseDto>> findTodo(@PathVariable Long careUserId) {
+        List<TodoResponseDto> responseDtoList = careUserService.findTodayTodo(careUserId);
+        return new SuccessResponse<>(SuccessStatus.SUCCESS, responseDtoList);
+    }
+
+    @PatchMapping("/todo/{todoId}")
+    public SuccessResponse<Long> updateTodo(@PathVariable Long todoId, @RequestBody TodoRequestDto requestDto) {
+        Long updateId = careUserService.updateTodo(requestDto.getUserId(), todoId, requestDto);
+        return new SuccessResponse<>(SuccessStatus.SUCCESS, updateId);
+    }
+
+    @DeleteMapping("/todo/{todoId}")
+    public SuccessResponse deleteTodo(@PathVariable Long todoId) {
+        careUserService.deleteTodo(todoId);
+        return new SuccessResponse<>(SuccessStatus.SUCCESS);
+    }
+
+    // 파일 업로드 테스트
     @PostMapping("/test/file/upload")
     public String uploadFile(@RequestParam("category") String category, @RequestParam("file") MultipartFile multipartFile) throws IOException {
         return fileUploadUtil.uploadFile(category, multipartFile);

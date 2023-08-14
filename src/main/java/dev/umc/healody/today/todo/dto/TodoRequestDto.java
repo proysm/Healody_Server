@@ -1,5 +1,7 @@
 package dev.umc.healody.today.todo.dto;
 
+import dev.umc.healody.family.careuser.domain.CareUser;
+import dev.umc.healody.family.careuser.domain.CareUserTodo;
 import dev.umc.healody.today.todo.Todo;
 import dev.umc.healody.user.entity.User;
 import lombok.Builder;
@@ -27,6 +29,14 @@ public class TodoRequestDto {
     public Todo toEntity(User user, Date date) {
         return Todo.builder()
                 .user(user)
+                .date(date)
+                .content(content)
+                .build();
+    }
+
+    public CareUserTodo toEntityCareUser(CareUser user, Date date) {
+        return CareUserTodo.builder()
+                .careUser(user)
                 .date(date)
                 .content(content)
                 .build();
