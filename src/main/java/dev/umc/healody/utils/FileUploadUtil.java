@@ -1,4 +1,4 @@
-package dev.umc.healody.common;
+package dev.umc.healody.utils;
 
  import com.amazonaws.services.s3.AmazonS3Client;
  import com.amazonaws.services.s3.model.CannedAccessControlList;
