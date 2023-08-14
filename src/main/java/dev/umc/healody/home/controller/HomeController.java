@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static dev.umc.healody.common.userInfo.getCurrentUserId;
+import static dev.umc.healody.common.FindUserInfo.getCurrentUserId;
 
 
 @RestController

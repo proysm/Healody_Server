@@ -1,6 +1,6 @@
 package dev.umc.healody.family.careuser;
 
-import dev.umc.healody.common.FileUploadUtil;
+import dev.umc.healody.utils.FileUploadUtil;
 import dev.umc.healody.family.careuser.domain.CareUser;
 import dev.umc.healody.family.careuser.domain.CareUserNote;
 import dev.umc.healody.family.careuser.dto.CareUserNoteRequestDto;
@@ -9,7 +9,6 @@ import dev.umc.healody.family.careuser.dto.CareUserResponseDTO;
 import dev.umc.healody.home.domain.Home;
 import dev.umc.healody.home.repository.HomeRepository;
 import dev.umc.healody.today.note.dto.NoteResponseDto;
-import dev.umc.healody.today.note.dto.NoteResponseDtoList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

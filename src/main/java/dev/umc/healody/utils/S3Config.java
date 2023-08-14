@@ -1,4 +1,4 @@
-package dev.umc.healody.common;
+package dev.umc.healody.utils;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;

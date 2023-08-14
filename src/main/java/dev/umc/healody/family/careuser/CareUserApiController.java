@@ -1,6 +1,6 @@
 package dev.umc.healody.family.careuser;
 
-import dev.umc.healody.common.FileUploadUtil;
+import dev.umc.healody.utils.FileUploadUtil;
 import dev.umc.healody.common.SuccessResponse;
 import dev.umc.healody.common.SuccessStatus;
 import dev.umc.healody.family.careuser.dto.CareUserNoteRequestDto;

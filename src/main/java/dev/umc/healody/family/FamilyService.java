@@ -5,7 +5,6 @@ import dev.umc.healody.home.repository.HomeRepository;
 import dev.umc.healody.user.entity.User;
 import dev.umc.healody.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static dev.umc.healody.common.userInfo.getCurrentUserId;
+import static dev.umc.healody.common.FindUserInfo.getCurrentUserId;
 
 @Service
 @RequiredArgsConstructor
