@@ -182,7 +182,7 @@ public class UserService {
         User user = new User();
 
         String name = kakaoProfile.getProperties().getNickname();
-        UUID garbagePw = UUID.randomUUID(); // 쓰레기값 만들기
+        RandomString garbagePw = new RandomString(16); // 쓰레기값 만들기
         String email = kakaoProfile.getKakao_account().getEmail();
         String image = kakaoProfile.getProperties().getThumbnail_image();
 
