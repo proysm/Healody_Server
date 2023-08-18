@@ -105,32 +105,23 @@ public class UserController {
     public String kakaoCallback(String code, RedirectAttributes rttr) throws JsonProcessingException {
         // 인증 코드, 카카오 로그인이 성공하면 이곳으로 감, @ResponseBody를 붙이면 데이터를 리턴해주는 함수가 됨.
 
-        User user = userService.kakaoCallback(code); // 현재 로그인을 시도한 사용자의 정보를 리턴함
+        User user = userService.kakaoCallback(code); // 현재 로그인을 시도한 사용자의 정보를 리턴한다.
+        Boolean principal = userService.kakaoLogin(user); // 로그인을 시도한다.
 
-        rttr.addFlashAttribute("user", user);
-        return "redirect:/api/auth/kakao/login";
-    }
-
-    @RequestMapping("/kakao/login")
-    public String kakaoLogin(@ModelAttribute("user") User user, RedirectAttributes rttr){
-
-        User newUser = user;
-
-        Boolean principal = userService.kakaoLogin(newUser); // 로그인을 시도한다.
-        if(principal == false){ // 새로운 유저이면 회원가입을 진행한다.
-            rttr.addFlashAttribute("newUser", newUser);
+        // 새로운 유저이면 회원가입을 진행한다.
+        if(principal == false){
+            rttr.addFlashAttribute("newUser", user);
             return "redirect:/api/auth/kakao/join";
         }
         // 이미 존재하는 유저이면 로그인을 진행한다.
-        return null;
+        return "redirect:/api/auth/kakao/login";
     }
+
 
     @ResponseBody
     @GetMapping("/kakao/join") // 일단 가입을 시킨 다음, 'kakaoGetInfo'에서 추가 정보를 입력받는다.
     public void kakaoJoin(@ModelAttribute("newUser") User newUser, RedirectAttributes rttr){
         userService.kakaoJoin(newUser);
-        rttr.addFlashAttribute("newUserEmail", newUser.getUserId());
-        //return "redirect:/api/auth/kakao/join/getInfo";
     }
 
 
@@ -147,13 +138,14 @@ public class UserController {
         //userService.kakaoJoin(newUser); @Transactional을 사용하면 굳이 할 필요 없음.
     }
 
-    @ResponseBody
-    @PostMapping("/kakao/logout")
-    public String kakaoLogout(User newUser){
-
-        userService.kakaoLogout(newUser);
-        return "카카오 로그아웃이 완료되었습니다.";
-    }
+//    @ResponseBody
+//    @PostMapping("/kakao/logout")
+//    public String kakaoLogout(User newUser){
+//
+//        userService.kakaoLogout(newUser);
+//        return "카카오 로그아웃이 완료되었습니다.";
+//    }
+    // 토큰 발급을 끊어서 로그아웃 시킨다.
 
 
 }

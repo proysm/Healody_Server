@@ -202,7 +202,7 @@ public class UserService {
 
     }
 
-    // 2. 카카오 로그인 시도 -> 이미 가입한 사용자인지 확인하고 새로운 사용자라면 회원가입으로 이동한다.
+    // 2. 카카오 로그인 시도 -> '이메일'을 통해 이미 가입한 사용자인지 확인한다.
     @Transactional(readOnly = true)
     public Boolean kakaoLogin(User user){
 
@@ -218,12 +218,12 @@ public class UserService {
     }
 
     // 4. 카카오 로그아웃
-    @Transactional
-    public void kakaoLogout(User newUser) {
-
-
-
-    }
+//    @Transactional
+//    public void kakaoLogout(User newUser) {
+//
+//
+//
+//    }
 
     @Transactional
     public User findUser(Long userId){
