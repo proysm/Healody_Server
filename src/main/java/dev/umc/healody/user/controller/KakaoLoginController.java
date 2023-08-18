@@ -2,6 +2,7 @@ package dev.umc.healody.user.controller;
 
 import dev.umc.healody.user.dto.LoginDto;
 import dev.umc.healody.user.dto.TokenDto;
+import dev.umc.healody.user.entity.User;
 import dev.umc.healody.user.jwt.JwtFilter;
 import dev.umc.healody.user.jwt.TokenProvider;
 import dev.umc.healody.user.repository.UserRepository;
@@ -13,6 +14,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,18 +34,18 @@ public class KakaoLoginController {
         }
 
         @PostMapping
-        public ResponseEntity<TokenDto> authorize(@Valid @RequestBody LoginDto loginDto) {
+        public ResponseEntity<TokenDto> authorize(@Valid @RequestBody @ModelAttribute("user") User user) {
 
             UsernamePasswordAuthenticationToken authenticationToken =
                     new UsernamePasswordAuthenticationToken(
-                            loginDto.getPhone(),
-                            loginDto.getPassword()
+                            user.getPhone(),
+                            user.getPassword()
                     );
 
             Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            Long userId = userRepository.findByPhone(loginDto.getPhone()).getUserId();
+            Long userId = userRepository.findByPhone(user.getPhone()).getUserId();
             String jwt = tokenProvider.createToken(authentication, userId);
 
             HttpHeaders httpHeaders = new HttpHeaders();

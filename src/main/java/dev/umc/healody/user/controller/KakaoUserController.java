@@ -35,7 +35,11 @@ public class KakaoUserController {
             return "redirect:/api/auth/kakao/join";
         }
         // 이미 존재하는 유저이면 로그인을 진행한다.
-        return "redirect:/api/auth/kakao/login";
+        else{
+            rttr.addFlashAttribute("user", user);
+            return "redirect:/api/auth/kakao/login";
+        }
+
     }
 
 
