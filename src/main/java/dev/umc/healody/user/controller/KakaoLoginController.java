@@ -14,44 +14,51 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 
+@RestController
+@RequestMapping("/api/auth/kakao/login")
 public class KakaoLoginController {
 
-    @RequestMapping("/api/auth/kakao/login")
-    public class LoginController {
-        private final TokenProvider tokenProvider;
-        private final AuthenticationManagerBuilder authenticationManagerBuilder;
-        private final UserRepository userRepository;
+    private final TokenProvider tokenProvider;
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final UserRepository userRepository;
 
-        public LoginController(TokenProvider tokenProvider, AuthenticationManagerBuilder authenticationManagerBuilder, UserRepository userRepository) {
-            this.tokenProvider = tokenProvider;
-            this.authenticationManagerBuilder = authenticationManagerBuilder;
-            this.userRepository = userRepository;
-        }
+    public KakaoLoginController(TokenProvider tokenProvider, AuthenticationManagerBuilder authenticationManagerBuilder, UserRepository userRepository) {
+        this.tokenProvider = tokenProvider;
+        this.authenticationManagerBuilder = authenticationManagerBuilder;
+        this.userRepository = userRepository;
+    }
 
-        @PostMapping
-        public ResponseEntity<TokenDto> authorize(@Valid @RequestBody @ModelAttribute("user") User user) {
 
-            UsernamePasswordAuthenticationToken authenticationToken =
-                    new UsernamePasswordAuthenticationToken(
-                            user.getPhone(),
-                            user.getPassword()
-                    );
+    @RequestMapping
+    public ResponseEntity<TokenDto> authorize2(@Valid @ModelAttribute("user") User user) {
 
-            Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+        User loginUser = userRepository.findByEmail(user.getEmail());
+//        잘 작동 되는 것 확인
+//        System.out.println(loginUser.getEmail());
+//        System.out.println(loginUser.getPassword());
+//        System.out.println(loginUser.getUserId());
+//        System.out.println(loginUser.getPhone());
 
-            Long userId = userRepository.findByPhone(user.getPhone()).getUserId();
-            String jwt = tokenProvider.createToken(authentication, userId);
+        UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(
+                        loginUser.getPhone(),
+                        loginUser.getPassword()
+                );
 
-            HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
 
-            return new ResponseEntity<>(new TokenDto(jwt), httpHeaders, HttpStatus.OK);
-        }
+        // 여기서 계속 오류 발생 ㅠㅠ
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        Long userId = userRepository.findByPhone(loginUser.getPhone()).getUserId();
+        String jwt = tokenProvider.createToken(authentication, userId);
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
+
+        return new ResponseEntity<>(new TokenDto(jwt), httpHeaders, HttpStatus.OK);
     }
 }
