@@ -43,28 +43,18 @@ public class HomeService {
     @Transactional
     public HomeDto updateHome(Long home_id, HomeDto homeDto, Long currentUserId) {
             Optional<Home> home = homeRepository.findHomeByHomeId(home_id);
-            if(home.isPresent()){
-                if (!home.get().getAdmin().equals(currentUserId)) {
-                    throw new AccessDeniedException("권한이 없습니다.");
-                }
-                home.get().setName(homeDto.getName());
-                homeRepository.save(home.get());
-                return HomeDto.builder()
-                        .homeId(home_id)
-                        .name(homeDto.getName())
-                        .build();
-            }
-            return null;
+            home.get().setName(homeDto.getName());
+            homeRepository.save(home.get());
+            return HomeDto.builder()
+                    .homeId(home_id)
+                    .name(homeDto.getName())
+                    .admin(currentUserId)
+                    .build();
     }
     @Transactional
-    public void deleteHome(Long home_id, Long currentUserId) {
+    public void deleteHome(Long home_id) {
         Optional<Home> home = homeRepository.findHomeByHomeId(home_id);
         if (home.isPresent()) {
-            // 현재 사용자가 집의 관리자인지 확인
-            if (!home.get().getAdmin().equals(currentUserId)) {
-                throw new AccessDeniedException("권한이 없습니다.");
-            }
-
             homeRepository.delete(home.get());
         }
     }

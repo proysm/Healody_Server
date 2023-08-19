@@ -1,5 +1,7 @@
 package dev.umc.healody.family.careuser;
 
+import dev.umc.healody.family.careuser.domain.CareUser;
+
 import java.util.List;
 import java.util.Optional;
 

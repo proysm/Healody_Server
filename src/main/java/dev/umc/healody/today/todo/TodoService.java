@@ -10,7 +10,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -30,7 +34,7 @@ public class TodoService {
         Date date = new Date();
         try {
             String requestDtoDate = requestDto.getDate();
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
             date = format.parse(requestDtoDate);
         } catch (ParseException e) {
             System.out.println("예외 처리");
@@ -40,14 +44,16 @@ public class TodoService {
         return todoRepository.save(todo).getId();
     }
 
-    public TodoResponseDto findTodo(Long todoId) {
-        Optional<Todo> byId = todoRepository.findById(todoId);
-        Todo todo = new Todo();
-        if(byId.isPresent())
-            todo = byId.get();
+    public List<TodoResponseDto> findTodayTodo(Long userId) {
+        // LocalDate to Date
+        LocalDate localDate = LocalDate.now();
+        Instant instant = localDate.atStartOfDay(ZoneId.systemDefault()).toInstant();
+        Date date = Date.from(instant);
+
+        List<Todo> todoList = todoRepository.findAllByUser_UserIdAndDate(userId, date);
 
         TodoResponseDto responseDto = new TodoResponseDto();
-        return responseDto.toDto(todo);
+        return responseDto.toDto(todoList);
     }
 
     @Transactional

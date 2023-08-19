@@ -5,12 +5,17 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
-public class userInfo {
+@Component
+public class FindUserInfo {
 
     public static UserService userService;
 
+    public static void setUserService(UserService userService) {
+        FindUserInfo.userService = userService;
+    }
     //현재 로그인된 사용자의 userId 반환
     public static Long getCurrentUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
