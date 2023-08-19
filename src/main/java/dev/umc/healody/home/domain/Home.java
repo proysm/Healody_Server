@@ -19,7 +19,7 @@ public class Home{
     private String name;
 
     @Column(nullable = false)
-    private Long user_cnt = 1L;
+    private Long user_cnt = 0L;
 
     @Column(nullable = false)
     private Long caring_cnt = 0L;

@@ -22,7 +22,10 @@ public enum SuccessStatus {
      * 200 OK
      */
     SUCCESS(200, "SUCCESS", "요청이 완료되었습니다."),
-    FAILURE(400, "FAILURE", "요청이 실패하였습니다.");
+    CREATED(201,"CREATED","집이 생성 되었습니다."),
+    FAILURE(400, "FAILURE", "요청이 실패하였습니다."),
+    FORBIDDEN(403,"FORBIDDEN","집 관리자 권한이 없습니다.");
+
 
     /**
      * SUCCESS CODE
