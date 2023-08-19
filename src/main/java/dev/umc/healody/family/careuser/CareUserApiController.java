@@ -38,9 +38,9 @@ public class CareUserApiController {
     }
 
     @PutMapping
-    public SuccessResponse<Long> update(@RequestBody CareUserRequestDTO careUserRequestDTO){
-        boolean result = careUserService.update(careUserRequestDTO.getId(), careUserRequestDTO);
-        return new SuccessResponse<>(SuccessStatus.SUCCESS, careUserRequestDTO.getId());
+    public SuccessResponse<Long> update(@RequestPart CareUserRequestDTO requestDTO, @RequestPart MultipartFile image) throws IOException {
+        boolean result = careUserService.update(requestDTO.getId(), requestDTO, image);
+        return new SuccessResponse<>(SuccessStatus.SUCCESS, requestDTO.getId());
     }
 
 
