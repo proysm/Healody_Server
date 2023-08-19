@@ -40,7 +40,7 @@ public class HomeController {
         Long adminId = getCurrentUserId();
         HomeDto newHome = homeService.createHome(homeDto, adminId);
         familyService.create(FamilyRequestDTO.builder().userId(adminId).homeId(newHome.homeId).build());
-        return new SuccessResponse<>(SuccessStatus.CREATED, newHome);
+        return new SuccessResponse<>(SuccessStatus.HOME_CREATED, newHome);
     }
     @GetMapping("/home/{userId}") // 집 조회 GET
     public SuccessResponse<Map<String, Map<String, List<String>>>> viewMyFamily(@PathVariable Long userId) {
@@ -51,7 +51,7 @@ public class HomeController {
                         family -> homeService.getHomeInfo(family.getHomeId()).getName(),
                         family -> getFamilyInfo(family.getHomeId(), userId)
                 ));
-        return new SuccessResponse<>(SuccessStatus.SUCCESS, resultMap);
+        return new SuccessResponse<>(SuccessStatus.HOME_READ, resultMap);
     }
     
     @DeleteMapping("/home/{homeId}") //집 삭제 DELETE
@@ -62,9 +62,9 @@ public class HomeController {
         if(currentUserId.equals(adminId)) {
             familyService.delete(currentUserId,homeId);
             homeService.deleteHome(homeId);
-            return new SuccessResponse<>(SuccessStatus.SUCCESS);
+            return new SuccessResponse<>(SuccessStatus.HOME_DELETE_SUCCESS);
         }
-        return new SuccessResponse<>(SuccessStatus.FORBIDDEN);
+        return new SuccessResponse<>(SuccessStatus.NOT_HOME_ADMIN);
     }
     @PatchMapping("/home/{homeId}") //집 수정 PATCH
     public SuccessResponse<HomeDto> updateHome(@PathVariable Long homeId, @RequestBody HomeDto homeDto){
@@ -74,11 +74,11 @@ public class HomeController {
         if(currentUserId.equals(adminId)) {
             HomeDto updatedHome = homeService.updateHome(homeId, homeDto, currentUserId);
             if (updatedHome != null) {
-                return new SuccessResponse<>(SuccessStatus.SUCCESS, updatedHome);
+                return new SuccessResponse<>(SuccessStatus.HOME_UPDATE_SUCCESS, updatedHome);
             }
-            return new SuccessResponse<>(SuccessStatus.FAILURE);
+            return new SuccessResponse<>(SuccessStatus.HOME_UPDATE_FAILURE);
         }
-        return new SuccessResponse<>(SuccessStatus.FORBIDDEN);
+        return new SuccessResponse<>(SuccessStatus.NOT_HOME_ADMIN);
     }
 
     private Map<String, List<String>> getFamilyInfo(Long homeId, Long userId) {
