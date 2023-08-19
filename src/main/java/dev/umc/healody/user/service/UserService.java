@@ -25,6 +25,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.sql.Date;
 import java.util.Collections;
+import java.util.Random;
 import java.util.UUID;
 
 @Service
@@ -182,7 +183,6 @@ public class UserService {
         User user = new User();
 
         String name = kakaoProfile.getProperties().getNickname();
-        UUID garbagePw = UUID.randomUUID(); // 쓰레기값 만들기
         String email = kakaoProfile.getKakao_account().getEmail();
         String image = kakaoProfile.getProperties().getThumbnail_image();
 
@@ -191,7 +191,6 @@ public class UserService {
         user.setName(name);
         user.setEmail(email);
         user.setImage(image);
-        user.setPassword(String.valueOf(garbagePw));
         user.setPhone(null);
         user.setBirth(null);
         user.setGender(null);
@@ -202,7 +201,7 @@ public class UserService {
 
     }
 
-    // 2. 카카오 로그인 시도 -> 이미 가입한 사용자인지 확인하고 새로운 사용자라면 회원가입으로 이동한다.
+    // 2. 카카오 로그인 시도 -> '이메일'을 통해 이미 가입한 사용자인지 확인한다.
     @Transactional(readOnly = true)
     public Boolean kakaoLogin(User user){
 
@@ -214,16 +213,21 @@ public class UserService {
     @Transactional
     public void kakaoJoin(User newUser){
 
+        Random r = new Random();    // 쓰레기값 만들기
+        RandomString rs = new RandomString(16, r);
+        String garbagePw = rs.nextString();
+        newUser.setPassword(String.valueOf(garbagePw));
+
         userRepository.save(newUser);
     }
 
     // 4. 카카오 로그아웃
-    @Transactional
-    public void kakaoLogout(User newUser) {
-
-
-
-    }
+//    @Transactional
+//    public void kakaoLogout(User newUser) {
+//
+//
+//
+//    }
 
     @Transactional
     public User findUser(Long userId){
