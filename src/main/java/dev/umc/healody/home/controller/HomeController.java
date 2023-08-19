@@ -60,7 +60,10 @@ public class HomeController {
         Long currentUserId = getCurrentUserId();
         Long adminId = homeService.getHomeInfo(homeId).admin;
         if(currentUserId.equals(adminId)) {
-            familyService.delete(currentUserId,homeId);
+            List<Long> family = familyService.searchUserId(homeId);
+            for (int i = 0; i < family.size(); i++){
+                familyService.delete(family.get(i),homeId);
+            }
             homeService.deleteHome(homeId);
             return new SuccessResponse<>(SuccessStatus.HOME_DELETE_SUCCESS);
         }
