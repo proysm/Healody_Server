@@ -92,14 +92,13 @@ public class UserController {
         }
     }
 
-    @ResponseBody
-    @GetMapping("/user-id/{phone}")
-    public SuccessResponse<Long> findUserIdByPhone(@PathVariable String phone) {
-        // 입력 받은 휴대폰 번호로 유저 아이디를 조회
-        Long userId = userService.findUserIdByPhone(phone);
-        return new SuccessResponse<>(SuccessStatus.SUCCESS, userId);
-    }
-
+//    @ResponseBody
+//    @GetMapping("/user-id/{phone}")
+//    public SuccessResponse<Long> findUserIdByPhone(@PathVariable String phone) {
+//        // 입력 받은 휴대폰 번호로 유저 아이디를 조회
+//        Long userId = userService.findUserIdByPhone(phone);
+//        return new SuccessResponse<>(SuccessStatus.SUCCESS, userId);
+//    }
 
     @RequestMapping("/kakao/callback")
     public String kakaoCallback(String code, RedirectAttributes rttr) throws JsonProcessingException {
