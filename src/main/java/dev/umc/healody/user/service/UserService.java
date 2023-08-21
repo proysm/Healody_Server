@@ -313,4 +313,9 @@ public class UserService {
                 .message(updatedUser.getMessage())
                 .build();
     }
+
+    @Transactional
+    public boolean checkMemberPassword(String inputPassword, Long userId) {
+        return passwordEncoder.matches(inputPassword, userRepository.findByUserId(userId).getPassword());
+    }
 }
