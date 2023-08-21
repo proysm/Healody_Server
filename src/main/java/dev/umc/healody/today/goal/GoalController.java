@@ -18,30 +18,30 @@ public class GoalController {
     @PostMapping("/goal")
     public SuccessResponse<String> createGoal(@RequestBody GoalRequestDto requestDto) {
         String goalMessage = goalService.createGoal(requestDto.getUserId(), requestDto);
-        return new SuccessResponse<>(SuccessStatus.SUCCESS, goalMessage);
+        return new SuccessResponse<>(SuccessStatus.GOAL_CREATE, goalMessage);
     }
 
     @GetMapping("/goal/{goalId}")
     public SuccessResponse<GoalResponseDto> findGoal(@PathVariable Long goalId) {
         goalService.createRecord(goalId);
-        return new SuccessResponse<>(SuccessStatus.SUCCESS);
-    }
-
-    @PatchMapping("/goal/{goalId}")
-    public SuccessResponse<String> updateGoalVal(@PathVariable Long goalId, @RequestBody RecordsRequestDto requestDto) {
-        String updateMessage = goalService.updateRecords(goalId, requestDto.getVal());
-        return new SuccessResponse<>(SuccessStatus.SUCCESS, updateMessage);
+        return new SuccessResponse<>(SuccessStatus.GOAL_GET);
     }
 
     @GetMapping("/goal/{goalId}/{date}")
     public SuccessResponse dateFindGoal(@PathVariable Long goalId, @PathVariable String date) {
         goalService.dateCreateRecord(goalId, date);
-        return new SuccessResponse(SuccessStatus.SUCCESS);
+        return new SuccessResponse(SuccessStatus.GOAL_GET);
+    }
+
+    @PatchMapping("/goal/{goalId}")
+    public SuccessResponse<String> updateGoalVal(@PathVariable Long goalId, @RequestBody RecordsRequestDto requestDto) {
+        String updateMessage = goalService.updateRecords(goalId, requestDto.getVal());
+        return new SuccessResponse<>(SuccessStatus.GOAL_UPDATE, updateMessage);
     }
 
     @DeleteMapping("/goal/{goalId}")
     public SuccessResponse deleteGoal(@PathVariable Long goalId) {
         goalService.deleteGoal(goalId);
-        return new SuccessResponse(SuccessStatus.SUCCESS);
+        return new SuccessResponse(SuccessStatus.GOAL_DELETE);
     }
 }
