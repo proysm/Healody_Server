@@ -19,24 +19,24 @@ public class TodoController {
     @PostMapping("/todo")
     public SuccessResponse<Long> createTodo(@RequestBody TodoRequestDto requestDto) {
         Long todoId = todoService.createTodo(requestDto.getUserId(), requestDto);
-        return new SuccessResponse<>(SuccessStatus.SUCCESS, todoId);
+        return new SuccessResponse<>(SuccessStatus.TODO_CREATE, todoId);
     }
 
     @GetMapping("/todo/{userId}")
     public SuccessResponse<List<TodoResponseDto>> findTodo(@PathVariable Long userId) {
         List<TodoResponseDto> responseDtoList = todoService.findTodayTodo(userId);
-        return new SuccessResponse<>(SuccessStatus.SUCCESS, responseDtoList);
+        return new SuccessResponse<>(SuccessStatus.TODO_GET, responseDtoList);
     }
 
     @PatchMapping("/todo/{todoId}")
     public SuccessResponse<Long> updateTodo(@PathVariable Long todoId, @RequestBody TodoRequestDto requestDto) {
         Long updateId = todoService.updateTodo(requestDto.getUserId(), todoId, requestDto);
-        return new SuccessResponse<>(SuccessStatus.SUCCESS, updateId);
+        return new SuccessResponse<>(SuccessStatus.TODO_UPDATE, updateId);
     }
 
     @DeleteMapping("/todo/{todoId}")
     public SuccessResponse deleteTodo(@PathVariable Long todoId) {
         todoService.deleteTodo(todoId);
-        return new SuccessResponse<>(SuccessStatus.SUCCESS);
+        return new SuccessResponse<>(SuccessStatus.TODO_DELETE);
     }
 }
