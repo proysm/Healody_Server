@@ -50,15 +50,16 @@ public class KakaoLoginController {
 
 
         // 여기서 계속 오류 발생 ㅠㅠ
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        //Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+        //SecurityContextHolder.getContext().setAuthentication(authentication);
 
         Long userId = userRepository.findByPhone(loginUser.getPhone()).getUserId();
-        String jwt = tokenProvider.createToken(authentication, userId);
+        //String jwt = tokenProvider.createToken(authentication, userId);
 
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
+        //httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
 
-        return new ResponseEntity<>(new TokenDto(jwt), httpHeaders, HttpStatus.OK);
+        //return new ResponseEntity<>(new TokenDto(jwt), httpHeaders, HttpStatus.OK);
+        return null;
     }
 }
