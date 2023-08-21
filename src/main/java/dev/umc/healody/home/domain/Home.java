@@ -27,11 +27,15 @@ public class Home{
     @Column(nullable = false)
     private Long admin;
 
+    @Column(nullable = false)
+    private String info;
+
     @Builder
-    public Home(String name, Long homeId, Long admin){
+    public Home(String name, Long homeId, Long admin, String info){
         this.name = name;
         this.homeId = homeId;
         this.admin = admin;
+        this.info = info;
     }
 
 }
