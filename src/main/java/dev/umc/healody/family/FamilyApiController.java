@@ -21,6 +21,12 @@ public class FamilyApiController {
         return new SuccessResponse<>(SuccessStatus.SUCCESS, familyService.create(request));
     }
 
+    @PostMapping("/update/{changeHomeId}")
+    public SuccessResponse<Long> updateFamily(@RequestBody FamilyRequestDTO familyDTORequest, @PathVariable Long changeHomeId){
+        boolean result = familyService.update(familyDTORequest.getUserId(), familyDTORequest.getHomeId(), changeHomeId);
+        return new SuccessResponse<>(SuccessStatus.SUCCESS);
+    }
+
     @DeleteMapping
     public SuccessResponse<Void> delete(@RequestBody FamilyRequestDTO familyDTORequest){
         boolean result = familyService.delete(familyDTORequest.getUserId(), familyDTORequest.getHomeId());
