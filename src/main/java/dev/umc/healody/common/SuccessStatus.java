@@ -44,8 +44,10 @@ public enum SuccessStatus {
 
     USER_CREATE(201, "SUCCESS", "회원가입이 완료되었습니다."),
     USER_GET(200, "SUCCESS", "회원 정보 조회가 완료되었습니다."),
-    USER_UPDATE(201, "SUCCESS", "회원 수정이 완료되었습니다."),
-    PASSWORD_UPDATE(201, "SUCCESS", "비밀번호 수정이 완료되었습니다."),
+
+    PROFILE_UPDATE(201, "SUCCESS", "프로필 수정이 완료되었습니다."),
+    MESSAGE_UPDATE(201, "SUCCESS", "상태메시지 수정이 완료되었습니다."),
+    INFO_UPDATE(201, "SUCCESS", "회원 정보 수정이 완료되었습니다."),
 
     /** 현우 **/
     CARE_USER_CREATE(201, "SUCCESS", "돌봄 가족 생성 되었습니다."),
