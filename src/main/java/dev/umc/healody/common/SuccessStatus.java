@@ -21,7 +21,7 @@ public enum SuccessStatus {
 
     HOME_READ(200, "SUCCESS", "집 구성원이 조회되었습니다."),
 
-    HOME_UPDATE_SUCCESS(200, "SUCCESS", "집 이름이 수정되었습니다."),
+    HOME_UPDATE_SUCCESS(200, "SUCCESS", "집 정보가 수정되었습니다."),
     HOME_UPDATE_FAILURE(400, "FAILURE", "수정 요청이 실패하였습니다."),
 
     HOME_DELETE_SUCCESS(200, "SUCCESS", "집이 삭제되었습니다."),
