@@ -101,16 +101,18 @@ public class CareUserService {
 
 
     @Transactional
-    public boolean update(Long id, CareUserRequestDTO requestDTO){
+    public boolean update(Long id, CareUserRequestDTO requestDTO, MultipartFile image) throws IOException {
         Optional<CareUser>careUser = careUserRepository.findById(id);
-
+        String imgUrl = "";
         if (careUser.isEmpty()) return false;
+
+        if(image != null) imgUrl = fileUploadUtil.uploadFile("profile", image);
 
         return careUserRepository.update(id,
                 CareUser.builder()
                 .message(requestDTO.getMessage())
                 .nickname(requestDTO.getNickname())
-                .image(requestDTO.getImage())
+                .image(imgUrl)
                 .build());
     }
 

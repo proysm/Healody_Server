@@ -73,6 +73,14 @@ public class FamilyService {
         return familyRepository.remove(userId, homeId);
     }
 
+    @Transactional
+    public boolean update(Long userId, Long homeId, Long changeHomeId){
+        Long result = create(FamilyRequestDTO.builder().userId(userId).homeId(changeHomeId).build());
+
+        if (result == null) return false;
+        else return delete(userId, homeId);
+    }
+
 
     @Transactional(readOnly = true)
     public boolean checkFamilyDuplicate(Long userId, Long homeId){
@@ -81,13 +89,11 @@ public class FamilyService {
 
     @Transactional(readOnly = true)
     public boolean checkFamilyOver(Long userId){
-        System.out.println(familyRepository.findByUserId(userId).size());
         return familyRepository.findByUserId(userId).size() >= 3;
     }
 
     @Transactional(readOnly = true)
     public boolean checkFamilyMemberOver(Long homeId){
-        System.out.println(familyRepository.findByHomeId(homeId).size());
         return familyRepository.findByHomeId(homeId).size() >= 6;
     }
 
