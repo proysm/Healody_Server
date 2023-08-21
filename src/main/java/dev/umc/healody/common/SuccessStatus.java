@@ -21,12 +21,12 @@ public enum SuccessStatus {
 
     HOME_READ(200, "SUCCESS", "집 구성원이 조회되었습니다."),
 
-    UPDATE_SUCCESS(200, "SUCCESS", "집 이름이 수정되었습니다."),
-    UPDATE_FAILURE(400, "FAILURE", "수정 요청이 실패하였습니다."),
+    HOME_UPDATE_SUCCESS(200, "SUCCESS", "집 이름이 수정되었습니다."),
+    HOME_UPDATE_FAILURE(400, "FAILURE", "수정 요청이 실패하였습니다."),
 
-    DELETE_SUCCESS(200, "SUCCESS", "집이 삭제되었습니다."),
+    HOME_DELETE_SUCCESS(200, "SUCCESS", "집이 삭제되었습니다."),
 
-    NOT_ADMIN(403, "FORBIDDEN", "집 관리자 권한이 없습니다."),
+    NOT_HOME_ADMIN(403, "FORBIDDEN", "집 관리자 권한이 없습니다."),
 
     /** 하늘 **/
     EMAIL_SUCCESS(200, "SUCCESS", "사용 가능한 이메일입니다."),

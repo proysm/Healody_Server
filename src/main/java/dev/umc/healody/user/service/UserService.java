@@ -3,7 +3,9 @@ package dev.umc.healody.user.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.umc.healody.user.dto.UpdateUserRequestDto;
 import dev.umc.healody.user.dto.UserDto;
+import dev.umc.healody.user.dto.UserResponseDto;
 import dev.umc.healody.user.entity.Authority;
 import dev.umc.healody.user.entity.User;
 import dev.umc.healody.user.model.KakaoProfile;
@@ -23,10 +25,9 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
-import java.sql.Date;
 import java.util.Collections;
+import java.util.Optional;
 import java.util.Random;
-import java.util.UUID;
 
 @Service
 public class UserService {
@@ -234,10 +235,69 @@ public class UserService {
         return userRepository.findByUserId(userId);
     }
 
+    @Transactional
+    public UserResponseDto getUserInfo(Long userId){
+        User user = userRepository.findByUserId(userId);
+        return UserResponseDto.builder()
+                .name(user.getName())
+                .phone(user.getPhone())
+                .nickname(user.getNickname())
+                .birth(user.getBirth())
+                .email(user.getEmail())
+                .gender(user.getGender())
+                .image(user.getImage())
+                .message(user.getMessage())
+                .familyCnt(user.getFamilyCnt())
+                .build();
+    }
+
     // 유저,권한 정보를 가져오는 메소드
 //    @Transactional(readOnly = true)
 //    public Optional<User> getUserWithAuthorities(String phone) {
 //        return userRepository.findOneWithAuthoritiesByPhone(phone);
 //    }
 
+    public UserResponseDto updateUser(Long userId, UpdateUserRequestDto userDto) {
+        System.out.println(userDto);
+        Optional<User> existUser = userRepository.findById(userId);
+        User user = new User();
+        if(existUser.isPresent()){
+            user = existUser.get();
+        }
+        if(userDto.getName() != null){
+            user.setName(userDto.getName());
+        }
+        if(userDto.getNickname() != null){
+            user.setNickname(userDto.getNickname());
+        }
+        if(userDto.getBirth() != null){
+            user.setBirth(userDto.getBirth());
+        }
+        if(userDto.getGender() != null){
+            user.setGender(userDto.getGender());
+        }
+        if(userDto.getImage() != null){
+            user.setImage(userDto.getImage());
+        }
+        if(userDto.getMessage() != null){
+            user.setMessage(userDto.getMessage());
+        }
+        if(userDto.getEmail() != null){
+            user.setEmail(userDto.getEmail());
+        }
+
+        User updatedUser = userRepository.save(user);
+
+        return UserResponseDto.builder()
+                .name(updatedUser.getName())
+                .phone(updatedUser.getPhone())
+                .nickname(updatedUser.getNickname())
+                .birth(updatedUser.getBirth())
+                .email(updatedUser.getEmail())
+                .gender(updatedUser.getGender())
+                .image(updatedUser.getImage())
+                .message(updatedUser.getMessage())
+                .familyCnt(updatedUser.getFamilyCnt())
+                .build();
+    }
 }
