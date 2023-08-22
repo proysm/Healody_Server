@@ -26,7 +26,7 @@ public class HomeService {
         return HomeDto.builder()
                 .homeId(save.getHomeId())
                 .name(save.getName())
-                .admin(userId)
+                .admin(save.getAdmin())
                 .info(save.getInfo())
                 .build();
     }
@@ -49,7 +49,7 @@ public class HomeService {
             home.get().setInfo(homeDto.getInfo());
             Home updatedHome = homeRepository.save(home.get());
             return HomeDto.builder()
-                    .homeId(home_id)
+                    .homeId(updatedHome.getHomeId())
                     .name(updatedHome.getName())
                     .admin(updatedHome.getAdmin())
                     .info(updatedHome.getInfo())
