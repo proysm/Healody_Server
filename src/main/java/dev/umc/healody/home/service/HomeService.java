@@ -26,7 +26,8 @@ public class HomeService {
         return HomeDto.builder()
                 .homeId(save.getHomeId())
                 .name(save.getName())
-                .admin(userId)
+                .admin(save.getAdmin())
+                .info(save.getInfo())
                 .build();
     }
     public HomeDto getHomeInfo(Long HomeId){
@@ -36,19 +37,22 @@ public class HomeService {
                         .homeId(home.get().getHomeId())
                         .name(home.get().getName())
                         .admin(home.get().getAdmin())
+                        .info(home.get().getInfo())
                         .build();
             }
             return null;
     }
     @Transactional
-    public HomeDto updateHome(Long home_id, HomeDto homeDto, Long currentUserId) {
+    public HomeDto updateHome(Long home_id, HomeDto homeDto) {
             Optional<Home> home = homeRepository.findHomeByHomeId(home_id);
             home.get().setName(homeDto.getName());
-            homeRepository.save(home.get());
+            home.get().setInfo(homeDto.getInfo());
+            Home updatedHome = homeRepository.save(home.get());
             return HomeDto.builder()
-                    .homeId(home_id)
-                    .name(homeDto.getName())
-                    .admin(currentUserId)
+                    .homeId(updatedHome.getHomeId())
+                    .name(updatedHome.getName())
+                    .admin(updatedHome.getAdmin())
+                    .info(updatedHome.getInfo())
                     .build();
     }
     @Transactional

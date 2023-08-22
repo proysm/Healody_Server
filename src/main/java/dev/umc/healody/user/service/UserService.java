@@ -3,9 +3,7 @@ package dev.umc.healody.user.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.umc.healody.user.dto.UpdateUserRequestDto;
-import dev.umc.healody.user.dto.UserDto;
-import dev.umc.healody.user.dto.UserResponseDto;
+import dev.umc.healody.user.dto.*;
 import dev.umc.healody.user.entity.Authority;
 import dev.umc.healody.user.entity.User;
 import dev.umc.healody.user.model.KakaoProfile;
@@ -257,47 +255,67 @@ public class UserService {
 //        return userRepository.findOneWithAuthoritiesByPhone(phone);
 //    }
 
-    public UserResponseDto updateUser(Long userId, UpdateUserRequestDto userDto) {
-        System.out.println(userDto);
+    public UpdateProfileDto updateProfile(Long userId, UpdateProfileDto userDto) {
         Optional<User> existUser = userRepository.findById(userId);
         User user = new User();
         if(existUser.isPresent()){
             user = existUser.get();
         }
-        if(userDto.getName() != null){
-            user.setName(userDto.getName());
-        }
         if(userDto.getNickname() != null){
             user.setNickname(userDto.getNickname());
-        }
-        if(userDto.getBirth() != null){
-            user.setBirth(userDto.getBirth());
-        }
-        if(userDto.getGender() != null){
-            user.setGender(userDto.getGender());
         }
         if(userDto.getImage() != null){
             user.setImage(userDto.getImage());
         }
-        if(userDto.getMessage() != null){
-            user.setMessage(userDto.getMessage());
+
+        User updatedUser = userRepository.save(user);
+
+        return UpdateProfileDto.builder()
+                .nickname(updatedUser.getNickname())
+                .image(updatedUser.getImage())
+                .build();
+    }
+
+    public UpdateInfoDto updateInfo(Long userId, UpdateInfoDto userDto) {
+        Optional<User> existUser = userRepository.findById(userId);
+        User user = new User();
+        if(existUser.isPresent()){
+            user = existUser.get();
         }
         if(userDto.getEmail() != null){
             user.setEmail(userDto.getEmail());
         }
+        if(userDto.getPassword() != null){
+            user.setPassword(passwordEncoder.encode((userDto.getPassword())));
+        }
 
         User updatedUser = userRepository.save(user);
 
-        return UserResponseDto.builder()
-                .name(updatedUser.getName())
-                .phone(updatedUser.getPhone())
-                .nickname(updatedUser.getNickname())
-                .birth(updatedUser.getBirth())
+        return UpdateInfoDto.builder()
                 .email(updatedUser.getEmail())
-                .gender(updatedUser.getGender())
-                .image(updatedUser.getImage())
-                .message(updatedUser.getMessage())
-                .familyCnt(updatedUser.getFamilyCnt())
+                .password(updatedUser.getPassword())
                 .build();
+    }
+
+    public UpdateMessageDto updateMessage(Long userId, UpdateMessageDto userDto) {
+        Optional<User> existUser = userRepository.findById(userId);
+        User user = new User();
+        if(existUser.isPresent()){
+            user = existUser.get();
+        }
+        if(userDto.getMessage() != null){
+            user.setMessage(userDto.getMessage());
+        }
+
+        User updatedUser = userRepository.save(user);
+
+        return UpdateMessageDto.builder()
+                .message(updatedUser.getMessage())
+                .build();
+    }
+
+    @Transactional
+    public boolean checkMemberPassword(String inputPassword, Long userId) {
+        return passwordEncoder.matches(inputPassword, userRepository.findByUserId(userId).getPassword());
     }
 }

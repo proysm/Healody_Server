@@ -75,7 +75,7 @@ public class HomeController {
         Long currentUserId = getCurrentUserId();
         Long adminId = homeService.getHomeInfo(homeId).admin;
         if(currentUserId.equals(adminId)) {
-            HomeDto updatedHome = homeService.updateHome(homeId, homeDto, currentUserId);
+            HomeDto updatedHome = homeService.updateHome(homeId, homeDto);
             if (updatedHome != null) {
                 return new SuccessResponse<>(SuccessStatus.HOME_UPDATE_SUCCESS, updatedHome);
             }
