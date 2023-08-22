@@ -42,6 +42,7 @@ public class FamilyService {
 
         Family family = requestDTO.toEntity(user, home);
         home.setUser_cnt(home.getUser_cnt() + 1);
+        user.setFamilyCnt(user.getFamilyCnt() + 1);
         Family save = familyRepository.save(family);
         return save.getId();
     }
@@ -64,11 +65,15 @@ public class FamilyService {
     @Transactional
     public boolean delete(Long userId, Long homeId){
         Optional<Home> optionalHome = homeRepository.findHomeByHomeId(homeId);
+        Optional<User> optionalUser = userRepository.findById(userId);
         Home home = null;
+        User user = null;
 
+        if(optionalUser.isPresent()) user = optionalUser.get();
         if(optionalHome.isPresent()) home = optionalHome.get();
+        user.setFamilyCnt(user.getFamilyCnt() - 1);
+        home.setUser_cnt(home.getUser_cnt() - 1);
         if(home == null) return false;
-        if(home.getAdmin() != getCurrentUserId()) return false;
 
         return familyRepository.remove(userId, homeId);
     }
