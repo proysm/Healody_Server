@@ -32,8 +32,8 @@ public class CareUserApiController {
 
     //돌봄 추가
     @PostMapping
-    public SuccessResponse<Long> create(@RequestBody CareUserRequestDTO requestDTO) throws IOException {
-        Long careUerId = careUserService.create(requestDTO);
+    public SuccessResponse<Long> create(@RequestPart CareUserRequestDTO requestDTO, @RequestPart MultipartFile image) throws IOException {
+        Long careUerId = careUserService.create(requestDTO, image);
         return new SuccessResponse<>(SuccessStatus.SUCCESS, careUerId);
     }
 

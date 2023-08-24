@@ -40,7 +40,7 @@ public class CareUserService {
     private final FileUploadUtil fileUploadUtil;
 
     @Transactional
-    public Long create(CareUserRequestDTO requestDTO) throws IOException {
+    public Long create(CareUserRequestDTO requestDTO, MultipartFile image) throws IOException {
         Optional<Home> optionalHome = homeRepository.findById(requestDTO.getHomeId());
         Home home = null;
 
@@ -52,7 +52,7 @@ public class CareUserService {
         }
 
         // 이미지 URL 생성
-        String imgUrl = fileUploadUtil.uploadFile("profile", requestDTO.getImageFile());
+        String imgUrl = fileUploadUtil.uploadFile("profile", image);
 
         home = optionalHome.get();
         CareUser careUser = requestDTO.toEntity(home, imgUrl);
