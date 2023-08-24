@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TokenDto {
     String token;
+    Long userId;
 
 //    private String grantType;
 //    private String accessToken;
