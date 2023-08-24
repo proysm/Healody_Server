@@ -63,7 +63,9 @@ public enum SuccessStatus {
 
     FAMILY_GET(200, "SUCCESS", "가족 구성원 조회가 완료되었습니다."),
     FAMILY_CREATE(201, "SUCCESS", "가족 생성 되었습니다."),
-    FAMILY_DELETE(201, "SUCCESS", "가족 삭제 되었습니다."),
+    FAMILY_CHANGE(200, "SUCCESS", "가족이 다른 집으로 이동되었습니다."),
+    FAMILY_DELETE(201, "SUCCESS", "가족을 내보냈습니다."),
+    FAMILY_EXIT(200, "SUCCESS", "집에서 나갔습니다."),
     FAMILY_DELTET_FAILURE(401, "FAILURE", "가족 삭제 권한이 없습니다."),
     FAMILY_OVER_FAILURE(403, "FAILURE", "가족 수가 초가 되었습니다"),
     FAMILY_MEMEBER_OVER_FAILURE(403, "FAILURE", "가족 구성원 수가 초과 되었습니다"),

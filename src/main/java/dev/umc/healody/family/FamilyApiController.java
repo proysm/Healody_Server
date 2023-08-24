@@ -24,7 +24,7 @@ public class FamilyApiController {
         Long userId = userService.findUserIdByPhone(familyDTORequest.getUserPhone());
         FamilyRequestDTO request = familyDTORequest.builder().userId(userId).homeId(familyDTORequest.getHomeId()).build();
 
-        return new SuccessResponse<>(SuccessStatus.SUCCESS, familyService.create(request));
+        return new SuccessResponse<>(SuccessStatus.FAMILY_CREATE, familyService.create(request));
     }
 
     @PostMapping("/update/{changeHomeId}")
@@ -34,7 +34,7 @@ public class FamilyApiController {
         boolean isAdmin = familyService.isAdmin(currentUserId, familyDTORequest.getHomeId());
         if(isAdmin) {
             boolean result = familyService.update(familyDTORequest.getUserId(), familyDTORequest.getHomeId(), changeHomeId);
-            return new SuccessResponse<>(SuccessStatus.SUCCESS);
+            return new SuccessResponse<>(SuccessStatus.FAMILY_CHANGE);
         }
         return new SuccessResponse<>(SuccessStatus.FORBIDDEN);
     }
@@ -46,7 +46,7 @@ public class FamilyApiController {
         boolean isAdmin = familyService.isAdmin(currentUserId, homeId);
         if(isAdmin) {
         boolean result = familyService.delete(userId, homeId);
-        return new SuccessResponse<>(SuccessStatus.SUCCESS);
+        return new SuccessResponse<>(SuccessStatus.FAMILY_DELETE);
         }
         return new SuccessResponse<>(SuccessStatus.FORBIDDEN);
     }
@@ -56,7 +56,7 @@ public class FamilyApiController {
         setUserService(userService);
         Long currentUserId = getCurrentUserId();
         boolean result = familyService.delete(currentUserId, homeId);
-        return new SuccessResponse<>(SuccessStatus.SUCCESS);
+        return new SuccessResponse<>(SuccessStatus.FAMILY_EXIT);
     }
 
 
