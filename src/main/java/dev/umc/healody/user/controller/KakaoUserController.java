@@ -29,16 +29,20 @@ public class KakaoUserController {
         User user = userService.kakaoCallback(code); // 현재 로그인을 시도한 사용자의 정보를 리턴한다.
         Boolean principal = userService.kakaoLogin(user); // 로그인을 시도한다.
 
+
+        rttr.addFlashAttribute("user", user);
+        return "redirect:/api/auth/kakao/login";
+
         // 새로운 유저이면 회원가입을 진행한다.
-        if(principal == false){
-            rttr.addFlashAttribute("newUser", user);
-            return "redirect:/api/auth/kakao/join";
-        }
-        // 이미 존재하는 유저이면 로그인을 진행한다.
-        else{
-            rttr.addFlashAttribute("user", user);
-            return "redirect:/api/auth/kakao/login";
-        }
+//        if(principal == false){
+//            rttr.addFlashAttribute("newUser", user);
+//            return "redirect:/api/auth/kakao/join";
+//        }
+//        // 이미 존재하는 유저이면 로그인을 진행한다.
+//        else{
+//            rttr.addFlashAttribute("user", user);
+//            return "redirect:/api/auth/kakao/login";
+//        }
 
     }
 
