@@ -46,8 +46,10 @@ public class LoginController {
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
+        Long id = tokenProvider.getUserIdFromToken(jwt);
+        TokenDto tokenDto = TokenDto.builder().token(jwt).userId(id).build();
 
-        return new ResponseEntity<>(new TokenDto(jwt), httpHeaders, HttpStatus.OK);
+        return new ResponseEntity<>(tokenDto, httpHeaders, HttpStatus.OK);
     }
 }
 
