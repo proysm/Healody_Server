@@ -113,4 +113,12 @@ public class FamilyService {
 
         return result;
     }
+
+    public boolean isAdmin(Long userId, Long homeId){
+        Optional<Home> optionalHome = homeRepository.findHomeByHomeId(homeId);
+        Home home = null;
+        if(optionalHome.isPresent()) home = optionalHome.get();
+        if (home.getAdmin().equals(userId)) return true;
+        return false;
+    }
 }
