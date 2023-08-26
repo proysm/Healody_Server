@@ -58,11 +58,13 @@ public class SecurityConfig {
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 )
 
-                .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
-//                        .requestMatchers("/api/**").permitAll()
-                        .requestMatchers("/api/auth/**").permitAll() // auth api만 허용
-                        .anyRequest().authenticated() // 그 외 인증 없이 접근X
+                .authorizeHttpRequests(authorizeHttpRequests ->
+                        authorizeHttpRequests
+                                .requestMatchers("/api/auth/**").permitAll() // 인증 API만 허용
+                                .requestMatchers("/api/auth/kakao/**").permitAll() // 카카오 인증 허용
+                                .anyRequest().authenticated() // 다른 요청은 인증이 필요함
                 )
+
 
                 // 세션을 사용하지 않기 때문에 STATELESS로 설정
                 .sessionManagement(sessionManagement ->

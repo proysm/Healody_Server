@@ -6,20 +6,25 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.umc.healody.user.dto.*;
 import dev.umc.healody.user.entity.Authority;
 import dev.umc.healody.user.entity.User;
+import dev.umc.healody.user.jwt.JwtFilter;
+import dev.umc.healody.user.jwt.TokenProvider;
 import dev.umc.healody.user.model.KakaoProfile;
 import dev.umc.healody.user.model.OAuthToken;
 import dev.umc.healody.user.repository.UserRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
@@ -36,13 +41,20 @@ public class UserService {
     String clientId;
     @Value("${security.oauth2.client.registration.kakao.redirect-uri}")
     String redirectUri;
+    @Value("${security.oauth2.client.registration.kakao.kakaoPw}")
+    String kakaoPw;
+
+
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final TokenProvider tokenProvider;
+
 
     @Autowired
-//    public UserService(UserRepository userRepository) {
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManagerBuilder authenticationManagerBuilder, TokenProvider tokenProvider) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-
+        this.authenticationManagerBuilder = authenticationManagerBuilder;
+        this.tokenProvider = tokenProvider;
     }
 
     public void registerUser(UserDto userDto) {
@@ -109,12 +121,6 @@ public class UserService {
         // HttpHeader 오브젝트 생성
         HttpHeaders tokenHeader = new HttpHeaders(); // Http header를 만든다.
         tokenHeader.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8"); // Http의 body data가 key=value의 data 형태라고 알려준다.
-
-        // body data를 저장한다.
-//        @Value("${security.oauth2.client.registration.kakao.client-id}")
-//        String clientId;
-
-        //String redirectUri;
 
         // HttpBody 오브젝트 생성
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>(); // body data를 저장할 object
@@ -190,7 +196,7 @@ public class UserService {
         user.setName(name);
         user.setEmail(email);
         user.setImage(image);
-        user.setPhone(null);
+        user.setPhone("01090304940");
         user.setBirth(null);
         user.setGender(null);
         user.setNickname(null);
@@ -200,33 +206,27 @@ public class UserService {
 
     }
 
-    // 2. 카카오 로그인 시도 -> '이메일'을 통해 이미 가입한 사용자인지 확인한다.
-    @Transactional(readOnly = true)
-    public Boolean kakaoLogin(User user){
 
-        if(checkEmailDuplication(user.getEmail())) return true; // 이미 존재하는 회원
-        else return false;
-    }
-
-    // 3. 카카오 회원가입 -> 추가 정보를 입력한다.
+    // 2. 카카오 회원가입
     @Transactional
     public void kakaoJoin(User newUser){
 
-        Random r = new Random();    // 쓰레기값 만들기
-        RandomString rs = new RandomString(16, r);
-        String garbagePw = rs.nextString();
-        newUser.setPassword(String.valueOf(garbagePw));
+        // 가입되어 있지 않은 회원이면 권한 정보 만들기
+        Authority authority = Authority.builder()
+                .authorityName("ROLE_USER")
+                .build();
+
+//        Random r = new Random();    // 쓰레기값 만들기
+//        RandomString rs = new RandomString(16, r);
+//        String garbagePw = rs.nextString();
+
+        newUser.setPassword(passwordEncoder.encode((kakaoPw))); // 프론트에게 kakaoPw 알려주기
+        newUser.setActivated(true);
+        newUser.setAuthorities(Collections.singleton(authority));
 
         userRepository.save(newUser);
     }
 
-    // 4. 카카오 로그아웃
-//    @Transactional
-//    public void kakaoLogout(User newUser) {
-//
-//
-//
-//    }
 
     @Transactional
     public User findUser(Long userId){
