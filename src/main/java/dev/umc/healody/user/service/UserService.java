@@ -3,10 +3,7 @@ package dev.umc.healody.user.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.umc.healody.user.dto.TokenDto;
-import dev.umc.healody.user.dto.UpdateUserRequestDto;
-import dev.umc.healody.user.dto.UserDto;
-import dev.umc.healody.user.dto.UserResponseDto;
+import dev.umc.healody.user.dto.*;
 import dev.umc.healody.user.entity.Authority;
 import dev.umc.healody.user.entity.User;
 import dev.umc.healody.user.jwt.JwtFilter;
@@ -54,7 +51,6 @@ public class UserService {
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManagerBuilder authenticationManagerBuilder, TokenProvider tokenProvider) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-
         this.authenticationManagerBuilder = authenticationManagerBuilder;
         this.tokenProvider = tokenProvider;
     }
@@ -198,7 +194,7 @@ public class UserService {
         user.setName(name);
         user.setEmail(email);
         user.setImage(image);
-        user.setPhone(null);
+        user.setPhone("01090304940");
         user.setBirth(null);
         user.setGender(null);
         user.setNickname(null);
@@ -209,19 +205,19 @@ public class UserService {
     }
 
     // 2. 카카오 로그인
-    //@Transactional(readOnly = true)
-    public ResponseEntity<TokenDto> kakaoLogin(@Valid @RequestBody User user){
+    //  ResponseEntity<TokenDto>
+    public ResponseEntity<TokenDto> kakaoLogin(KakaoLoginDto kakaoLoginDto){
 
-        UsernamePasswordAuthenticationToken authenticationToken2 =
+        UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(
-                        user.getEmail(),
-                        user.getPassword()
+                        kakaoLoginDto.getPhone(),
+                        kakaoLoginDto.getPassword()
                 );
 
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken2);
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        Long userId = userRepository.findByEmail(user.getEmail()).getUserId();
+        Long userId = userRepository.findByPhone(kakaoLoginDto.getPhone()).getUserId();
         String jwt = tokenProvider.createToken(authentication, userId);
 
         HttpHeaders httpHeaders = new HttpHeaders();
@@ -234,10 +230,20 @@ public class UserService {
     @Transactional
     public void kakaoJoin(User newUser){
 
+        // 가입되어 있지 않은 회원이면 권한 정보 만들기
+        Authority authority = Authority.builder()
+                .authorityName("ROLE_USER")
+                .build();
+
         Random r = new Random();    // 쓰레기값 만들기
         RandomString rs = new RandomString(16, r);
         String garbagePw = rs.nextString();
-        newUser.setPassword(String.valueOf(garbagePw));
+
+
+        newUser.setPassword(passwordEncoder.encode(("test1234")));
+        newUser.setActivated(true);
+        newUser.setAuthorities(Collections.singleton(authority));
+
         userRepository.save(newUser);
     }
 

@@ -82,6 +82,10 @@ public enum SuccessStatus {
     GOAL_DELETE(200, "SUCCESS", "목표 삭제가 완료되었습니다."),
     GOAL_FAILURE(400, "FAILURE", "목표 요청이 실패하였습니다."),
 
+    /** 수민 **/
+    KAKAO_USER_CREATE(201, "SUCCESS", "카카오 회원가입이 완료되었습니다."),
+    KAKAO_USER_LOGIN(200, "SUCCESS", "카카오 기존 회원입니다."),
+
 
     /**
      * SUCCESS CODE

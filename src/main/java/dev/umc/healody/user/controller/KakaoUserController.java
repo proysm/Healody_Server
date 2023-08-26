@@ -1,6 +1,7 @@
 package dev.umc.healody.user.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import dev.umc.healody.user.dto.KakaoLoginDto;
 import dev.umc.healody.user.dto.TokenDto;
 import dev.umc.healody.user.entity.User;
 import dev.umc.healody.user.jwt.JwtFilter;
@@ -26,21 +27,23 @@ import java.sql.Date;
 public class KakaoUserController {
 
     private final UserService userService;
+    private final KakaoLoginDto kakaoLoginDto;
+    private final UserRepository userRepository;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final TokenProvider tokenProvider;
-    private final UserRepository userRepository;
 
     @Autowired
-    public KakaoUserController(UserService userService, UserRepository userRepository, AuthenticationManagerBuilder authenticationManagerBuilder, TokenProvider tokenProvider, UserRepository userRepository1) {
+    public KakaoUserController(UserService userService, UserRepository userRepository, KakaoLoginDto kakaoLoginDto, AuthenticationManagerBuilder authenticationManagerBuilder, TokenProvider tokenProvider, UserRepository userRepository1, AuthenticationManagerBuilder authenticationManagerBuilder1, TokenProvider tokenProvider1) {
         this.userService = userService;
+        this.kakaoLoginDto = kakaoLoginDto;
+        this.userRepository = userRepository;
         this.authenticationManagerBuilder = authenticationManagerBuilder;
         this.tokenProvider = tokenProvider;
-        this.userRepository = userRepository1;
     }
 
-    @ResponseBody //, RedirectAttributes rttr
+
     @RequestMapping("/kakao/callback")
-    public ResponseEntity<TokenDto> kakaoCallback(String code) throws JsonProcessingException {
+    public String kakaoCallback(String code) throws JsonProcessingException {
         // 인증 코드, 카카오 로그인이 성공하면 이곳으로 감, @ResponseBody를 붙이면 데이터를 리턴해주는 함수가 됨.
 
         User user = userService.kakaoCallback(code); // 현재 로그인을 시도한 사용자의 정보를 리턴한다.
@@ -49,32 +52,19 @@ public class KakaoUserController {
         // 새로운 유저이면 회원가입을 진행한다.
         if(principal == false){
             userService.kakaoJoin(user);
-            //rttr.addFlashAttribute("newUser", user);
-            //return "redirect:/api/auth/kakao/join";
+
         }
         // 이미 존재하는 유저이면 로그인을 진행한다.
-        else{
-            //userService.kakaoLogin(user);
-            //rttr.addFlashAttribute("user", user);
-            //return "redirect:/api/auth/kakao/login";
-        }
+//        else{
+//            User loginUser = userRepository.findByEmail(user.getEmail());
+//
+//            kakaoLoginDto.setPhone(loginUser.getPhone());
+//            kakaoLoginDto.setPassword(loginUser.getPassword());
+//            userService.kakaoLogin(kakaoLoginDto);
+//            return new SuccessResponse<>(SuccessStatus.KAKAO_USER_LOGIN);
+//        }
 
-        UsernamePasswordAuthenticationToken authenticationToken2 =
-                new UsernamePasswordAuthenticationToken(
-                        user.getEmail(),
-                        user.getPassword()
-                );
-
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken2);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        Long userId = userRepository.findByEmail(user.getEmail()).getUserId();
-        String jwt = tokenProvider.createToken(authentication, userId);
-
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
-
-        return new ResponseEntity<>(new TokenDto(jwt), httpHeaders, HttpStatus.OK);
+        return "redirect:/api/auth/login";
     }
 
 
