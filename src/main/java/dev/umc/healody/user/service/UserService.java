@@ -3,25 +3,31 @@ package dev.umc.healody.user.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.umc.healody.user.dto.TokenDto;
 import dev.umc.healody.user.dto.UpdateUserRequestDto;
 import dev.umc.healody.user.dto.UserDto;
 import dev.umc.healody.user.dto.UserResponseDto;
 import dev.umc.healody.user.entity.Authority;
 import dev.umc.healody.user.entity.User;
+import dev.umc.healody.user.jwt.JwtFilter;
+import dev.umc.healody.user.jwt.TokenProvider;
 import dev.umc.healody.user.model.KakaoProfile;
 import dev.umc.healody.user.model.OAuthToken;
 import dev.umc.healody.user.repository.UserRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
@@ -39,12 +45,18 @@ public class UserService {
     @Value("${security.oauth2.client.registration.kakao.redirect-uri}")
     String redirectUri;
 
+
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final TokenProvider tokenProvider;
+
+
     @Autowired
-//    public UserService(UserRepository userRepository) {
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManagerBuilder authenticationManagerBuilder, TokenProvider tokenProvider) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
 
+        this.authenticationManagerBuilder = authenticationManagerBuilder;
+        this.tokenProvider = tokenProvider;
     }
 
     public void registerUser(UserDto userDto) {
@@ -111,12 +123,6 @@ public class UserService {
         // HttpHeader 오브젝트 생성
         HttpHeaders tokenHeader = new HttpHeaders(); // Http header를 만든다.
         tokenHeader.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8"); // Http의 body data가 key=value의 data 형태라고 알려준다.
-
-        // body data를 저장한다.
-//        @Value("${security.oauth2.client.registration.kakao.client-id}")
-//        String clientId;
-
-        //String redirectUri;
 
         // HttpBody 오브젝트 생성
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>(); // body data를 저장할 object
@@ -202,15 +208,29 @@ public class UserService {
 
     }
 
-    // 2. 카카오 로그인 시도 -> '이메일'을 통해 이미 가입한 사용자인지 확인한다.
-    @Transactional(readOnly = true)
-    public Boolean kakaoLogin(User user){
+    // 2. 카카오 로그인
+    //@Transactional(readOnly = true)
+    public ResponseEntity<TokenDto> kakaoLogin(@Valid @RequestBody User user){
 
-        if(checkEmailDuplication(user.getEmail())) return true; // 이미 존재하는 회원
-        else return false;
+        UsernamePasswordAuthenticationToken authenticationToken2 =
+                new UsernamePasswordAuthenticationToken(
+                        user.getEmail(),
+                        user.getPassword()
+                );
+
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken2);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        Long userId = userRepository.findByEmail(user.getEmail()).getUserId();
+        String jwt = tokenProvider.createToken(authentication, userId);
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
+
+        return new ResponseEntity<>(new TokenDto(jwt), httpHeaders, HttpStatus.OK);
     }
 
-    // 3. 카카오 회원가입 -> 추가 정보를 입력한다.
+    // 3. 카카오 회원가입
     @Transactional
     public void kakaoJoin(User newUser){
 
@@ -218,17 +238,9 @@ public class UserService {
         RandomString rs = new RandomString(16, r);
         String garbagePw = rs.nextString();
         newUser.setPassword(String.valueOf(garbagePw));
-
         userRepository.save(newUser);
     }
 
-    // 4. 카카오 로그아웃
-//    @Transactional
-//    public void kakaoLogout(User newUser) {
-//
-//
-//
-//    }
 
     @Transactional
     public User findUser(Long userId){
