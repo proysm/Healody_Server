@@ -84,7 +84,7 @@ public enum SuccessStatus {
 
     /** 수민 **/
     KAKAO_USER_CREATE(201, "SUCCESS", "카카오 회원가입이 완료되었습니다."),
-    KAKAO_USER_LOGIN(200, "SUCCESS", "카카오 기존 회원입니다."),
+
 
 
     /**

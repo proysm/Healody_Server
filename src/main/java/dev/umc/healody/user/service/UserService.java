@@ -41,6 +41,8 @@ public class UserService {
     String clientId;
     @Value("${security.oauth2.client.registration.kakao.redirect-uri}")
     String redirectUri;
+    @Value("${security.oauth2.client.registration.kakao.kakaoPw}")
+    String kakaoPw;
 
 
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
@@ -214,11 +216,11 @@ public class UserService {
                 .authorityName("ROLE_USER")
                 .build();
 
-        Random r = new Random();    // 쓰레기값 만들기
-        RandomString rs = new RandomString(16, r);
-        String garbagePw = rs.nextString();
+//        Random r = new Random();    // 쓰레기값 만들기
+//        RandomString rs = new RandomString(16, r);
+//        String garbagePw = rs.nextString();
 
-        newUser.setPassword(passwordEncoder.encode(("test1234")));
+        newUser.setPassword(passwordEncoder.encode((kakaoPw))); // 프론트에게 kakaoPw 알려주기
         newUser.setActivated(true);
         newUser.setAuthorities(Collections.singleton(authority));
 
