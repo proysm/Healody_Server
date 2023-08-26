@@ -28,9 +28,10 @@ public class KakaoLoginController {
         this.authenticationManagerBuilder = authenticationManagerBuilder;
         this.userRepository = userRepository;
     }
+// @ModelAttribute("loginDto")
+    @RequestMapping
+    public ResponseEntity<TokenDto> authorize(@Valid @RequestBody KakaoLoginDto loginDto) {
 
-    @PostMapping
-    public ResponseEntity<TokenDto> authorize(@ModelAttribute("loginDto") KakaoLoginDto loginDto) {
 
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(

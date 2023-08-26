@@ -30,23 +30,18 @@ import java.sql.Date;
 public class KakaoUserController {
 
     private final UserService userService;
-    private final KakaoLoginDto kakaoLoginDto;
     private final UserRepository userRepository;
-    private final AuthenticationManagerBuilder authenticationManagerBuilder;
-    private final TokenProvider tokenProvider;
+
 
     @Autowired
     public KakaoUserController(UserService userService, UserRepository userRepository, KakaoLoginDto kakaoLoginDto, AuthenticationManagerBuilder authenticationManagerBuilder, TokenProvider tokenProvider, UserRepository userRepository1, AuthenticationManagerBuilder authenticationManagerBuilder1, TokenProvider tokenProvider1) {
         this.userService = userService;
-        this.kakaoLoginDto = kakaoLoginDto;
         this.userRepository = userRepository;
-        this.authenticationManagerBuilder = authenticationManagerBuilder;
-        this.tokenProvider = tokenProvider;
     }
 
-
+    @ResponseBody
     @RequestMapping("/kakao/callback")
-    public String kakaoCallback(String code, RedirectAttributes rttr) throws JsonProcessingException {
+    public KakaoLoginDto kakaoCallback(String code) throws JsonProcessingException {
         // 인증 코드, 카카오 로그인이 성공하면 이곳으로 감, @ResponseBody를 붙이면 데이터를 리턴해주는 함수가 됨.
 
         User user = userService.kakaoCallback(code); // 현재 로그인을 시도한 사용자의 정보를 리턴한다.
@@ -55,25 +50,14 @@ public class KakaoUserController {
         // 새로운 유저이면 회원가입을 진행한다.
         if(principal == false){
             userService.kakaoJoin(user);
-
         }
         User loginUser = userRepository.findByEmail(user.getEmail());
 
-        kakaoLoginDto.setPhone(loginUser.getPhone());
-        kakaoLoginDto.setPassword(loginUser.getPassword());
-        userService.kakaoLogin(kakaoLoginDto);
+        KakaoLoginDto loginDto = new KakaoLoginDto();
+        loginDto.setPhone(loginUser.getPhone());
+        loginDto.setPassword(loginUser.getPassword());
 
-        // 이미 존재하는 유저이면 로그인을 진행한다.
-//        else{
-//            User loginUser = userRepository.findByEmail(user.getEmail());
-//
-//            kakaoLoginDto.setPhone(loginUser.getPhone());
-//            kakaoLoginDto.setPassword(loginUser.getPassword());
-//            userService.kakaoLogin(kakaoLoginDto);
-//            return new SuccessResponse<>(SuccessStatus.KAKAO_USER_LOGIN);
-//        }
-        rttr.addFlashAttribute("loginDto", kakaoLoginDto);
-        return "redirect:/api/auth/kakao/login";
+        return loginDto;
     }
 
 

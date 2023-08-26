@@ -204,29 +204,8 @@ public class UserService {
 
     }
 
-    // 2. 카카오 로그인
-    //  ResponseEntity<TokenDto>
-    public ResponseEntity<TokenDto> kakaoLogin(KakaoLoginDto kakaoLoginDto){
 
-        UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(
-                        kakaoLoginDto.getPhone(),
-                        kakaoLoginDto.getPassword()
-                );
-
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        Long userId = userRepository.findByPhone(kakaoLoginDto.getPhone()).getUserId();
-        String jwt = tokenProvider.createToken(authentication, userId);
-
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
-
-        return new ResponseEntity<>(new TokenDto(jwt), httpHeaders, HttpStatus.OK);
-    }
-
-    // 3. 카카오 회원가입
+    // 2. 카카오 회원가입
     @Transactional
     public void kakaoJoin(User newUser){
 
@@ -238,7 +217,6 @@ public class UserService {
         Random r = new Random();    // 쓰레기값 만들기
         RandomString rs = new RandomString(16, r);
         String garbagePw = rs.nextString();
-
 
         newUser.setPassword(passwordEncoder.encode(("test1234")));
         newUser.setActivated(true);
