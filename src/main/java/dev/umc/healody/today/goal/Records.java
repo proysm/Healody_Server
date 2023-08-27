@@ -23,12 +23,16 @@ public class Records {
 
     private LocalDate today;
     private String val;
+    private String behavior;
+    private Long days;
 
     @Builder
-    public Records(Goal goal, LocalDate today, String val) {
+    public Records(Goal goal, LocalDate today, String val, String behavior, Long days) {
         this.goal = goal;
         this.today = today;
         this.val = val;
+        this.behavior = behavior;
+        this.days = days;
     }
 
     public void updateVal(String val) {

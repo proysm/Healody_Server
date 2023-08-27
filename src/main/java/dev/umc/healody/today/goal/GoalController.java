@@ -5,6 +5,7 @@ import dev.umc.healody.common.SuccessStatus;
 import dev.umc.healody.today.goal.dto.GoalRequestDto;
 import dev.umc.healody.today.goal.dto.GoalResponseDto;
 import dev.umc.healody.today.goal.dto.RecordsRequestDto;
+import dev.umc.healody.today.goal.dto.RecordsResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,15 +23,15 @@ public class GoalController {
     }
 
     @GetMapping("/goal/{goalId}")
-    public SuccessResponse<GoalResponseDto> findGoal(@PathVariable Long goalId) {
-        goalService.createRecord(goalId);
-        return new SuccessResponse<>(SuccessStatus.GOAL_GET);
+    public SuccessResponse<RecordsResponseDto> findGoal(@PathVariable Long goalId) {
+        RecordsResponseDto responseDto = goalService.createRecord(goalId);
+        return new SuccessResponse<>(SuccessStatus.GOAL_GET, responseDto);
     }
 
     @GetMapping("/goal/{goalId}/{date}")
-    public SuccessResponse dateFindGoal(@PathVariable Long goalId, @PathVariable String date) {
-        goalService.dateCreateRecord(goalId, date);
-        return new SuccessResponse(SuccessStatus.GOAL_GET);
+    public SuccessResponse<RecordsResponseDto> dateFindGoal(@PathVariable Long goalId, @PathVariable String date) {
+        RecordsResponseDto responseDto = goalService.dateCreateRecord(goalId, date);
+        return new SuccessResponse(SuccessStatus.GOAL_GET, responseDto);
     }
 
     @PatchMapping("/goal/{goalId}")
