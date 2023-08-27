@@ -18,7 +18,6 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
-    - name: Set resources directory
     - uses: actions/checkout@v3
     - run: touch ./src/main/resources/application.yml
     - run: echo "${{ secrets.APPLICATION }}" > ./src/main/resources/application.yml
