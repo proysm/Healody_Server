@@ -2,6 +2,7 @@ package dev.umc.healody.today.goal;
 
 import dev.umc.healody.today.goal.dto.GoalRequestDto;
 import dev.umc.healody.today.goal.dto.GoalResponseDto;
+import dev.umc.healody.today.goal.dto.RecordsResponseDto;
 import dev.umc.healody.user.entity.User;
 import dev.umc.healody.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -37,11 +38,13 @@ public class GoalService {
     }
 
     @Transactional
-    public void createRecord(Long goalId) {
+    public RecordsResponseDto createRecord(Long goalId) {
         Goal goal = goalRepository.findById(goalId).get();
 
         int startCnt = goal.getStartDate().getDayOfMonth();
         int nowCnt = LocalDate.now().getDayOfMonth();
+
+        RecordsResponseDto responseDto = new RecordsResponseDto();
 
         // 날짜가 지났다면
         if((nowCnt - startCnt) == goal.getCnt()) {
@@ -49,18 +52,20 @@ public class GoalService {
                     .goal(goal)
                     .today(LocalDate.now())
                     .val("0")
+                    .behavior(goal.getBehavior().getDisplayValue())
+                    .days(goal.getCnt() + 1)
                     .build();
-            recordsRepository.save(records);
+
             goal.plusCnt();
+            recordsRepository.save(records);
         }
-        // 그렇지 않았다면
-        else {
-            System.out.println("createRecord 예외처리");
-        }
+
+        Records records = recordsRepository.findByGoalIdAndDays(goalId, goal.getCnt());
+        return responseDto.toDto(records);
     }
 
     @Transactional
-    public void dateCreateRecord(Long goalId, String date) {
+    public RecordsResponseDto dateCreateRecord(Long goalId, String date) {
         Goal goal = goalRepository.findById(goalId).get();
 
         LocalDate localDate = LocalDate.parse(date);
@@ -68,20 +73,23 @@ public class GoalService {
         int startCnt = goal.getStartDate().getDayOfMonth();
         int nowCnt = localDate.getDayOfMonth();
 
+        RecordsResponseDto responseDto = new RecordsResponseDto();
+
         // 날짜가 지났다면
         if((nowCnt - startCnt) == goal.getCnt()) {
             Records records = Records.builder()
                     .goal(goal)
                     .today(localDate)
                     .val("0")
+                    .behavior(goal.getBehavior().getDisplayValue())
+                    .days(goal.getCnt() + 1)
                     .build();
             recordsRepository.save(records);
             goal.plusCnt();
         }
-        // 그렇지 않았다면
-        else {
-            System.out.println("dateCreateRecord 예외처리");
-        }
+
+        Records records = recordsRepository.findByGoalIdAndDays(goalId, goal.getCnt());
+        return responseDto.toDto(records);
     }
 
     @Transactional
