@@ -48,6 +48,11 @@ dependencies {
 	// AWS RDS
 	runtimeOnly 'mysql:mysql-connector-java:8.0.33'
 }
+
+jar {
+	enabled = false
+}
+
 tasks.named('test') {
 	useJUnitPlatform()
 }
