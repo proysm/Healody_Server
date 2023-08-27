@@ -47,15 +47,18 @@ public class KakaoUserController {
         User user = userService.kakaoCallback(code); // 현재 로그인을 시도한 사용자의 정보를 리턴한다.
         Boolean principal = userService.checkEmailDuplication(user.getEmail()); // 존재하는 이메일인지 확인한다.
 
+        KakaoLoginDto loginDto = new KakaoLoginDto();
         // 새로운 유저이면 회원가입을 진행한다.
         if(principal == false){
             userService.kakaoJoin(user);
+            loginDto.setStatus(false);
         }
-        User loginUser = userRepository.findByEmail(user.getEmail());
-
-        KakaoLoginDto loginDto = new KakaoLoginDto();
-        loginDto.setPhone(loginUser.getPhone());
-        loginDto.setPassword(loginUser.getPassword());
+        else{
+            loginDto.setStatus(true);
+            User loginUser = userRepository.findByEmail(user.getEmail());
+            loginDto.setPhone(loginUser.getPhone());
+            loginDto.setPassword(loginUser.getPassword());
+        }
 
         return loginDto;
     }
@@ -64,7 +67,7 @@ public class KakaoUserController {
     @ResponseBody
     @Transactional
     @GetMapping("/kakao/join/getInfo") // kakao 회원가입 이후 반드시 거쳐야됨.
-    public SuccessResponse<String> kakaoGetInfo(@RequestParam Long userid, @RequestParam String nickName, @RequestParam String gender, @RequestParam String birth, @RequestParam String phone){
+    public KakaoLoginDto kakaoGetInfo(@RequestParam Long userid, @RequestParam String nickName, @RequestParam String gender, @RequestParam String birth, @RequestParam String phone){
 
         User newUser = userService.findUser(userid);
         newUser.setNickname(nickName);
@@ -73,7 +76,12 @@ public class KakaoUserController {
         newUser.setPhone(phone);
         //userService.kakaoJoin(newUser); @Transactional을 사용하면 굳이 할 필요 없음.
 
-        return new SuccessResponse<>(SuccessStatus.KAKAO_USER_CREATE);
+        KakaoLoginDto loginDto = new KakaoLoginDto();
+        loginDto.setPhone(newUser.getPhone());
+        loginDto.setStatus(true);
+        loginDto.setPassword(newUser.getPassword());
+
+        return loginDto;
     }
 
 }
