@@ -19,12 +19,21 @@ jobs:
         distribution: 'temurin'
 
     - uses: actions/checkout@v2
-    - run: touch ./src/main/resources/application.yml
-    - run: echo "${{ secrets.APPLICATION }}" > ./src/main/resources/application.yml
-    - run: touch ./src/main/resources/email.properties
-    - run: echo "${{ secrets.EMAIL }}" > ./src/main/resources/email.properties
-    - run: touch ./src/main/resources/data.sql
-    - run: echo "${{ secrets.DATA }}" > ./src/main/resources/data.sql
+    - name: make resources
+      run: |
+        mkdir ./src/main/resources
+        touch ./src/main/resources/application.yml
+        echo "${{ secrets.APPLICATION }}" > ./src/main/resources/application.yml
+        touch ./src/main/resources/email.properties
+        echo "${{ secrets.EMAIL }}" > ./src/main/resources/email.properties
+        touch ./src/main/resources/data.sql
+        echo "${{ secrets.DATA }}" > ./src/main/resources/data.sql
+        cat ./src/main/resources/application.yml
+      shell: bash
+
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+      shell: bash
       
     - name: Spring Boot Build
       run: ./gradlew clean build -x test
