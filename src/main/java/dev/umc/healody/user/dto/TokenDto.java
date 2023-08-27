@@ -13,7 +13,11 @@ public class TokenDto {
     String token;
     Long userId;
 
-//    private String grantType;
+    public TokenDto(String token) {
+        this.token = token;
+    }
+
+    //    private String grantType;
 //    private String accessToken;
 //    private String refreshToken;
 //    private String key;
