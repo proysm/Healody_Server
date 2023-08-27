@@ -196,7 +196,7 @@ public class UserService {
         user.setName(name);
         user.setEmail(email);
         user.setImage(image);
-        user.setPhone("01090304940");
+        user.setPhone(null);
         user.setBirth(null);
         user.setGender(null);
         user.setNickname(null);
