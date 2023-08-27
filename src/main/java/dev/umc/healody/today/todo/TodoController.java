@@ -39,9 +39,4 @@ public class TodoController {
         todoService.deleteTodo(todoId);
         return new SuccessResponse<>(SuccessStatus.TODO_DELETE);
     }
-
-    @GetMapping("/test/home")
-    public String testHome() {
-        return "Hello world!";
-    }
 }
