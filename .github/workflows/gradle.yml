@@ -19,7 +19,7 @@ jobs:
         distribution: 'temurin'
 
     - uses: actions/checkout@v2
-    - name: Make Resources Setting
+    - name: Set Resources
       run: |
         mkdir ./src/main/resources
         touch ./src/main/resources/application.yml
