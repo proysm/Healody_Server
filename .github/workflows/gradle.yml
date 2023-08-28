@@ -19,7 +19,7 @@ jobs:
         distribution: 'temurin'
 
     - uses: actions/checkout@v2
-    - name: Make Properties files
+    - name: Make Properties
       run: |
         mkdir ./src/main/resources
         touch ./src/main/resources/application.yml
