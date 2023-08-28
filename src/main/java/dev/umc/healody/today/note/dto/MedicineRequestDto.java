@@ -12,7 +12,6 @@ import java.util.Date;
 @Getter @NoArgsConstructor
 public class MedicineRequestDto {
 
-    private Long userId;
     private String date;
     private String title;
     private String memo;
@@ -22,8 +21,7 @@ public class MedicineRequestDto {
     private String place;
 
     @Builder
-    public MedicineRequestDto(Long userId, String date, String title, String memo, String medicine1, String medicine2, String medicine3, String place) {
-        this.userId = userId;
+    public MedicineRequestDto(String date, String title, String memo, String medicine1, String medicine2, String medicine3, String place) {
         this.date = date;
         this.title = title;
         this.memo = memo;

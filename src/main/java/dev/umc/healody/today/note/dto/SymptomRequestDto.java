@@ -13,15 +13,13 @@ import java.util.Date;
 @Getter @NoArgsConstructor
 public class SymptomRequestDto {
 
-    private Long userId;
     private String date;
     private String title;
     private String memo;
     private String name;
 
     @Builder
-    public SymptomRequestDto(Long userId, String date, String title, String memo, String name) {
-        this.userId = userId;
+    public SymptomRequestDto(String date, String title, String memo, String name) {
         this.date = date;
         this.title = title;
         this.memo = memo;
