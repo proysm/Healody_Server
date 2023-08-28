@@ -1,4 +1,4 @@
-name: Deploy
+name: JAVA CI WITH GRADLE
 
 on:
   push:
