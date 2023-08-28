@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static dev.umc.healody.common.FindUserInfo.getCurrentUserId;
+
 @RequiredArgsConstructor
 @RequestMapping("/api")
 @RestController
@@ -18,7 +20,7 @@ public class TodoController {
 
     @PostMapping("/todo")
     public SuccessResponse<Long> createTodo(@RequestBody TodoRequestDto requestDto) {
-        Long todoId = todoService.createTodo(requestDto.getUserId(), requestDto);
+        Long todoId = todoService.createTodo(getCurrentUserId(), requestDto);
         return new SuccessResponse<>(SuccessStatus.TODO_CREATE, todoId);
     }
 
@@ -30,7 +32,7 @@ public class TodoController {
 
     @PatchMapping("/todo/{todoId}")
     public SuccessResponse<Long> updateTodo(@PathVariable Long todoId, @RequestBody TodoRequestDto requestDto) {
-        Long updateId = todoService.updateTodo(requestDto.getUserId(), todoId, requestDto);
+        Long updateId = todoService.updateTodo(getCurrentUserId(), todoId, requestDto);
         return new SuccessResponse<>(SuccessStatus.TODO_UPDATE, updateId);
     }
 

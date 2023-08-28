@@ -12,8 +12,6 @@ import java.time.LocalDate;
 @Getter @NoArgsConstructor
 public class GoalRequestDto {
 
-    private Long userId;
-
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate startDate;
 
