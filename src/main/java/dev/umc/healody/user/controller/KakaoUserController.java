@@ -1,27 +1,16 @@
 package dev.umc.healody.user.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import dev.umc.healody.common.SuccessResponse;
-import dev.umc.healody.common.SuccessStatus;
 import dev.umc.healody.user.dto.KakaoLoginDto;
-import dev.umc.healody.user.dto.TokenDto;
 import dev.umc.healody.user.entity.User;
-import dev.umc.healody.user.jwt.JwtFilter;
 import dev.umc.healody.user.jwt.TokenProvider;
 import dev.umc.healody.user.repository.UserRepository;
 import dev.umc.healody.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.sql.Date;
 
@@ -31,12 +20,20 @@ public class KakaoUserController {
 
     private final UserService userService;
     private final UserRepository userRepository;
+    private final KakaoLoginDto loginDto;
 
 
     @Autowired
-    public KakaoUserController(UserService userService, UserRepository userRepository, KakaoLoginDto kakaoLoginDto, AuthenticationManagerBuilder authenticationManagerBuilder, TokenProvider tokenProvider, UserRepository userRepository1, AuthenticationManagerBuilder authenticationManagerBuilder1, TokenProvider tokenProvider1) {
+    public KakaoUserController(UserService userService, UserRepository userRepository, KakaoLoginDto kakaoLoginDto, AuthenticationManagerBuilder authenticationManagerBuilder, TokenProvider tokenProvider, UserRepository userRepository1, AuthenticationManagerBuilder authenticationManagerBuilder1, TokenProvider tokenProvider1, KakaoLoginDto loginDto) {
         this.userService = userService;
         this.userRepository = userRepository;
+        this.loginDto = loginDto;
+    }
+
+    @ResponseBody
+    @RequestMapping("/kakao/callback/test")
+    public KakaoLoginDto kakaoCallbacktest(){
+        return loginDto;
     }
 
     @ResponseBody
@@ -47,7 +44,7 @@ public class KakaoUserController {
         User user = userService.kakaoCallback(code); // 현재 로그인을 시도한 사용자의 정보를 리턴한다.
         Boolean principal = userService.checkEmailDuplication(user.getEmail()); // 존재하는 이메일인지 확인한다.
 
-        KakaoLoginDto loginDto = new KakaoLoginDto();
+
         // 새로운 유저이면 회원가입을 진행한다.
         if(principal == false){
             userService.kakaoJoin(user);
@@ -61,6 +58,7 @@ public class KakaoUserController {
         }
 
         return loginDto;
+
     }
 
 
