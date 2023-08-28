@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static dev.umc.healody.common.FindUserInfo.getCurrentUserId;
+
 @RequiredArgsConstructor
 @RequestMapping("/api")
 @RestController
@@ -17,19 +19,19 @@ public class NoteController {
 
     @PostMapping("/note/hospital")
     public SuccessResponse<Long> createNoteHospital(@RequestBody HospitalRequestDto requestDto) {
-        Long noteId = noteService.createNoteHospital(requestDto.getUserId(), requestDto);
+        Long noteId = noteService.createNoteHospital(getCurrentUserId(), requestDto);
         return new SuccessResponse<>(SuccessStatus.NOTE_CREATE, noteId);
     }
 
     @PostMapping("/note/medicine")
     public SuccessResponse<Long> createNoteMedicine(@RequestBody MedicineRequestDto requestDto) {
-        Long noteId = noteService.createNoteMedicine(requestDto.getUserId(), requestDto);
+        Long noteId = noteService.createNoteMedicine(getCurrentUserId(), requestDto);
         return new SuccessResponse<>(SuccessStatus.NOTE_CREATE, noteId);
     }
 
     @PostMapping("/note/symptom")
     public SuccessResponse<Long> createNoteSymptom(@RequestBody SymptomRequestDto requestDto) {
-        Long noteId = noteService.createNoteSymptom(requestDto.getUserId(), requestDto);
+        Long noteId = noteService.createNoteSymptom(getCurrentUserId(), requestDto);
         return new SuccessResponse<>(SuccessStatus.NOTE_CREATE, noteId);
     }
 
