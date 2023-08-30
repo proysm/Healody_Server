@@ -31,12 +31,6 @@ public class KakaoUserController {
         this.loginDto = loginDto;
     }
 
-    @GetMapping("/test")
-    public String kakaoTest() {
-        System.out.println("complete log");
-        return "Complete";
-    }
-
     @ResponseBody
     @RequestMapping("/kakao/callbacks") //KakaoLoginDto
     public String kakaoCallback(@RequestBody String code) throws JsonProcessingException {
