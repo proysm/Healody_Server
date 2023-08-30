@@ -9,7 +9,6 @@ import dev.umc.healody.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,7 +46,7 @@ public class KakaoUserController {
         // Boolean principal = userService.checkEmailDuplication(user.getEmail()); // 존재하는 이메일인지 확인한다.
 
 
-        // // 새로운 유저이면 회원가입을 진행한다.
+        // // 새로운 유저이면 회원가입을 진행한다.ㅋ
         // if(principal == false){
         //     userService.kakaoJoin(user);
         //     loginDto.setStatus(false);
