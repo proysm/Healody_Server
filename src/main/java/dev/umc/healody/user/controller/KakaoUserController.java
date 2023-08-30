@@ -45,8 +45,8 @@ public class KakaoUserController {
     }
 
     @ResponseBody
-    @GetMapping("/please")
-    public String Please(@RequestBody String code){
+    @GetMapping("/please/{code}")
+    public String Please(@PathVariable String code){
         return code;
     }
 
