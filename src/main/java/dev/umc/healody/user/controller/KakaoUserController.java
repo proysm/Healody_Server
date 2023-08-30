@@ -41,7 +41,6 @@ public class KakaoUserController {
     public KakaoLoginDto kakaoCallback(@RequestParam(name = "code") String code) throws JsonProcessingException {
         // 인증 코드, 카카오 로그인이 성공하면 이곳으로 감, @ResponseBody를 붙이면 데이터를 리턴해주는 함수가 됨.
 
-        //return "hello!!!";
         User user = userService.kakaoCallback(code); // 현재 로그인을 시도한 사용자의 정보를 리턴한다.
         Boolean principal = userService.checkEmailDuplication(user.getEmail()); // 존재하는 이메일인지 확인한다.
 
