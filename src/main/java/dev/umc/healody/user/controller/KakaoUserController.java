@@ -32,24 +32,6 @@ public class KakaoUserController {
         this.loginDto = loginDto;
     }
 
-    @ResponseBody
-    @RequestMapping("/kakao/callback/test")
-    public KakaoLoginDto kakaoCallbacktest(){
-        return loginDto;
-    }
-
-    @ResponseBody
-    @RequestMapping("/kakao/callback/testing")
-    public String kakaoCallbacktesting(@RequestBody String code){
-        return code;
-    }
-
-    @ResponseBody
-    @GetMapping("/please/{code}")
-    public String Please(@PathVariable String code){
-        return code;
-    }
-
 
     @ResponseBody
     @RequestMapping("/kakao/callbacks") //KakaoLoginDto
