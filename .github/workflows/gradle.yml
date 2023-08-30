@@ -1,4 +1,4 @@
-name: JAVA CI WITH GRADLE
+name: GITHUB ACTIONS CI/CD
 
 on:
   push:
