@@ -14,7 +14,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
 
-@Controller
+@Controller    
+@RequiredArgsConstructor
 @RequestMapping("/api/auth")
 public class KakaoUserController {
 
