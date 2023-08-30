@@ -6,6 +6,7 @@ import dev.umc.healody.user.entity.User;
 import dev.umc.healody.user.jwt.TokenProvider;
 import dev.umc.healody.user.repository.UserRepository;
 import dev.umc.healody.user.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.stereotype.Controller;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.Date;
 
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/api/auth")
 public class KakaoUserController {
 
@@ -35,6 +37,19 @@ public class KakaoUserController {
     public KakaoLoginDto kakaoCallbacktest(){
         return loginDto;
     }
+
+    @ResponseBody
+    @RequestMapping("/kakao/callback/testing")
+    public String kakaoCallbacktesting(@RequestBody String code){
+        return code;
+    }
+
+    @ResponseBody
+    @GetMapping("/please")
+    public String Please(@RequestBody String code){
+        return code;
+    }
+
 
     @ResponseBody
     @RequestMapping("/kakao/callbacks") //KakaoLoginDto
