@@ -32,10 +32,10 @@ public class KakaoUserController {
         this.loginDto = loginDto;
     }
 
-    @GetMapping("/kakao/test/{code}")
-    public String kakaoTest(@PathVariable String code) {
-        System.out.println("code = " + code);
-        return code;
+    @GetMapping("/kakao/test/{name}")
+    public String kakaoTest(@PathVariable String name) {
+        System.out.println("name = " + name);
+        return name;
     }
 
     @ResponseBody
