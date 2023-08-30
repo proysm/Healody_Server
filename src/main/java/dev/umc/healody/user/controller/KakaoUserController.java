@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
 
-@RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/auth")
+@RestController
 public class KakaoUserController {
 
     private final UserService userService;
@@ -31,7 +31,7 @@ public class KakaoUserController {
         this.loginDto = loginDto;
     }
 
-    @GetMapping("/kakao/test/{name}")
+    @GetMapping("/test/{name}")
     public String kakaoTest(@PathVariable String name) {
         System.out.println("name = " + name);
         return name;
