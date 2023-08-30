@@ -56,7 +56,6 @@ public class KakaoUserController {
             loginDto.setPhone(loginUser.getPhone());
             loginDto.setPassword(loginUser.getPassword());
         }
-
         return loginDto;
 
     }
