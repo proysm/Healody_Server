@@ -37,7 +37,7 @@ public class KakaoUserController {
     }
 
     @ResponseBody
-    @RequestMapping("/kakao/callback") //KakaoLoginDto
+    @RequestMapping("/kakao/callback/test") //KakaoLoginDto
     public String kakaoCallback(@RequestBody String code) throws JsonProcessingException {
         // 인증 코드, 카카오 로그인이 성공하면 이곳으로 감, @ResponseBody를 붙이면 데이터를 리턴해주는 함수가 됨.
         return code;
