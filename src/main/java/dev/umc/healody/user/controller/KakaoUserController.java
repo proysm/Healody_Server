@@ -37,24 +37,25 @@ public class KakaoUserController {
     }
 
     @ResponseBody
-    @RequestMapping("/kakao/callback") //
-    public KakaoLoginDto kakaoCallback(@RequestParam(name = "code") String code) throws JsonProcessingException {
+    @RequestMapping("/kakao/callback") //KakaoLoginDto
+    public String kakaoCallback(@RequestParam(name = "code") String code) throws JsonProcessingException {
 
-        User user = userService.kakaoCallback(code); // 현재 로그인을 시도한 사용자의 정보를 리턴한다.
-        Boolean principal = userService.checkEmailDuplication(user.getEmail()); // 존재하는 이메일인지 확인한다.
+        return code;
+        // User user = userService.kakaoCallback(code); // 현재 로그인을 시도한 사용자의 정보를 리턴한다.
+        // Boolean principal = userService.checkEmailDuplication(user.getEmail()); // 존재하는 이메일인지 확인한다.
 
-        // 새로운 유저이면 회원가입을 진행한다.
-        if(principal == false){
-            userService.kakaoJoin(user);
-            loginDto.setStatus(false);
-        }
-        else{
-            loginDto.setStatus(true);
-            User loginUser = userRepository.findByEmail(user.getEmail());
-            loginDto.setPhone(loginUser.getPhone());
-            loginDto.setPassword(loginUser.getPassword());
-        }
-        return loginDto;
+        // // 새로운 유저이면 회원가입을 진행한다.
+        // if(principal == false){
+        //     userService.kakaoJoin(user);
+        //     loginDto.setStatus(false);
+        // }
+        // else{
+        //     loginDto.setStatus(true);
+        //     User loginUser = userRepository.findByEmail(user.getEmail());
+        //     loginDto.setPhone(loginUser.getPhone());
+        //     loginDto.setPassword(loginUser.getPassword());
+        // }
+        // return loginDto;
 
     }
 
