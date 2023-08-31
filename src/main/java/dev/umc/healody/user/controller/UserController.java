@@ -112,7 +112,7 @@ public class UserController {
     // 수민
     @ResponseBody
     @PostMapping("/tests")
-    public SuccessResponse<String> kakaoCallback(@Valid @RequestBody TestDto code)  {
+    public SuccessResponse<String> Tests()  {
         System.out.println("hifdkjfljdl");
         return new SuccessResponse<>(SuccessStatus.EMAIL_SUCCESS);
 
