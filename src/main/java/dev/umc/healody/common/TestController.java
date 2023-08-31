@@ -4,12 +4,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RequestMapping("/api/auth/test")
+@RequestMapping("/test")
 @RestController
 public class TestController {
 
     @GetMapping
-    public String testMethod() {
-        return "Hello world!";
+    public SuccessResponse testMethod() {
+        return new SuccessResponse<>(SuccessStatus.SUCCESS);
     }
 }
