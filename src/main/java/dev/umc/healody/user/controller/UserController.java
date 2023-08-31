@@ -119,10 +119,9 @@ public class UserController {
     // 수민
     @ResponseBody
     @PostMapping("/tests")
-    public SuccessResponse<String> Tests()  {
-        System.out.println("hifdkjfljdl");
-        return new SuccessResponse<>(SuccessStatus.EMAIL_SUCCESS);
+    public TestDto Tests(@Valid @RequestBody TestDto testDto)  {
 
+        return testDto;
 
     }
 
