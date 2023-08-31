@@ -1,21 +1,16 @@
 package dev.umc.healody.user.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import dev.umc.healody.common.SuccessResponse;
 import dev.umc.healody.common.SuccessStatus;
 import dev.umc.healody.user.dto.KakaoLoginDto;
-import dev.umc.healody.user.dto.TestDto;
+import dev.umc.healody.user.dto.ingaDto;
 import dev.umc.healody.user.dto.UserDto;
-import dev.umc.healody.user.entity.User;
 import dev.umc.healody.user.repository.UserRepository;
 import dev.umc.healody.user.service.EmailService;
 import dev.umc.healody.user.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-
-import java.sql.Date;
 
 
 @RestController
@@ -23,19 +18,13 @@ import java.sql.Date;
 public class UserController {
     private final UserService userService;
     private final EmailService emailService;
-    private final UserRepository userRepository;
-    private final KakaoLoginDto loginDto;
-    private final TestDto testDto;
     String confirm = "";
 
 
     @Autowired
-    public UserController(UserService userService, EmailService emailService, UserRepository userRepository, KakaoLoginDto loginDto, TestDto testDto) {
+    public UserController(UserService userService, EmailService emailService, UserRepository userRepository, KakaoLoginDto loginDto, ingaDto ingaDto) {
         this.userService = userService;
         this.emailService = emailService;
-        this.userRepository = userRepository;
-        this.loginDto = loginDto;
-        this.testDto = testDto;
     }
 
     @ResponseBody
@@ -113,42 +102,6 @@ public class UserController {
 //        Long userId = userService.findUserIdByPhone(phone);
 //        return new SuccessResponse<>(SuccessStatus.SUCCESS, userId);
 //    }
-
-
-
-    // 수민
-    @ResponseBody
-    @PostMapping("/tests")
-    public TestDto Tests(@Valid @RequestBody TestDto testDto)  {
-
-        return testDto;
-
-    }
-
-
-    @ResponseBody
-    @Transactional
-    @GetMapping("/kakao/join/getInfo") // kakao 회원가입 이후 반드시 거쳐야됨.
-    public KakaoLoginDto kakaoGetInfo(@RequestParam Long userid, @RequestParam String nickName, @RequestParam String gender, @RequestParam String birth, @RequestParam String phone){
-
-        User newUser = userService.findUser(userid);
-        newUser.setNickname(nickName);
-        newUser.setGender(gender);
-        newUser.setBirth(Date.valueOf(birth));
-        newUser.setPhone(phone);
-        //userService.kakaoJoin(newUser); @Transactional을 사용하면 굳이 할 필요 없음.
-
-        KakaoLoginDto loginDto = new KakaoLoginDto();
-        loginDto.setPhone(newUser.getPhone());
-        loginDto.setStatus(true);
-        loginDto.setPassword(newUser.getPassword());
-
-        return loginDto;
-    }
-
-
-
-
 
 
 }

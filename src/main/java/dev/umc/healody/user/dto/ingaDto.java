@@ -9,6 +9,6 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 @NoArgsConstructor
 @Component
-public class TestDto {
-    private String str;
+public class ingaDto {
+    private String code;
 }
