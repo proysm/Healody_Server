@@ -111,7 +111,7 @@ public class UserController {
     // 수민
     @ResponseBody
     @GetMapping("/kakao/callbacks") //KakaoLoginDto
-    public TestDto kakaoCallback(@RequestBody TestDto code) throws JsonProcessingException {
+    public TestDto kakaoCallback(@Valid @RequestBody TestDto code) throws JsonProcessingException {
         // 인증 코드, 카카오 로그인이 성공하면 이곳으로 감, @ResponseBody를 붙이면 데이터를 리턴해주는 함수가 됨.
 
         //testDto.setStr(code);
