@@ -45,6 +45,13 @@ public class UserController {
         return new SuccessResponse<>(SuccessStatus.USER_CREATE);
     }
 
+    @ResponseBody
+    @PostMapping("/joins")
+    public SuccessResponse<String> registerUsers(@Valid @RequestBody UserDto userDTO) {
+        userService.registerUser(userDTO);
+        return new SuccessResponse<>(SuccessStatus.USER_CREATE);
+    }
+
 //    @PostMapping("/login")
 //    public ResponseEntity<?> login(@RequestBody LoginDto loginDto, Errors errors) {
 //        JwtToken token = userService.login(loginDto.getPhone(), loginDto.getPassword())
