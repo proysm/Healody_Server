@@ -1,4 +1,4 @@
-name: GITHUB ACTIONS CI/CD AND DOCKER
+name: GITHUB ACTIONS CI/CD
 
 on:
   push:
@@ -54,7 +54,7 @@ jobs:
 
     - name: Get Github IP
       id: ip
-      uses: haythem/public-ip@v1.2
+      uses: haythem/public-ip@v1.3
 
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1
