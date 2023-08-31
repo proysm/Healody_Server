@@ -1,4 +1,4 @@
-name: GITHUB ACTIONS CI
+name: GITHUB ACTIONS CI/CD
 
 on:
   push:
