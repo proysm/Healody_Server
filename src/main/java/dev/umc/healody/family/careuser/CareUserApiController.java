@@ -34,20 +34,25 @@ public class CareUserApiController {
     @PostMapping
     public SuccessResponse<Long> create(@RequestPart("requestDTO") CareUserRequestDTO requestDTO, @RequestPart("image") MultipartFile image) throws IOException {
         Long careUerId = careUserService.create(requestDTO, image);
-        return new SuccessResponse<>(SuccessStatus.SUCCESS, careUerId);
+
+        if(careUerId != null) return new SuccessResponse<>(SuccessStatus.CARE_USER_CREATE, careUerId);
+        return new SuccessResponse<>(SuccessStatus.CARE_USER_FAILURE, null);
     }
 
     @PutMapping
     public SuccessResponse<Long> update(@RequestPart CareUserRequestDTO requestDTO, @RequestPart MultipartFile image) throws IOException {
         boolean result = careUserService.update(requestDTO.getId(), requestDTO, image);
-        return new SuccessResponse<>(SuccessStatus.SUCCESS, requestDTO.getId());
+
+        if(result) return new SuccessResponse<>(SuccessStatus.SUCCESS, requestDTO.getId());
+        return new SuccessResponse<>(SuccessStatus.CARE_USER_FAILURE, null);
     }
 
 
     @DeleteMapping("/{careuserId}")
     public SuccessResponse<Void> delete(@PathVariable Long careuserId) {
         boolean result = careUserService.delete(careuserId);
-        return new SuccessResponse<>(SuccessStatus.SUCCESS);
+        if(result) return new SuccessResponse<>(SuccessStatus.SUCCESS);
+        return new SuccessResponse<>(SuccessStatus.CARE_USER_FAILURE);
     }
 
     // 돌봄계정 기록 CRUD

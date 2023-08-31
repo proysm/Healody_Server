@@ -23,8 +23,10 @@ public class FamilyApiController {
     public SuccessResponse<Long> addFamily(@RequestBody FamilyRequestDTO familyDTORequest){
         Long userId = userService.findUserIdByPhone(familyDTORequest.getUserPhone());
         FamilyRequestDTO request = familyDTORequest.builder().userId(userId).homeId(familyDTORequest.getHomeId()).build();
+        Long result = familyService.create(request);
 
-        return new SuccessResponse<>(SuccessStatus.FAMILY_CREATE, familyService.create(request));
+        if(result != null) return new SuccessResponse<>(SuccessStatus.FAMILY_CREATE, result);
+        return new SuccessResponse<>(SuccessStatus.FAMILY_FAILURE, null);
     }
 
     @PostMapping("/update/{changeHomeId}")
@@ -34,7 +36,9 @@ public class FamilyApiController {
         boolean isAdmin = familyService.isAdmin(currentUserId, familyDTORequest.getHomeId());
         if(isAdmin) {
             boolean result = familyService.update(familyDTORequest.getUserId(), familyDTORequest.getHomeId(), changeHomeId);
-            return new SuccessResponse<>(SuccessStatus.FAMILY_CHANGE);
+
+            if(result) return new SuccessResponse<>(SuccessStatus.FAMILY_CHANGE, currentUserId);
+            else return new SuccessResponse<>(SuccessStatus.FAMILY_FAILURE, null);
         }
         return new SuccessResponse<>(SuccessStatus.FORBIDDEN);
     }
@@ -46,7 +50,8 @@ public class FamilyApiController {
         boolean isAdmin = familyService.isAdmin(currentUserId, homeId);
         if(isAdmin) {
         boolean result = familyService.delete(userId, homeId);
-        return new SuccessResponse<>(SuccessStatus.FAMILY_DELETE);
+            if(result) return new SuccessResponse<>(SuccessStatus.FAMILY_DELETE);
+            else return new SuccessResponse<>(SuccessStatus.FAMILY_FAILURE);
         }
         return new SuccessResponse<>(SuccessStatus.FORBIDDEN);
     }
@@ -56,8 +61,7 @@ public class FamilyApiController {
         setUserService(userService);
         Long currentUserId = getCurrentUserId();
         boolean result = familyService.delete(currentUserId, homeId);
-        return new SuccessResponse<>(SuccessStatus.FAMILY_EXIT);
+        if(result) return new SuccessResponse<>(SuccessStatus.FAMILY_EXIT);
+        else return new SuccessResponse<>(SuccessStatus.FAMILY_FAILURE);
     }
-
-
 }
