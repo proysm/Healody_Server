@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import dev.umc.healody.common.SuccessResponse;
 import dev.umc.healody.common.SuccessStatus;
 import dev.umc.healody.user.dto.KakaoLoginDto;
+import dev.umc.healody.user.dto.TestDto;
 import dev.umc.healody.user.dto.UserDto;
 import dev.umc.healody.user.entity.User;
 import dev.umc.healody.user.repository.UserRepository;
@@ -11,29 +12,30 @@ import dev.umc.healody.user.service.EmailService;
 import dev.umc.healody.user.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
 
 
-@Controller
+@RestController
 @RequestMapping("/api/auth")
 public class UserController {
     private final UserService userService;
     private final EmailService emailService;
     private final UserRepository userRepository;
     private final KakaoLoginDto loginDto;
+    private final TestDto testDto;
     String confirm = "";
 
 
     @Autowired
-    public UserController(UserService userService, EmailService emailService, UserRepository userRepository, KakaoLoginDto loginDto) {
+    public UserController(UserService userService, EmailService emailService, UserRepository userRepository, KakaoLoginDto loginDto, TestDto testDto) {
         this.userService = userService;
         this.emailService = emailService;
         this.userRepository = userRepository;
         this.loginDto = loginDto;
+        this.testDto = testDto;
     }
 
     @ResponseBody
@@ -109,8 +111,10 @@ public class UserController {
     // 수민
     @ResponseBody
     @RequestMapping("/kakao/callbacks") //KakaoLoginDto
-    public String kakaoCallback(@RequestBody String code) throws JsonProcessingException {
+    public TestDto kakaoCallback(@RequestBody TestDto code) throws JsonProcessingException {
         // 인증 코드, 카카오 로그인이 성공하면 이곳으로 감, @ResponseBody를 붙이면 데이터를 리턴해주는 함수가 됨.
+
+        //testDto.setStr(code);
         return code;
         // User user = userService.kakaoCallback(code); // 현재 로그인을 시도한 사용자의 정보를 리턴한다.
         // Boolean principal = userService.checkEmailDuplication(user.getEmail()); // 존재하는 이메일인지 확인한다.
