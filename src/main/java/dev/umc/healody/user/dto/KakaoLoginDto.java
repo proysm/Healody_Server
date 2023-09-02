@@ -15,5 +15,6 @@ public class KakaoLoginDto {
     private String phone;
     private Boolean status;
     private String password;
+    private String email;
 
 }

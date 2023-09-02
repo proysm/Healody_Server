@@ -60,6 +60,7 @@ public class KakaoUserController {
             User loginUser = userRepository.findByEmail(user.getEmail());
             loginDto.setPhone(loginUser.getPhone());
             loginDto.setPassword(loginUser.getPassword());
+            loginDto.setEmail(loginUser.getEmail());
         }
         return loginDto;
     }
