@@ -234,6 +234,11 @@ public class UserService {
     }
 
     @Transactional
+    public User findUser(String email){
+        return userRepository.findByEmail(email);
+    }
+
+    @Transactional
     public UserResponseDto getUserInfo(Long userId){
         User user = userRepository.findByUserId(userId);
         return UserResponseDto.builder()
