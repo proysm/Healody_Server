@@ -53,6 +53,7 @@ public class KakaoUserController {
         // 새로운 유저이면 회원가입을 진행한다.ㅋ
         if(principal == false){
             userService.kakaoJoin(user);
+            loginDto.setEmail(user.getEmail());
             loginDto.setStatus(false);
         }
         else{
